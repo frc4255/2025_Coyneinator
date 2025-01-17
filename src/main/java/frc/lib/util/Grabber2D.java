@@ -3,6 +3,8 @@ package frc.lib.util;
 import java.lang.constant.Constable;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.*;
 
@@ -29,6 +31,21 @@ public class Grabber2D {
         
         elevator.setPos(y);
         arm.setPos(radians);
+    }
+
+    public void moveToWithFixedAngle(double y, double angle) {
+
+        if (y < minHeight || y > maxHeight) {
+            throw new IllegalArgumentException("Target out of bounds");
+        }
+
+        double HeightOfArm = (armLength * Math.sin(angle)); 
+        elevator.setPos(y - HeightOfArm);
+        arm.setPos(angle);
+
+        double valueOfX = (armLength * Math.cos(angle));
+        
+        SmartDashboard.putNumber("Distance of arm from elevator", valueOfX); 
     }
 }
 

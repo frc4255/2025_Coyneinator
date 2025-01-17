@@ -16,4 +16,8 @@ public class Grabber extends SubsystemBase{
     public void RunGrabber() {
         m_motor0.set(0.5); //TODO Tune this
     }
+
+    public void stopGrabber() {
+        m_motor0.stopMotor();
+    }
 }

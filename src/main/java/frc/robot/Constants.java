@@ -25,6 +25,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    public static final class ScoringPositions {
+        public enum setpoints {
+            
+
+        }
+    }
+
     public final class PoseFilter {
         public static final double POSE_HEIGHT_TOLERANCE = 0.05;
 
@@ -75,10 +82,11 @@ public final class Constants {
         public static final double WHEEL_RADIUS_METERS = 0.0; //TODO get real value
         public static final double DRIVE_MOTOR_CURRENT_LIMIT = 35.0; //TODO make sure this is right
 
-        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = {new Translation2d(),
-                                    new Translation2d(),
-                                    new Translation2d(),
-                                    new Translation2d()}; //TODO get real positions of each swerve module (Robot relative NOT from center to module distance.) IN METERS
+        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = 
+                {new Translation2d(),
+                new Translation2d(),
+                new Translation2d(),
+                new Translation2d()}; //TODO get real positions of each swerve module (Robot relative NOT from center to module distance.) IN METERS
         
         public static final double[] MODULE_PIVOT_DISTANCE = {0.0, 0.0, 0.0, 0.0}; //TODO find each Modules distance form the center of the robot in METERS
 
@@ -87,13 +95,16 @@ public final class Constants {
         public static final double WHEEL_FRICTION_FORCE = 0.0; //TODO get the force of static friction between the wheels and ground in newtons (on carpet)
     
         public static final ModuleConfig swerveModuleConfig = new ModuleConfig(WHEEL_RADIUS_METERS,
-                                                    MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
-                                                    DCMotor.getKrakenX60(1), 
-                                                    DRIVE_MOTOR_CURRENT_LIMIT, 
-                                          1
-                                                    ); //TODO figure out if I am actually insane or this is what im supposed to be doing
+                                        MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
+                                        DCMotor.getKrakenX60(1), 
+                                        DRIVE_MOTOR_CURRENT_LIMIT, 
+                              1
+                ); //TODO figure out if I am actually insane or this is what im supposed to be doing
 
-        public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, ROBOT_MOMENT_OF_INERTIA, swerveModuleConfig, SWERVE_MODULE_LOCATIONS);
+        public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, 
+                                                    ROBOT_MOMENT_OF_INERTIA, 
+                                                    swerveModuleConfig, 
+                                                    SWERVE_MODULE_LOCATIONS);
 
         public static final int pigeonID = 1;
 
