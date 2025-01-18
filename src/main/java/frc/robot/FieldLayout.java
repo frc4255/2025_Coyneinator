@@ -83,7 +83,7 @@ public class FieldLayout {
                     Units.inchesToMeters(365.20),
                     Units.inchesToMeters(241.64),
                     Units.inchesToMeters(73.54),
-                    new Rotation3d(0, 0, 30)
+                    new Rotation3d(0, 0, Units.degreesToRadians(30))
                 )
             ),
             new AprilTag(
@@ -101,7 +101,7 @@ public class FieldLayout {
                     Units.inchesToMeters(530.49),
                     Units.inchesToMeters(130.17),
                     Units.inchesToMeters(12.13),
-                    new Rotation3d(0, 300, Units.degreesToRadians(270))
+                    new Rotation3d(0, Units.degreesToRadians(300), Units.degreesToRadians(270))
                 )
             ),
             new AprilTag(
@@ -163,7 +163,7 @@ public class FieldLayout {
                     Units.inchesToMeters(33.51 ),
                     Units.inchesToMeters(291.20),
                     Units.inchesToMeters(58.50),
-                    new Rotation3d(0, 0, 306)
+                    new Rotation3d(0, 0, Units.degreesToRadians(306))
                 )
             ),
             new AprilTag(
@@ -172,7 +172,7 @@ public class FieldLayout {
                     Units.inchesToMeters(325.68),
                     Units.inchesToMeters(241.64),
                     Units.inchesToMeters(73.54),
-                    new Rotation3d(0, 30, 180)
+                    new Rotation3d(0, Units.degreesToRadians(30), Units.degreesToRadians(180))
                 )
             ),
             new AprilTag(
@@ -181,7 +181,7 @@ public class FieldLayout {
                     Units.inchesToMeters(325.68),
                     Units.inchesToMeters(75.39),
                     Units.inchesToMeters(73.54),
-                    new Rotation3d(0, 30, Units.degreesToRadians(180))
+                    new Rotation3d(0, Units.degreesToRadians(30), Units.degreesToRadians(180))
                 )
             ),
             new AprilTag(
@@ -201,7 +201,7 @@ public class FieldLayout {
                     Units.inchesToMeters(160.39),
                     Units.inchesToMeters(130.17),
                     Units.inchesToMeters(12.13),
-                    new Rotation3d(0, 0, 240)
+                    new Rotation3d(0, 0, Units.degreesToRadians(240))
                 )
             ),
 
@@ -211,7 +211,7 @@ public class FieldLayout {
                     Units.inchesToMeters(144.00),
                     Units.inchesToMeters(158.50),
                     Units.inchesToMeters(12.13),
-                    new Rotation3d(0, 0, 180)
+                    new Rotation3d(0, 0, Units.degreesToRadians(180))
                 )
             ),
 
@@ -221,7 +221,7 @@ public class FieldLayout {
                     Units.inchesToMeters(160.39),
                     Units.inchesToMeters(186.83),
                     Units.inchesToMeters(12.13),
-                    new Rotation3d(0, 0, 120)
+                    new Rotation3d(0, 0, Units.degreesToRadians(120))
                 )
             ),
 
@@ -231,7 +231,7 @@ public class FieldLayout {
                     Units.inchesToMeters(193.10),
                     Units.inchesToMeters(186.83),
                     Units.inchesToMeters(12.13),
-                    new Rotation3d(0, 0, 60)
+                    new Rotation3d(0, 0, Units.degreesToRadians(60))
                 )
             ),
 
@@ -251,7 +251,7 @@ public class FieldLayout {
                     Units.inchesToMeters(193.10),
                     Units.inchesToMeters(130.17),
                     Units.inchesToMeters(12.13),
-                    new Rotation3d(0, 0, 300)
+                    new Rotation3d(0, 0, Units.degreesToRadians(300))
                 )
             )
         ));
