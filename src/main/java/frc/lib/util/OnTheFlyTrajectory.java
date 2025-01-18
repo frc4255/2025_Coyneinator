@@ -33,19 +33,17 @@ public class OnTheFlyTrajectory {
         // Define additional waypoints between the start and end positions (optional)
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
                 startPose,                            // Start position
-                new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)), // Intermediate waypoint
                 endPose                              // End position
         );
 
         // Define the path constraints
         PathConstraints constraints = new PathConstraints(
-                3.0,         // Max velocity (m/s)
-                3.0,         // Max acceleration (m/s^2)
-                2 * Math.PI, // Max angular velocity (rad/s)
-                4 * Math.PI  // Max angular acceleration (rad/s^2)
+                3.0,         
+                3.0,        
+                2 * Math.PI, 
+                4 * Math.PI 
         );
 
-        // Create the path with the start and endpoint
         PathPlannerPath path = new PathPlannerPath(
                 waypoints,
                 constraints,

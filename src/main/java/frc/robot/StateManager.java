@@ -10,7 +10,7 @@ public class StateManager {
         Algae
     }
 
-    private RobotStateMachine currentState = RobotStateMachine.Coral;
+    private static RobotStateMachine currentState = RobotStateMachine.Coral;
 
     public enum Positions {
         L1,
@@ -19,35 +19,38 @@ public class StateManager {
         L4,
         NET,
         HP,
-        INTAKE
+        INTAKE,
+        STOW
     }
 
     
-    private final HashMap<Positions, Double[]> coral = new HashMap<>();
-    private final HashMap<Positions, Double[]> algae = new HashMap<>();
+    private static final HashMap<Positions, double[]> coral = new HashMap<>();
+    private static final HashMap<Positions, double[]> algae = new HashMap<>();
 
-    private HashMap<Positions, Double[]> currentCoordinateBase = new HashMap<>();
+    private static HashMap<Positions, double[]> currentCoordinateBase = new HashMap<>();
 
     public StateManager() {
 
-        coral.put(Positions.L1, new Double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.L2, new Double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.L3, new Double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.L4, new Double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.NET, new Double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.HP, new Double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
+        coral.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
 
-        algae.put(Positions.L1, new Double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.L2, new Double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.L3, new Double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.L4, new Double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.NET, new Double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.HP, new Double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.INTAKE, new Double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.INTAKE, new double[] {0.0, 0.0}); //TODO Tune this
+        algae.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
 
     }
 
-    public Double[] getCoordinate(Positions requested) {
+    public static double[] getCoordinate(Positions requested) {
 
         if (getCurrentState() == RobotStateMachine.Algae) {
             currentCoordinateBase = algae;
@@ -58,7 +61,7 @@ public class StateManager {
         return currentCoordinateBase.get(requested);
     }
 
-    public RobotStateMachine getCurrentState() {
+    public static RobotStateMachine getCurrentState() {
         return currentState;
     }
 
