@@ -1,21 +1,47 @@
 package frc.robot;
 
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+
+    public static final class ScoringPositions {
+        public enum setpoints {
+            
+
+        }
+    }
+
+    public final class PoseFilter {
+        public static final double POSE_HEIGHT_TOLERANCE = 0.05;
+
+        public static final double MAX_DIST_BETWEEN_POSE = 0.2;
+    }
+
+    public static final class Grabber {
+
+        public static final int MOTOR_ID_0 = 30; 
+    }
 
     public static final class Elevator {
         public static final double kP = 0.05; //Todo Tune this
@@ -39,24 +65,47 @@ public final class Constants {
 
     }
 
-    public static final class Coordinates {
-
-        public enum armPositions {
-            L1,
-            L2,
-            L3,
-            L4,
-            STOW,
-            INTAKE,
-            NET
-          }
-
-        
-
+    public static final class Grabber2D {
+        public static final double armLength = 0.0; //Todo get real value
+        public static final double minHeight = 0.0; //Todo get real value
+        public static final double maxHeight = 0.0; //Todo get real value
     }
 
 
     public static final class Swerve {
+
+        public static final double ROBOT_MASS_KG = 0.0; //TODO get real value with bumpers and battery
+        public static final double MAX_TORQUE_FRICTION = 0.0; //TODO get real value (max torque a drive module can apply without slipping the wheels)
+
+        public static final double MAX_DRIVE_VELOCITY_MPS = 0.0; //TODO get real value
+        public static final double WHEEL_COF = 0.0; //TODO get real value
+        public static final double WHEEL_RADIUS_METERS = 0.0; //TODO get real value
+        public static final double DRIVE_MOTOR_CURRENT_LIMIT = 35.0; //TODO make sure this is right
+
+        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = 
+                {new Translation2d(),
+                new Translation2d(),
+                new Translation2d(),
+                new Translation2d()}; //TODO get real positions of each swerve module (Robot relative NOT from center to module distance.) IN METERS
+        
+        public static final double[] MODULE_PIVOT_DISTANCE = {0.0, 0.0, 0.0, 0.0}; //TODO find each Modules distance form the center of the robot in METERS
+
+        public static final double ROBOT_MOMENT_OF_INERTIA = 0.0; //TODO get real value in KG * M^2
+        public static final int NUMBER_OF_MODULES = 4; 
+        public static final double WHEEL_FRICTION_FORCE = 0.0; //TODO get the force of static friction between the wheels and ground in newtons (on carpet)
+    
+        public static final ModuleConfig swerveModuleConfig = new ModuleConfig(WHEEL_RADIUS_METERS,
+                                        MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
+                                        DCMotor.getKrakenX60(1), 
+                                        DRIVE_MOTOR_CURRENT_LIMIT, 
+                              1
+                ); //TODO figure out if I am actually insane or this is what im supposed to be doing
+
+        public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, 
+                                                    ROBOT_MOMENT_OF_INERTIA, 
+                                                    swerveModuleConfig, 
+                                                    SWERVE_MODULE_LOCATIONS);
+
         public static final int pigeonID = 1;
 
         public static final COTSTalonFXSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot

@@ -1,5 +1,10 @@
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotState;
@@ -11,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Vision.Camera;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,12 +34,26 @@ public class RobotContainer {
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+    /* When viewed from behind the bot */ //OFFSETS NEED TO BE REDONE
+    private final Camera RightCam = new Camera(new PhotonCamera("RightCam"), 
+        new Transform3d(new Translation3d(0.258, -0.291, 0.2), 
+        new Rotation3d(0, -1.08, -0.523)));
+        
+    private final Camera LeftCam = new Camera(new PhotonCamera("LeftCam"), 
+        new Transform3d(new Translation3d(0.258, 0.291, 0.2), 
+        new Rotation3d(0, -1.08, 0.523)));
+    //private final Camera LLCam = new Camera(new PhotonCamera("LLCam"), new Transform3d(new Translation3d(0.135, 0, 0.204), new Rotation3d(0, -1.04, 0)));
+    /* Driver Buttons */
+
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
+            new Camera[]{LeftCam, RightCam}/*new Camera[]{}/*new Camera[]{rightCam, leftCam}*/);
+            
+    private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
 
     private final StateManager s_RobotState = new StateManager();
 
