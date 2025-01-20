@@ -17,7 +17,7 @@ public class Grabber extends SubsystemBase{
         m_motor0.set(0.5); //TODO Tune this
     }
 
-    public void runGrabberInRevers() {
+    public void runGrabberInReverse() {
         m_motor0.set(-0.5); //TODO Tune this    
     }
 

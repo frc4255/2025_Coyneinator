@@ -11,29 +11,23 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Hexatroller;
 
 public class OnTheFlyTrajectory {
 
     private Swerve s_Swerve;
 
-    public Pose2d EndingPose() {
-
-        
-
-        return new Pose2d(); //TODO do this 
-    }
 
     public PathPlannerPath newOnTheFlyPath() {
-        // Define the start and end positions using Pose2d
         Pose2d startPose = new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), 
-                s_Swerve.getPose().getRotation()); // Start position
+                s_Swerve.getPose().getRotation()); 
 
-        Pose2d endPose = new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90));  // End position
+        Pose2d endPose = Hexatroller.getRequestedPosition(); 
 
         // Define additional waypoints between the start and end positions (optional)
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-                startPose,                            // Start position
-                endPose                              // End position
+                startPose,                           
+                endPose                            
         );
 
         // Define the path constraints
@@ -48,7 +42,7 @@ public class OnTheFlyTrajectory {
                 waypoints,
                 constraints,
                 null, // Ideal starting state, not needed for on-the-fly paths
-                new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state (can set holonomic rotation for swerve)
+                new GoalEndState(0.0, Hexatroller.getRequestedPosition().getRotation()) // Goal end state (can set holonomic rotation for swerve)
         );
 
         // Prevent the path from being flipped if the coordinates are already correct

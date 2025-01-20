@@ -78,28 +78,32 @@ public final class Constants {
         public static final double MAX_TORQUE_FRICTION = 0.0; //TODO get real value (max torque a drive module can apply without slipping the wheels)
 
         public static final double MAX_DRIVE_VELOCITY_MPS = 0.0; //TODO get real value
-        public static final double WHEEL_COF = 0.0; //TODO get real value
+        public static final double WHEEL_COF = 1.542; //I got this one chief delphi so this might just be straight up wrong
         public static final double WHEEL_RADIUS_METERS = 0.0; //TODO get real value
         public static final double DRIVE_MOTOR_CURRENT_LIMIT = 35.0; //TODO make sure this is right
 
         public static final Translation2d[] SWERVE_MODULE_LOCATIONS = 
-                {new Translation2d(),
-                new Translation2d(),
-                new Translation2d(),
-                new Translation2d()}; //TODO get real positions of each swerve module (Robot relative NOT from center to module distance.) IN METERS
+                {new Translation2d(Units.inchesToMeters(-12.105518), Units.inchesToMeters(12.105518)),
+                new Translation2d(Units.inchesToMeters(12.105518), Units.inchesToMeters(12.105518)),
+                new Translation2d(Units.inchesToMeters(-12.105518), Units.inchesToMeters(-12.105518)),
+                new Translation2d(Units.inchesToMeters(12.105518), Units.inchesToMeters(-12.105518))};
         
-        public static final double[] MODULE_PIVOT_DISTANCE = {0.0, 0.0, 0.0, 0.0}; //TODO find each Modules distance form the center of the robot in METERS
+        public static final double[] MODULE_PIVOT_DISTANCE = {
+            Units.inchesToMeters(16.779097),
+            Units.inchesToMeters(16.779097),
+            Units.inchesToMeters(16.779097),    
+            Units.inchesToMeters(16.779097)}; //TODO find each Modules distance form the center of the robot in METERS
 
         public static final double ROBOT_MOMENT_OF_INERTIA = 0.0; //TODO get real value in KG * M^2
         public static final int NUMBER_OF_MODULES = 4; 
         public static final double WHEEL_FRICTION_FORCE = 0.0; //TODO get the force of static friction between the wheels and ground in newtons (on carpet)
     
-        public static final ModuleConfig swerveModuleConfig = new ModuleConfig(WHEEL_RADIUS_METERS,
+        public static final ModuleConfig swerveModuleConfig = new ModuleConfig(
+                                        WHEEL_RADIUS_METERS,
                                         MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
                                         DCMotor.getKrakenX60(1), 
                                         DRIVE_MOTOR_CURRENT_LIMIT, 
-                              1
-                ); //TODO figure out if I am actually insane or this is what im supposed to be doing
+                                        1); //TODO figure out if I am actually insane or this is what im supposed to be doing
 
         public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, 
                                                     ROBOT_MOMENT_OF_INERTIA, 

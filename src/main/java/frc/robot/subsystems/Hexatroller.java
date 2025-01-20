@@ -20,7 +20,7 @@ public class Hexatroller extends SubsystemBase{
     
     private Joystick hexaTroller;
 
-    public Pose2d currentRobotPoseSelection; // What pose the Spotter has chosen for the robot to go to
+    public static Pose2d currentRobotPoseSelection; // What pose the Spotter has chosen for the robot to go to
 
     private enum ScoringPosition {
         A,
@@ -65,7 +65,7 @@ public class Hexatroller extends SubsystemBase{
 
     }
 
-    public Pose2d getRequestedPosition() {
+    public static Pose2d getRequestedPosition() {
         //the robot will go up 6.5 and left or right 6.5 inches (the hexagon creates an equilateral triangle)
         return currentRobotPoseSelection;
     }

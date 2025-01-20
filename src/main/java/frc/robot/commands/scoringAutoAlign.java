@@ -1,0 +1,40 @@
+package frc.robot.commands;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.Grabber2D;
+import frc.robot.subsystems.Swerve;
+import frc.robot.StateManager;
+import frc.robot.subsystems.Hexatroller;
+import frc.lib.util.OnTheFlyTrajectory;
+
+public class scoringAutoAlign extends Command{
+
+    private Grabber2D util_Grabber2d;
+    
+    private Swerve s_Swerve;
+
+    private OnTheFlyTrajectory newOnTheFlyPath = new OnTheFlyTrajectory();
+
+    public scoringAutoAlign(Swerve s_Swerve) {
+
+        this.s_Swerve = s_Swerve;
+
+        addRequirements(s_Swerve);
+
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void execute() {
+        s_Swerve.followPathCommand(newOnTheFlyPath.newOnTheFlyPath());
+    }
+
+
+    @Override
+    public void end(boolean interrupted) {
+
+    }
+}

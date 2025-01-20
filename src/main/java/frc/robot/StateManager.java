@@ -68,4 +68,12 @@ public class StateManager {
     public void setRobotState(RobotStateMachine newState) {
         currentState = newState;
     }
+
+    public void toggleRobotState() {
+        if (currentState == RobotStateMachine.Algae) {
+            currentState = RobotStateMachine.Coral;
+        } else {
+            currentState = RobotStateMachine.Algae;
+        }
+    }
 }
