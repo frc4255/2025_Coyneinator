@@ -17,13 +17,33 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.utils.Color;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+
+    
+    public static class LEDconstants {
+        public static final int CANDLE_ID = 1;
+        public static final int JoystickId = 0;
+        public static final int IncrementAnimButton = XboxController.Button.kRightBumper.value;
+        public static final int DecrementAnimButton = XboxController.Button.kLeftBumper.value;
+        public static final int BlockButton = XboxController.Button.kStart.value;
+        public static final int MaxBrightnessAngle = 90;
+        public static final int MidBrightnessAngle = 180;
+        public static final int ZeroBrightnessAngle = 270;
+        public static final int ChangeDirectionAngle = 0;
+        public static final int VbatButton = XboxController.Button.kA.value;
+        public static final int V5Button = XboxController.Button.kB.value;
+        public static final int CurrentButton = XboxController.Button.kX.value;
+        public static final int TemperatureButton = XboxController.Button.kY.value;
+        public static final int mainStripSegmentSize = 0; //TODO assign correct value to how big the LEDstrip is
+    }
 
     public static final class ScoringPositions {
         public enum setpoints {
