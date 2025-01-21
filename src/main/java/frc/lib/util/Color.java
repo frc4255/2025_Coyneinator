@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.lib.util;
 
 public class Color {
     public int RED;
