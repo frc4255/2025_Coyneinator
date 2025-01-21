@@ -7,6 +7,8 @@ import frc.lib.util.Color;
 import frc.robot.Constants;
 import frc.robot.Constants.LEDconstants;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
@@ -16,13 +18,17 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 public class LEDSystem extends SubsystemBase {
-    private static final CANdle CANDLE = new CANdle(Constants.LEDconstants.CANDLE_ID, "rio");
+    private CANdle LEDs;
     private final int LEDS_PER_ANIMATION = 300;
     private XboxController joystick;
     private int CANDLE_channel = 0;
     private boolean CANDLE_clearAllAnims = false;
     private boolean CANDLE_animDirection = false;
     private boolean CANDLE_setAnim = false;
+
+    private BooleanSupplier algaeSupplier;
+    private BooleanSupplier coralSupplier;
+    private BooleanSupplier alignedSupplier;
 
     // Game piece colors
     public static final Color algae = new Color(131, 227, 237);
@@ -37,6 +43,42 @@ public class LEDSystem extends SubsystemBase {
     public static final Color red = new Color(255, 0, 0);
 
     private Animation CANDLE_toAnimate = null;
+
+    public class LEDSegment {
+        public final int startIndex;
+        public final int segmentSize;
+        public final int animationSlot;
+        private final CANdle LEDs;
+
+        public LEDSegment(CANdle leds, int startIndex, int segmentSize, int animationSlot) {
+            this.LEDs = leds;
+            this.startIndex = startIndex;
+            this.segmentSize = segmentSize;
+            this.animationSlot = animationSlot;
+        }
+
+        public void setColor(Color color) {
+            clearAnimation();
+            LEDs.setLEDs(color.RED, color.GREEN, color.BLUE, 0, startIndex, segmentSize);
+        }
+
+        public void fullClear() {
+            clearAnimation();
+            disableLEDs();
+        }
+
+        public void clearAnimation() {
+            LEDs.clearAnimation(animationSlot);
+        }
+
+        public void disableLEDs() {
+            setColor(black);
+        }
+    }
+
+    // Create instances of LEDSegment
+    public LEDSegment BatteryIndicator = new LEDSegment(LEDs, 0, 2, 0);
+    public LEDSegment MainStrip = new LEDSegment(LEDs, 2, LEDconstants.mainStripSegmentSize, 2);
 
     public enum AnimationTypes {
         ColorFlow,
@@ -54,16 +96,19 @@ public class LEDSystem extends SubsystemBase {
     private AnimationTypes CANDLE_currentAnimation;
     private AnimationTypes CANDLE_previousAnimation;
 
-    public LEDSystem(XboxController joy) {
-        this.joystick = joy;
-        changeAnimation(AnimationTypes.SetAll);
-        CANdleConfiguration configAll = new CANdleConfiguration();
-        configAll.statusLedOffWhenActive = true;
-        configAll.disableWhenLOS = false;
-        configAll.stripType = LEDStripType.GRB;
-        configAll.brightnessScalar = 0.1;
-        configAll.vBatOutputMode = VBatOutputMode.Modulated;
-        CANDLE.configAllSettings(configAll, 100);
+    public LEDSystem(BooleanSupplier algaeSupplier, BooleanSupplier coralSupplier, BooleanSupplier alignedSupplier,
+            int startIndex, int segmentSize, int animationSlot) {
+        this.algaeSupplier = algaeSupplier;
+        this.coralSupplier = coralSupplier;
+        this.alignedSupplier = alignedSupplier;
+        LEDs = new CANdle(Constants.LEDconstants.CANDLE_ID);
+        CANdleConfiguration config = new CANdleConfiguration();
+        config.stripType = LEDStripType.RGB;
+        config.brightnessScalar = 1;
+        config.statusLedOffWhenActive = true;
+        config.disableWhenLOS = false;
+        config.vBatOutputMode = VBatOutputMode.Modulated;
+        LEDs.configAllSettings(config, 100);
     }
 
     public void toggleAnimDirection() {
@@ -105,21 +150,23 @@ public class LEDSystem extends SubsystemBase {
         }
     }
 
+
+    
     /* yknow how it is with them getters and setters :tongue: */
     public void setColors() {
         changeAnimation(AnimationTypes.SetAll);
     }
     
     public double getVbat() {
-        return CANDLE.getBusVoltage();
+        return LEDs.getBusVoltage();
     }
 
     public double getCurrent() {
-        return CANDLE.getCurrent();
+        return LEDs.getCurrent();
     }
 
     public double getTemperature() {
-        return CANDLE.getTemperature();
+        return LEDs.getTemperature();
     }
 
     public AnimationTypes getPreviousAnimation() {
@@ -127,24 +174,24 @@ public class LEDSystem extends SubsystemBase {
     }
 
     public void configBrightness(double percent) {
-        CANDLE.configBrightnessScalar(percent, 0);
+        LEDs.configBrightnessScalar(percent, 0);
     }
 
     public void configLos(boolean disableWhenLos) {
-        CANDLE.configLOSBehavior(disableWhenLos, 0);
+        LEDs.configLOSBehavior(disableWhenLos, 0);
     }
 
     public void configLedType(LEDStripType type) {
-        CANDLE.configLEDType(type, 0);
+        LEDs.configLEDType(type, 0);
     }
 
     public void configStatusLedBehavior(boolean offWhenActive) {
-        CANDLE.configStatusLedState(offWhenActive, 0);
+        LEDs.configStatusLedState(offWhenActive, 0);
     }
 
     public void changeAnimation(AnimationTypes toChange) {
         if (!(CANDLE_currentAnimation == null)) {
-            CANDLE_previousAnimation = CANDLE_previousAnimation;
+            CANDLE_previousAnimation = CANDLE_currentAnimation;
         }
         
         CANDLE_currentAnimation = toChange;
@@ -212,70 +259,9 @@ public class LEDSystem extends SubsystemBase {
      */
     public Command defaultCommand() {
         return runOnce(() -> {
-            LEDSegment.BatteryIndicator.fullClear();
+            BatteryIndicator.fullClear();
 
-            LEDSegment.MainStrip.setColor(green); //like the robodores...get it?
+            MainStrip.setColor(white);
         });
-    }
-
-    public static enum LEDSegment {
-        BatteryIndicator(0, 2, 0),
-        MainStrip(2, LEDconstants.mainStripSegmentSize, 2);
-    
-        public final int startIndex;
-        public final int segmentSize;
-        public final int animationSlot;
-    
-        private LEDSegment(int startIndex, int segmentSize, int animationSlot) {
-            this.startIndex = startIndex;
-            this.segmentSize = segmentSize;
-            this.animationSlot = animationSlot;
-        }
-    
-        public void setColor(Color color) {
-            clearAnimation();
-            CANDLE.setLEDs(color.RED, color.GREEN, color.BLUE, 0, startIndex, segmentSize);
-        }
-    
-        public void fullClear() {
-            clearAnimation();
-            disableLEDs();
-        }
-    
-        public void clearAnimation() {
-            CANDLE.clearAnimation(animationSlot);
-        }
-    
-        public void disableLEDs() {
-            setColor(black);
-        }
-    }
-
-    @Override
-    public void periodic() {
-        if(CANDLE_toAnimate == null) {
-            if(!CANDLE_setAnim) {
-                
-                CANDLE.setLEDs(3, 7, 1);
-                CANDLE_setAnim = true;
-            }
-        } else {
-            CANDLE_toAnimate.setSpeed((joystick.getRightY() + 1.0) / 2.0);
-            CANDLE.animate(CANDLE_toAnimate, CANDLE_channel);
-            CANDLE_setAnim = false;
-        }
-        CANDLE.modulateVBatOutput(joystick.getRightY());
-
-        if (CANDLE_clearAllAnims) {
-            CANDLE_clearAllAnims = false;
-            for (int i = 0; i < 10; ++i) {
-                CANDLE.clearAnimation(i);
-            }
-        }
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
     }
 }
