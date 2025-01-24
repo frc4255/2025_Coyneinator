@@ -25,13 +25,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-    public static final class ScoringPositions {
-        public enum setpoints {
-            
-
-        }
-    }
-
     public final class PoseFilter {
         public static final double POSE_HEIGHT_TOLERANCE = 0.05;
 
@@ -48,6 +41,9 @@ public final class Constants {
 
         public static final int LEFT_MOTOR_ID = 10;
         public static final int RIGHT_MOTOR_ID = 11;
+
+        public static final int PIVOT_LEFT_MOTOR_ID = 12;
+        public static final int PIVOT_RIGHT_MOTOR_ID = 13;
 
     }
 
@@ -69,6 +65,8 @@ public final class Constants {
         public static final double armLength = 0.0; //Todo get real value
         public static final double minHeight = 0.0; //Todo get real value
         public static final double maxHeight = 0.0; //Todo get real value
+
+        public static final double wristLength = 0.0;
     }
 
 

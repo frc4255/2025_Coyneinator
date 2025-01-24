@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.elevator;
 
 import java.util.HashMap;
 
@@ -21,17 +21,17 @@ import frc.robot.StateManager;
 import frc.robot.StateManager.RobotStateMachine;
 import frc.lib.util.RadianDutyCycleEncoder;
 
-public class Arm extends SubsystemBase {
+public class Pivot extends SubsystemBase {
 
     private RadianDutyCycleEncoder encoder;
     
-    private TalonFX m_Motor0 = new TalonFX(Constants.Arm.MOTOR_ID_0);
-    private TalonFX m_Motor1 = new TalonFX(Constants.Arm.MOTOR_ID_1);
+    private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
+    private TalonFX m_Motor1 = new TalonFX(Constants.Elevator.PIVOT_RIGHT_MOTOR_ID);
 
     private VoltageOut m_Motor0Request = new VoltageOut(0.0);
     private VoltageOut m_Motor1Request = new VoltageOut(0.0);
 
-    private ArmFeedforward armFeedforward;
+    private ArmFeedforward elevatorPivotFeedforward;
 
     private StateManager s_RobotState = new StateManager();
 
@@ -45,7 +45,7 @@ public class Arm extends SubsystemBase {
     private BooleanLogEntry encoderConnectionLog;
     private DoubleLogEntry encoderIncrementLog;
 
-    public Arm() {
+    public Pivot() {
         m_PIDController = new ProfiledPIDController(
             Constants.Elevator.kP, 
             0, 
@@ -59,7 +59,7 @@ public class Arm extends SubsystemBase {
         m_Motor0.setNeutralMode(NeutralModeValue.Brake);
         m_Motor1.setNeutralMode(NeutralModeValue.Brake);
 
-        armFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
+        elevatorPivotFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
                                             Constants.Arm.kV, Constants.Arm.kA);
 
 
@@ -75,7 +75,7 @@ public class Arm extends SubsystemBase {
 
     protected void useOutput(double output, TrapezoidProfile.State setpoint) {
     
-        double finalOut = output + armFeedforward.calculate(setpoint.position, setpoint.velocity);
+        double finalOut = output + elevatorPivotFeedforward.calculate(setpoint.position, setpoint.velocity);
 
         m_Motor0.setControl(m_Motor0Request.withOutput(finalOut));
         m_Motor1.setControl(m_Motor1Request.withOutput(finalOut));
@@ -91,7 +91,7 @@ public class Arm extends SubsystemBase {
         return encoder.getPositionRadians();
     }
 
-    public void setArmAsHomed() {
+    public void setPivotAsHomed() {
         m_Motor0.setPosition(0.0);
         m_Motor1.setPosition(0.0);
         isHomed = true;

@@ -2,10 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.Grabber2D;
-import frc.robot.subsystems.Elevator;
 import frc.robot.StateManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.elevator.Elevator;
 
 public class intake extends Command{
 
