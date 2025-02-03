@@ -17,6 +17,9 @@ public class Grabber2D {
     
     private final double wristLength = Constants.Grabber2D.wristLength;
 
+
+    
+
     public Grabber2D(Elevator elevator, Arm arm, Pivot pivot) {
         this.elevator = elevator;
         this.arm = arm;
@@ -50,7 +53,7 @@ public class Grabber2D {
         SmartDashboard.putNumber("Distance of arm from elevator", valueOfX); 
     }
 
-    public void CompbotShit(double x, double y, double wristAngle) {
+    public void CompBotMovement(double x, double y, double wristAngle) {
 
         double elevatorX = x - (wristLength * Math.cos(wristAngle));
 

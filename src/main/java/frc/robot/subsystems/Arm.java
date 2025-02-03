@@ -64,8 +64,8 @@ public class Arm extends SubsystemBase {
 
 
 
-        encoder = new RadianDutyCycleEncoder(1);
-        encoder.setOffset(0); //TODO get offset IN RADIANS PLEASE
+        //encoder = new RadianDutyCycleEncoder(1);
+        //encoder.setOffset(0); //TODO get offset IN RADIANS PLEASE
 
     }
 
@@ -88,7 +88,8 @@ public class Arm extends SubsystemBase {
     } */
 
     public double getArmPosition() {
-        return encoder.getPositionRadians();
+        //return encoder.getPositionRadians();
+        return m_Motor0.getPosition().getValueAsDouble() * 2 * Math.PI;
     }
 
     public void setArmAsHomed() {

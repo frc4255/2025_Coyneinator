@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.lib.sim.SwerveSim;
+import frc.lib.sim.TeleopSwerveSim;
 import frc.lib.util.Grabber2D;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
@@ -75,6 +77,8 @@ public class RobotContainer {
                 new Camera[]{LeftCam, RightCam}/*new Camera[]{}/*new Camera[]{rightCam, leftCam}*/);
                 
         private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
+
+        private final SwerveSim s_SwerveSim = new SwerveSim(s_VisionSubystem);
     
         private final StateManager s_RobotState = new StateManager();
     
@@ -107,11 +111,23 @@ public class RobotContainer {
                 )
             );
 
+            s_SwerveSim.setDefaultCommand(
+                new TeleopSwerveSim(
+                    s_SwerveSim, 
+                    () -> -driver.getRawAxis(translationAxis), 
+                    () -> -driver.getRawAxis(strafeAxis), 
+                    () -> -driver.getRawAxis(rotationAxis), 
+                    () -> false //For the love of god do not change this
+                )
+            );
+
             NamedCommands.registerCommand("Intake", autoIntake);
             NamedCommands.registerCommand("ScoreL4", autoScoreL4);
     
             // Configure the button bindings
             configureButtonBindings();
+
+            
         }
     
         /**
