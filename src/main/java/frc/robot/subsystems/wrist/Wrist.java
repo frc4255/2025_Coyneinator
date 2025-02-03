@@ -1,4 +1,4 @@
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.wrist;
 
 import java.util.HashMap;
 
@@ -21,17 +21,17 @@ import frc.robot.StateManager;
 import frc.robot.StateManager.RobotStateMachine;
 import frc.lib.util.RadianDutyCycleEncoder;
 
-public class Pivot extends SubsystemBase {
+public class Wrist extends SubsystemBase {
 
     private RadianDutyCycleEncoder encoder;
     
-    private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
-    private TalonFX m_Motor1 = new TalonFX(Constants.Elevator.PIVOT_RIGHT_MOTOR_ID);
+    private TalonFX m_Motor0 = new TalonFX(Constants.Arm.MOTOR_ID_0);
+    private TalonFX m_Motor1 = new TalonFX(Constants.Arm.MOTOR_ID_1);
 
     private VoltageOut m_Motor0Request = new VoltageOut(0.0);
     private VoltageOut m_Motor1Request = new VoltageOut(0.0);
 
-    private ArmFeedforward elevatorPivotFeedforward;
+    private ArmFeedforward armFeedforward;
 
     private StateManager s_RobotState = new StateManager();
 
@@ -39,9 +39,13 @@ public class Pivot extends SubsystemBase {
 
     private boolean isHomed = false;
 
-    private DataLog log;
+    private boolean encoderDisconnected = false;
 
-    public Pivot() {
+    private DataLog log;
+    private BooleanLogEntry encoderConnectionLog;
+    private DoubleLogEntry encoderIncrementLog;
+
+    public Wrist() {
         m_PIDController = new ProfiledPIDController(
             Constants.Elevator.kP, 
             0, 
@@ -55,7 +59,7 @@ public class Pivot extends SubsystemBase {
         m_Motor0.setNeutralMode(NeutralModeValue.Brake);
         m_Motor1.setNeutralMode(NeutralModeValue.Brake);
 
-        elevatorPivotFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
+        armFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
                                             Constants.Arm.kV, Constants.Arm.kA);
 
 
@@ -66,12 +70,12 @@ public class Pivot extends SubsystemBase {
     }
 
     protected double getMeasurement() {
-        return getPivotPosition();
+        return getArmPosition();
     }
 
     protected void useOutput(double output, TrapezoidProfile.State setpoint) {
     
-        double finalOut = output + elevatorPivotFeedforward.calculate(setpoint.position, setpoint.velocity);
+        double finalOut = output + armFeedforward.calculate(setpoint.position, setpoint.velocity);
 
         m_Motor0.setControl(m_Motor0Request.withOutput(finalOut));
         m_Motor1.setControl(m_Motor1Request.withOutput(finalOut));
@@ -83,11 +87,11 @@ public class Pivot extends SubsystemBase {
         return ((m_Motor0.getPosition().getValueAsDouble()) / 161.290322581)* (2 * Math.PI); //TODO get GEAR RATIO PLEASE
     } */
 
-    public double getPivotPosition() {
+    public double getArmPosition() {
         return encoder.getPositionRadians();
     }
 
-    public void setPivotAsHomed() {
+    public void setArmAsHomed() {
         m_Motor0.setPosition(0.0);
         m_Motor1.setPosition(0.0);
         isHomed = true;
@@ -110,7 +114,7 @@ public class Pivot extends SubsystemBase {
 
         useOutput(pidOutput, m_PIDController.getSetpoint());
 
-        SmartDashboard.putNumber("PivotPosition", getPivotPosition());
+        SmartDashboard.putNumber("ArmPosition", getArmPosition());
         
     }
 }

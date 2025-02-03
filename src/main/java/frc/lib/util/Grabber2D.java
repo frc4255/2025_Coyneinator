@@ -63,11 +63,7 @@ public class Grabber2D {
         elevator.setPos(elevatorExtension);
         pivot.setPos(angleOfElevator);
 
-        arm.setPos(wristAngle);
-
-        
-        
-
+        arm.setPos(wristAngle);    
     }
 }
 
