@@ -67,6 +67,12 @@ public final class Constants {
         public static final double maxHeight = 0.0; //Todo get real value
 
         public static final double wristLength = 0.0;
+
+        public static final double floor = 0.0;
+        public static final double maxVerticalRobotExtension = 90.389937; //TODO get real value approx whatever I put there (I didn't account for end effector height yet)
+        public static final double maxHorizontalRobotExtension = 33.75; //Robot length / 2 + extension limit from frame perimeter.
+
+
     }
 
 

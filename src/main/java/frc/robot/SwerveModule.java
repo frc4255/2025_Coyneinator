@@ -10,6 +10,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -30,6 +32,10 @@ public class SwerveModule {
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
+    private DoubleLogEntry moduleSpeedLog;
+    private DoubleLogEntry moduleAngleLog;
+    private DoubleLogEntry encoderLog;
+
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
@@ -41,18 +47,37 @@ public class SwerveModule {
         /* Angle Motor Config */
         mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
         mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
-        resetToAbsolute();
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
+
+        if (Robot.isSimulation()) {
+            var mAngleMotorSim = mAngleMotor.getSimState();
+            var mDriveMotorSim = mDriveMotor.getSimState();
+            var angleEncoderSim = angleEncoder.getSimState();
+
+            mAngleMotorSim.setSupplyVoltage(12);
+            mDriveMotorSim.setSupplyVoltage(12);
+            
+        }
+
+        moduleSpeedLog = new DoubleLogEntry(DataLogManager.getLog(), "swerve/module" + moduleNumber + "/speed");
+        moduleAngleLog = new DoubleLogEntry(DataLogManager.getLog(), "swerve/module" + moduleNumber + "/angle");
+        encoderLog = new DoubleLogEntry(DataLogManager.getLog(), "swerve/module" + moduleNumber + "/encoder");
+
+        /* Angle Motor Config moved here so that data logging doesn't break*/
+        resetToAbsolute();
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); //This will be removed next year which kinda breaks this file.
         mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
+
+        moduleSpeedLog.append(desiredState.speedMetersPerSecond);
+        moduleAngleLog.append(desiredState.angle.getDegrees());
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
@@ -68,6 +93,11 @@ public class SwerveModule {
     }
 
     public Rotation2d getCANcoder(){
+        if (angleEncoder != null) {
+            double absolutePosition = angleEncoder.getAbsolutePosition().getValueAsDouble();
+            encoderLog.append(absolutePosition);
+        }
+
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
     }
     
