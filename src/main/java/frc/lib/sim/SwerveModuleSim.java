@@ -116,10 +116,4 @@ public class SwerveModuleSim {
         // For the angle motor, we assume the simulation state is set immediately,
         // so no incremental update is required.
     }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("poseOfSwervemodule" + moduleNumber + " Drive Motor", getPosition());
-
-    }
 }

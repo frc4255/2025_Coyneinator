@@ -19,11 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.StateManager.RobotStateMachine;
-import frc.lib.util.RadianDutyCycleEncoder;
 
 public class Pivot extends SubsystemBase {
-
-    private RadianDutyCycleEncoder encoder;
     
     private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
     private TalonFX m_Motor1 = new TalonFX(Constants.Elevator.PIVOT_RIGHT_MOTOR_ID);
@@ -58,11 +55,6 @@ public class Pivot extends SubsystemBase {
         elevatorPivotFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
                                             Constants.Arm.kV, Constants.Arm.kA);
 
-
-
-        encoder = new RadianDutyCycleEncoder(1);
-        encoder.setOffset(0); //TODO get offset IN RADIANS PLEASE
-
     }
 
     protected double getMeasurement() {
@@ -84,7 +76,7 @@ public class Pivot extends SubsystemBase {
     } */
 
     public double getPivotPosition() {
-        return encoder.getPositionRadians();
+        return m_Motor0.getPosition().getValueAsDouble();
     }
 
     public void setPivotAsHomed() {

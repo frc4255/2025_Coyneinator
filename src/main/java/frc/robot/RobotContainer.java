@@ -21,12 +21,14 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.sim.SwerveSim;
 import frc.lib.sim.TeleopSwerveSim;
 import frc.lib.util.Grabber2D;
+import frc.lib.util.OnTheFlyTrajectory;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.Pivot;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -83,8 +85,11 @@ public class RobotContainer {
         private final StateManager s_RobotState = new StateManager();
     
         private final Elevator s_Elevator = new Elevator();
+        private final Pivot s_Pivot = new Pivot();
         private final Arm s_Arm = new Arm();
         private final Grabber s_Grabber = new Grabber();
+        
+        private final Grabber2D grabber2D = new Grabber2D(s_Elevator, s_Arm, s_Pivot);
     
         private final Stow s_Stow = new Stow(s_Elevator, s_Arm);
 
@@ -92,10 +97,11 @@ public class RobotContainer {
         public SendableChooser<Command> autoChooser;
 
         intake autoIntake = new intake(s_Elevator, s_Arm, s_Grabber);
-        driverManualScoring autoScoreL4 = new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L4);
+        driverManualScoring autoScoreL4 = new driverManualScoring(s_Elevator, s_Arm, 
+                StateManager.Positions.L4, grabber2D);
         Stow autoStow = new Stow(s_Elevator, s_Arm);
 
-    
+        OnTheFlyTrajectory OnTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
     
     
     
@@ -144,21 +150,21 @@ public class RobotContainer {
     
             stow.onTrue(s_Stow);
     
-            scoreL1.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L1));
-            scoreL2.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L2));
-            scoreL3.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L3));
-            scoreL4.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L4));
+            scoreL1.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L1, grabber2D));
+            scoreL2.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L2, grabber2D));
+            scoreL3.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L3, grabber2D));
+            scoreL4.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L4, grabber2D));
     
-            scoreNet.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.NET));
-            intakeFromHP.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.HP));
+            scoreNet.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.NET, grabber2D));
+            intakeFromHP.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.HP, grabber2D));
     
             autoPathPlanningInTeleop.onTrue(new InstantCommand(() -> {
                 autoAlign = !autoAlign; 
 
                 if (autoAlign) {
-                    new scoringAutoAlign(s_Swerve).schedule();
+                    new scoringAutoAlign(s_Swerve, OnTheFlyTrajectory).schedule();
                 } else {
-                    CommandScheduler.getInstance().cancel(new scoringAutoAlign(s_Swerve));
+                    CommandScheduler.getInstance().cancel(new scoringAutoAlign(s_Swerve, OnTheFlyTrajectory));
                 }
             }));
         

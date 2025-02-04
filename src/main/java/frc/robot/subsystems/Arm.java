@@ -19,11 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.StateManager.RobotStateMachine;
-import frc.lib.util.RadianDutyCycleEncoder;
 
 public class Arm extends SubsystemBase {
-
-    private RadianDutyCycleEncoder encoder;
     
     private TalonFX m_Motor0 = new TalonFX(Constants.Arm.MOTOR_ID_0);
     private TalonFX m_Motor1 = new TalonFX(Constants.Arm.MOTOR_ID_1);
@@ -63,9 +60,6 @@ public class Arm extends SubsystemBase {
                                             Constants.Arm.kV, Constants.Arm.kA);
 
 
-
-        //encoder = new RadianDutyCycleEncoder(1);
-        //encoder.setOffset(0); //TODO get offset IN RADIANS PLEASE
 
     }
 

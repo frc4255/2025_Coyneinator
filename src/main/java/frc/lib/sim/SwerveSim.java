@@ -9,8 +9,13 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import static edu.wpi.first.units.Units.Rotation;
+
+import java.util.concurrent.Flow.Publisher;
+
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.sim.Pigeon2SimState;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -24,7 +29,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -36,17 +42,25 @@ public class SwerveSim extends SubsystemBase {
     public SwerveDrivePoseEstimator m_SwervePoseEstimator;
     // Replace SwerveModule with your simulation-only version
     public SwerveModuleSim[] mSwerveMods;
-    public Pigeon2 gyro;
+    public Pigeon2 pigeon2D;
+    public Pigeon2SimState gyro;
 
     private VisionSubsystem vision;
+
+    private double rotation;
+
+    private StructArrayPublisher<SwerveModuleState> publisher =publisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("SimSwerveModuleStates", SwerveModuleState.struct).publish(); //YES IT DOES THE CODE WILL BREAK IF YOU DELETE THIS
+
+    private Pose2d simulatedPose = new Pose2d(); 
 
     public SwerveSim(VisionSubsystem vision) {
         this.vision = vision;
         
         // Instantiate the gyro and apply its simulation configuration if needed
-        gyro = new Pigeon2(Constants.Swerve.pigeonID);
-        gyro.getConfigurator().apply(new Pigeon2Configuration());
-        gyro.setYaw(0);
+        pigeon2D = new Pigeon2(Constants.Swerve.pigeonID);
+        var gyro = pigeon2D.getSimState();
+        gyro.addYaw(0);
         
         Timer.delay(1);
 
@@ -187,7 +201,7 @@ public class SwerveSim extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return m_SwervePoseEstimator.getEstimatedPosition();
+        return simulatedPose;
     }
 
     public void setPose(Pose2d pose) {
@@ -195,7 +209,7 @@ public class SwerveSim extends SubsystemBase {
     }
 
     public Rotation2d getHeading(){
-        return getPose().getRotation();
+        return simulatedPose.getRotation();
     }
 
     public void setHeading(Rotation2d heading){
@@ -210,11 +224,10 @@ public class SwerveSim extends SubsystemBase {
      * Gets the gyro yaw angle converted to the robot coordinate system (-180 to 180 degrees).
      */
     public Rotation2d getGyroYaw() {
-        double yaw = gyro.getAngle() % 360;
-        if (yaw > 180) {
-            yaw -= 360;
-        }
-        return Rotation2d.fromDegrees(-yaw);
+
+        //gyro.setRawYaw(6);
+        //return Rotation2d.fromDegrees(-yaw);
+        return Rotation2d.fromDegrees(0);
     }
 
     public void resetModulesToAbsolute(){
@@ -222,6 +235,39 @@ public class SwerveSim extends SubsystemBase {
             mod.resetToAbsolute();
         }
     }
+
+    public void updateGyroSim(double rotationSpeed) {
+        if (gyro != null) {
+            double angularVelocity = rotationSpeed * Constants.Swerve.maxAngularVelocity / 4; // Scale as needed
+
+            gyro.setAngularVelocityZ(angularVelocity);
+    
+            double deltaYaw = angularVelocity * 0.02; // 20ms loop
+            gyro.addYaw(deltaYaw);
+        }
+    }
+
+    private void updateSimulatedPose() {
+        double dt = 0.02; // 20ms timestep
+
+        ChassisSpeeds robotSpeeds = getChassisSpeeds();
+
+        Rotation2d currentHeading = simulatedPose.getRotation();
+        double cosAngle = Math.cos(currentHeading.getRadians());
+        double sinAngle = Math.sin(currentHeading.getRadians());
+
+        double fieldVx = robotSpeeds.vxMetersPerSecond * cosAngle - robotSpeeds.vyMetersPerSecond * sinAngle;
+        double fieldVy = robotSpeeds.vxMetersPerSecond * sinAngle + robotSpeeds.vyMetersPerSecond * cosAngle;
+
+        Translation2d deltaTranslation = new Translation2d(fieldVx * dt, fieldVy * dt);
+        Rotation2d deltaRotation = Rotation2d.fromRadians(robotSpeeds.omegaRadiansPerSecond * dt * dt);
+
+        Translation2d newTranslation = simulatedPose.getTranslation().plus(deltaTranslation);
+        Rotation2d newRotation = simulatedPose.getRotation().plus(deltaRotation);
+        simulatedPose = new Pose2d(newTranslation, newRotation);
+    }
+
+    
 
     @Override
     public void periodic(){
@@ -247,6 +293,10 @@ public class SwerveSim extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
 
-        SmartDashboard.putNumber("Gyro angle", getGyroYaw().getDegrees());
+        publisher.set(getModuleStates());
+
+        updateGyroSim(rotation);
+
+        updateSimulatedPose();
     }
 }

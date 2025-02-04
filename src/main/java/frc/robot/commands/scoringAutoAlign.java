@@ -13,11 +13,12 @@ public class scoringAutoAlign extends Command{
     
     private Swerve s_Swerve;
 
-    private OnTheFlyTrajectory newOnTheFlyPath = new OnTheFlyTrajectory();
+    private OnTheFlyTrajectory newOnTheFlyPath = new OnTheFlyTrajectory(s_Swerve);
 
-    public scoringAutoAlign(Swerve s_Swerve) {
+    public scoringAutoAlign(Swerve s_Swerve, OnTheFlyTrajectory newOnTheFlyTrajectory) {
 
         this.s_Swerve = s_Swerve;
+        this.newOnTheFlyPath = newOnTheFlyTrajectory;
 
         addRequirements(s_Swerve);
 

@@ -17,10 +17,15 @@ public class OnTheFlyTrajectory {
 
     private Swerve s_Swerve;
 
+    public OnTheFlyTrajectory(Swerve s_Swerve) {
+        this.s_Swerve = s_Swerve;
+    }
+
 
     public PathPlannerPath newOnTheFlyPath() {
-        Pose2d startPose = new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), 
-                s_Swerve.getPose().getRotation()); 
+        Pose2d currentPose = s_Swerve.getPose();
+        Pose2d startPose = new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getRotation());
+
 
         Pose2d endPose = Hexatroller.getRequestedPosition(); 
 
