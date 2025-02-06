@@ -25,6 +25,19 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    public final class Wrist {
+        public static final double kS = 0.0; //TODO tune this 
+        public static final double kG = 0.0; //TODO tune this 
+        public static final double kV = 0.0; //TODO tune this  
+        public static final double kA = 0.0; //TODO tune this 
+
+        public static final double Pitch_kP = 0.05; //TODO tune this
+        public static final double Roll_kP = 0.05; //TODO tune this
+
+        public static final int PITCH_MOTOR_ID = 40;
+        public static final int ROLL_MOTOR_ID = 41;
+    }
+
     public final class PoseFilter {
         public static final double POSE_HEIGHT_TOLERANCE = 0.05;
 
