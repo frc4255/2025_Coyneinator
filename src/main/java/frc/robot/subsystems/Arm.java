@@ -89,7 +89,7 @@ public class Arm extends SubsystemBase {
 
     public double getArmPosition() {
         //return encoder.getPositionRadians();
-        return m_Motor0.getPosition().getValueAsDouble() * 2 * Math.PI;
+        return m_Motor0.getPosition().getValueAsDouble() * 2 * Math.PI; //TODO gear ratio is needed 
     }
 
     public void setArmAsHomed() {

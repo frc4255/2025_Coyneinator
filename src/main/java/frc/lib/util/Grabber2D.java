@@ -18,8 +18,6 @@ public class Grabber2D {
     private final double wristLength = Constants.Grabber2D.wristLength;
 
 
-    
-
     public Grabber2D(Elevator elevator, Arm arm, Pivot pivot) {
         this.elevator = elevator;
         this.arm = arm;
@@ -68,8 +66,6 @@ public class Grabber2D {
 
         arm.setPos(wristAngle);
 
-        
-        
 
     }
 }
