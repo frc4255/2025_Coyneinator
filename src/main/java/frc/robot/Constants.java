@@ -34,8 +34,17 @@ public final class Constants {
         public static final double Pitch_kP = 0.05; //TODO tune this
         public static final double Roll_kP = 0.05; //TODO tune this
 
+        /*Wrist Pitch range Limits && Roll range limits*/
+        public static final double PitchMaxLimit = 0; //TODO tune this for RAD
+        public static final double PitchMinLimit = 0; //TODO tune this for RAD
+
+        public static final double RollMaxLimit = 0; //TODO tune this for RAD
+        public static final double RollMinLimit = 0; //TODO tune this for RAD
+
         public static final int PITCH_MOTOR_ID = 40;
         public static final int ROLL_MOTOR_ID = 41;
+
+        public static final int END_EFFECTOR_MOTOR_ID = 42;
     }
 
     public final class PoseFilter {
@@ -58,6 +67,11 @@ public final class Constants {
         public static final int PIVOT_LEFT_MOTOR_ID = 12;
         public static final int PIVOT_RIGHT_MOTOR_ID = 13;
 
+        /*Pivot Max and Min limit */
+
+        public static final double PivotMaxLimit = 0; //TODO tune this for RAD
+        public static final double PivotMinLimit = 0; //TODO tune this for RAD
+
     }
 
     public static final class Arm {
@@ -76,8 +90,8 @@ public final class Constants {
 
     public static final class Grabber2D {
         public static final double armLength = 0.0; //Todo get real value
-        public static final double minHeight = 0.0; //Todo get real value
-        public static final double maxHeight = 0.0; //Todo get real value
+        public static final double ElevatorminHeight = 0.0; //Todo get real value
+        public static final double ElevatormaxHeight = 0.0; //Todo get real value
 
         public static final double wristLength = 0.0;
 

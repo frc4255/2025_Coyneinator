@@ -29,6 +29,7 @@ import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Pivot;
+import frc.robot.subsystems.wrist.WristManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -87,9 +88,10 @@ public class RobotContainer {
         private final Elevator s_Elevator = new Elevator();
         private final Pivot s_Pivot = new Pivot();
         private final Arm s_Arm = new Arm();
+        private final WristManager s_Wrist = new WristManager();
         private final Grabber s_Grabber = new Grabber();
         
-        private final Grabber2D grabber2D = new Grabber2D(s_Elevator, s_Arm, s_Pivot);
+        private final Grabber2D grabber2D = new Grabber2D(s_Elevator, s_Arm, s_Pivot, s_Wrist);
     
         private final Stow s_Stow = new Stow(s_Elevator, s_Arm);
 
