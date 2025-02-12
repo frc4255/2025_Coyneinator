@@ -21,9 +21,11 @@ import frc.robot.StateManager;
 import frc.robot.StateManager.RobotStateMachine;
 
 public class Arm extends SubsystemBase {
+
+    /* This class will be deleted after Grabber2D is revamped. */
     
-    private TalonFX m_Motor0 = new TalonFX(Constants.Arm.MOTOR_ID_0);
-    private TalonFX m_Motor1 = new TalonFX(Constants.Arm.MOTOR_ID_1);
+    private TalonFX m_Motor0 = new TalonFX(0);
+    private TalonFX m_Motor1 = new TalonFX(0);
 
     private VoltageOut m_Motor0Request = new VoltageOut(0.0);
     private VoltageOut m_Motor1Request = new VoltageOut(0.0);
@@ -56,8 +58,8 @@ public class Arm extends SubsystemBase {
         m_Motor0.setNeutralMode(NeutralModeValue.Brake);
         m_Motor1.setNeutralMode(NeutralModeValue.Brake);
 
-        armFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
-                                            Constants.Arm.kV, Constants.Arm.kA);
+        armFeedforward = new ArmFeedforward(Constants.Elevator.Pivot.kS, Constants.Elevator.Pivot.kG, 
+                                            Constants.Elevator.Pivot.kV, Constants.Elevator.Pivot.kA);
 
 
 

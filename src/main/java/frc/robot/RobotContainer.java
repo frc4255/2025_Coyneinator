@@ -29,6 +29,7 @@ import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Pivot;
+import frc.robot.subsystems.wrist.EndEffector;
 import frc.robot.subsystems.wrist.WristManager;
 
 /**
@@ -89,7 +90,7 @@ public class RobotContainer {
         private final Pivot s_Pivot = new Pivot();
         private final Arm s_Arm = new Arm();
         private final WristManager s_Wrist = new WristManager();
-        private final Grabber s_Grabber = new Grabber();
+        private final EndEffector s_EndEffector = new EndEffector();
         
         private final Grabber2D grabber2D = new Grabber2D(s_Elevator, s_Arm, s_Pivot, s_Wrist);
     
@@ -98,7 +99,7 @@ public class RobotContainer {
         /* auto stuff */
         public SendableChooser<Command> autoChooser;
 
-        intake autoIntake = new intake(s_Elevator, s_Arm, s_Grabber);
+        intake autoIntake = new intake(s_Elevator, s_Arm, s_EndEffector);
         driverManualScoring autoScoreL4 = new driverManualScoring(s_Elevator, s_Arm, 
                 StateManager.Positions.L4, grabber2D);
         Stow autoStow = new Stow(s_Elevator, s_Arm);

@@ -2,11 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.Grabber2D;
+import frc.robot.Constants.Grabber;
 import frc.robot.StateManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Hexatroller;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.wrist.EndEffector;
 
 public class goToScorePosition extends Command{
 
@@ -15,16 +16,16 @@ public class goToScorePosition extends Command{
     private Elevator s_Elevator;
     private Arm s_Arm;
     private Hexatroller s_Hexatroller; 
-    private Grabber s_Grabber;
+    private EndEffector s_EndEffector;
 
-    public goToScorePosition(Elevator s_Elevator, Arm s_Arm, Hexatroller s_Hexatroller, Grabber s_Grabber) {
+    public goToScorePosition(Elevator s_Elevator, Arm s_Arm, Hexatroller s_Hexatroller, EndEffector s_EndEffector) {
 
         this.s_Elevator = s_Elevator;
         this.s_Arm = s_Arm;
         this.s_Hexatroller = s_Hexatroller;
-        this.s_Grabber = s_Grabber;
+        this.s_EndEffector = s_EndEffector;
 
-        addRequirements(s_Elevator, s_Arm, s_Hexatroller, s_Grabber);
+        addRequirements(s_Elevator, s_Arm, s_Hexatroller, s_EndEffector);
 
     }
 

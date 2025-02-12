@@ -31,6 +31,8 @@ public class Elevator extends SubsystemBase {
 
     private boolean isHomed = false;
 
+    private boolean isPosePossible = true;
+
     public Elevator() {
         m_PIDController = new ProfiledPIDController(
             Constants.Elevator.kP, 
@@ -71,6 +73,10 @@ public class Elevator extends SubsystemBase {
        m_PIDController.setGoal(pos);
     }
 
+    public boolean isElevatorPosePossible() {
+        return isPosePossible;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
@@ -82,6 +88,11 @@ public class Elevator extends SubsystemBase {
 
         SmartDashboard.putNumber("ElevatorPosition", getElevatorPosition());
 
-        
+        if(getElevatorPosition() > Constants.Elevator.ElevatorMaxExtensionLimit ||
+                getElevatorPosition() < Constants.Elevator.ElevatorMinExtensionLimit) {
+            isPosePossible = false;
+        } else {
+            isPosePossible = true;
+        }
     }
 }

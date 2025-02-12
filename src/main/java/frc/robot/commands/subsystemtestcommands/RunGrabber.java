@@ -1,28 +1,29 @@
 package frc.robot.commands.subsystemtestcommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Grabber;
+import frc.robot.Constants.Grabber;
+import frc.robot.subsystems.wrist.EndEffector;
 
 public class RunGrabber extends Command{
 
-    private Grabber s_Grabber;
+    private EndEffector s_EndEffector;
     
-    public RunGrabber(Grabber s_Grabber) {
+    public RunGrabber(EndEffector s_EndEffector) {
 
-        this.s_Grabber = s_Grabber;
+        this.s_EndEffector = s_EndEffector;
 
-        addRequirements(s_Grabber);
+        addRequirements(s_EndEffector);
     }
 
 
     @Override
     public void execute() {
 
-        s_Grabber.RunGrabber();
+        s_EndEffector.runEndEffector();
     }
 
     @Override
     public void end(boolean interrupted) {
-        s_Grabber.stopGrabber();
+        s_EndEffector.stop();
     }
 }

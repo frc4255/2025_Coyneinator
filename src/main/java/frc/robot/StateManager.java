@@ -31,7 +31,9 @@ public class StateManager {
 
     public StateManager() {
 
-        coral.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
+        //double[] = {Elevator Extension, ElevatorPitchANGLERAD, WristPitchAngleRAD, WristRollAngleRAD}
+
+        coral.put(Positions.L1, new double[] {0.0, 0.0, 0.0, 0.0}); //TODO Tune this
         coral.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
         coral.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
         coral.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this

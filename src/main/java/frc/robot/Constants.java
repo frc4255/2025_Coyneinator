@@ -61,6 +61,13 @@ public final class Constants {
     public static final class Elevator {
         public static final double kP = 0.05; //Todo Tune this
 
+        public static final class Pivot {
+            public static final double kS = 0; //TODO tune this 
+            public static final double kG = 0; //TODO tune this
+            public static final double kV = 0; //TODO tune this
+            public static final double kA = 0; //TODO tune this
+        }
+
         public static final int LEFT_MOTOR_ID = 10;
         public static final int RIGHT_MOTOR_ID = 11;
 
@@ -72,19 +79,8 @@ public final class Constants {
         public static final double PivotMaxLimit = 0; //TODO tune this for RAD
         public static final double PivotMinLimit = 0; //TODO tune this for RAD
 
-    }
-
-    public static final class Arm {
-
-        public static final double kS = 0.0; //TODO tune this 
-        public static final double kG = 0.0; //TODO tune this 
-        public static final double kV = 0.0; //TODO tune this  
-        public static final double kA = 0.0; //TODO tune this 
-
-        public static final double kP = 0.05; //TODO tune this
-
-        public static final int MOTOR_ID_0 = 20;
-        public static final int MOTOR_ID_1 = 21;
+        public static final double ElevatorMaxExtensionLimit = 0; //TODO tune this in inches
+        public static final double ElevatorMinExtensionLimit = 0; //This is actually 0
 
     }
 

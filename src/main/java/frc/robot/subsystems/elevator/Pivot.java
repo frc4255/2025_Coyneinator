@@ -36,6 +36,8 @@ public class Pivot extends SubsystemBase {
 
     private boolean isHomed = false;
 
+    private boolean isPosePossible = true;
+
     private DataLog log;
 
     public Pivot() {
@@ -52,8 +54,9 @@ public class Pivot extends SubsystemBase {
         m_Motor0.setNeutralMode(NeutralModeValue.Brake);
         m_Motor1.setNeutralMode(NeutralModeValue.Brake);
 
-        elevatorPivotFeedforward = new ArmFeedforward(Constants.Arm.kS, Constants.Arm.kG, 
-                                            Constants.Arm.kV, Constants.Arm.kA);
+        elevatorPivotFeedforward = new ArmFeedforward(Constants.Elevator.Pivot.kS, 
+                                            Constants.Elevator.Pivot.kG, Constants.Elevator.Pivot.kV, 
+                                            Constants.Elevator.Pivot.kA);
 
     }
 
@@ -93,6 +96,10 @@ public class Pivot extends SubsystemBase {
        m_PIDController.setGoal(pos);
     }
 
+    public boolean isPivotPosePossible() {
+        return isPosePossible;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
@@ -104,5 +111,11 @@ public class Pivot extends SubsystemBase {
 
         SmartDashboard.putNumber("PivotPosition", getPivotPosition());
         
+        if (getPivotPosition() > Constants.Elevator.PivotMaxLimit ||
+            getPivotPosition() < Constants.Elevator.PivotMinLimit) {
+                isPosePossible = false;
+            } else {
+                isPosePossible = true;
+            }
     }
 }

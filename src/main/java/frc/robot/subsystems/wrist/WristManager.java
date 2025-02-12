@@ -8,6 +8,9 @@ public class WristManager extends SubsystemBase{
     private final PitchController pitchController;
     private final RollController rollController;
 
+    private boolean isPitchPosePossible = true;
+    private boolean isRollPosePossible = true;
+
     public WristManager(){
         pitchController = new PitchController(Constants.Wrist.PITCH_MOTOR_ID);
         rollController = new RollController(Constants.Wrist.ROLL_MOTOR_ID);
@@ -21,12 +24,12 @@ public class WristManager extends SubsystemBase{
         rollController.setRollAngleRAD(angle);
     }
 
-    public void getPitch() {
-        pitchController.getCurrentAngle();
+    public double getPitch() {
+        return pitchController.getCurrentAngle();
     }
 
-    public void getRoll() {
-        rollController.getCurrentAngle();
+    public double getRoll() {
+        return rollController.getCurrentAngle();
     }
 
     public void stopPitch(){
@@ -35,5 +38,34 @@ public class WristManager extends SubsystemBase{
 
     public void stopRoll(){
         rollController.Stop();
+    }
+
+    public boolean isPitchPosePossible() {
+        return isPitchPosePossible;
+    }
+
+    public boolean isRollPosePossible() {
+        return isRollPosePossible;
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+
+        if (getPitch() > Constants.Wrist.PitchMaxLimit ||
+            getPitch() < Constants.Wrist.PitchMinLimit) {
+
+            isPitchPosePossible = false;
+        } else {
+            isPitchPosePossible = true;
+        }
+
+        if (getRoll() > Constants.Wrist.RollMaxLimit ||
+            getPitch() < Constants.Wrist.RollMinLimit) {
+
+            isRollPosePossible = false;
+        } else {
+            isRollPosePossible = true;
+        }
     }
 }
