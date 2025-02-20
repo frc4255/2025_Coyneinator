@@ -217,6 +217,14 @@ public class Swerve extends SubsystemBase {
     /* 
      * Gets the the gyro yaw and converts it to the robot coordinate plane (-180 to 180)
      */
+
+    public Rotation2d getGyroYaw() {
+        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
+    } //Why do they keep changing the API? They gotta make up their minds ong
+
+    /* 
+    this was used in 2024 code, is updated now
+
     public Rotation2d getGyroYaw() {
         double yaw = gyro.getAngle() % 360;
 
@@ -225,10 +233,6 @@ public class Swerve extends SubsystemBase {
         }
 
         return Rotation2d.fromDegrees(yaw*-1);
-    }
-
-    /*public Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
     }*/
 
     public void resetModulesToAbsolute(){

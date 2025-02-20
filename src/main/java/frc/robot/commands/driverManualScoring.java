@@ -1,27 +1,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.Grabber2D;
+import frc.lib.util.subsystemController;
 import frc.robot.StateManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.wrist.EndEffector;
+import frc.robot.subsystems.wrist.WristManager;
 import frc.robot.subsystems.elevator.Elevator;
 
 public class driverManualScoring extends Command{
     
     private Elevator s_Elevator;
-    private Arm s_Arm; 
+    private WristManager s_Wrist;
     private StateManager.Positions position;
-    private Grabber2D grabber2D;
+    private subsystemController subsystemController;
 
-    public driverManualScoring(Elevator s_Elevator, Arm s_Arm, StateManager.Positions position, Grabber2D grabber2d) {
+    public driverManualScoring(Elevator s_Elevator, WristManager s_Wrist, StateManager.Positions position, subsystemController subsystemController) {
 
         this.s_Elevator = s_Elevator;
-        this.s_Arm = s_Arm;
+        this.s_Wrist = s_Wrist;
         this.position = position;
-        this.grabber2D = grabber2d;
+        this.subsystemController = subsystemController;
 
-        addRequirements(s_Elevator, s_Arm);
+        addRequirements(s_Elevator, s_Wrist);
 
     }
 
@@ -32,7 +33,7 @@ public class driverManualScoring extends Command{
     @Override
     public void execute() {
 
-        grabber2D.moveToWithFixedAngle(StateManager.getCoordinate(position)[0], StateManager.getCoordinate(position)[1]);
+        subsystemController.BotShouldGoTo(StateManager.getCoordinate(position)[0], StateManager.getCoordinate(position)[1], StateManager.getCoordinate(position)[2], StateManager.getCoordinate(position)[3]);
 
     }
 

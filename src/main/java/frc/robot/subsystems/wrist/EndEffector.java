@@ -17,6 +17,14 @@ public class EndEffector extends SubsystemBase{
         m_Motor0.set(0.625); //TODO tune this
     }
 
+    public void idleEndEffector() {
+        m_Motor0.set(0.01); //TODO tune this
+    }
+
+    public void inverseIdleEndEffector() {
+        m_Motor0.set(-0.01); //TODO tune this
+    }
+
     public void inverseRunEndEffector() {
         m_Motor0.set(-0.625); //TODO tune this
     }
