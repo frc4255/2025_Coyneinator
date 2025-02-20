@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.sim.SwerveSim;
 import frc.lib.sim.TeleopSwerveSim;
-import frc.lib.util.Grabber2D;
+import frc.lib.util.subsystemController;
 import frc.lib.util.OnTheFlyTrajectory;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
@@ -92,17 +92,17 @@ public class RobotContainer {
         private final WristManager s_Wrist = new WristManager();
         private final EndEffector s_EndEffector = new EndEffector();
         
-        private final Grabber2D grabber2D = new Grabber2D(s_Elevator, s_Arm, s_Pivot, s_Wrist);
+        private final subsystemController subsystemController = new subsystemController(s_Elevator, s_Wrist, s_Pivot);
     
-        private final Stow s_Stow = new Stow(s_Elevator, s_Arm);
+        private final Stow s_Stow = new Stow(s_Elevator, s_Pivot, s_Wrist, subsystemController);
 
         /* auto stuff */
         public SendableChooser<Command> autoChooser;
 
-        intake autoIntake = new intake(s_Elevator, s_Arm, s_EndEffector);
-        driverManualScoring autoScoreL4 = new driverManualScoring(s_Elevator, s_Arm, 
-                StateManager.Positions.L4, grabber2D);
-        Stow autoStow = new Stow(s_Elevator, s_Arm);
+        intake autoIntake = new intake(s_Elevator, s_Pivot, s_Wrist, s_EndEffector);
+        driverManualScoring autoScoreL4 = new driverManualScoring(s_Elevator, s_Wrist, 
+                StateManager.Positions.L4, subsystemController);
+        Stow autoStow = new Stow(s_Elevator, s_Pivot, s_Wrist, subsystemController);
 
         OnTheFlyTrajectory OnTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
     
@@ -153,13 +153,13 @@ public class RobotContainer {
     
             stow.onTrue(s_Stow);
     
-            scoreL1.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L1, grabber2D));
-            scoreL2.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L2, grabber2D));
-            scoreL3.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L3, grabber2D));
-            scoreL4.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.L4, grabber2D));
+            scoreL1.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L1, subsystemController));
+            scoreL2.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L2, subsystemController));
+            scoreL3.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L3, subsystemController));
+            scoreL4.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L4, subsystemController));
     
-            scoreNet.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.NET, grabber2D));
-            intakeFromHP.onTrue(new driverManualScoring(s_Elevator, s_Arm, StateManager.Positions.HP, grabber2D));
+            scoreNet.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.NET, subsystemController));
+            intakeFromHP.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.HP, subsystemController));
     
             autoPathPlanningInTeleop.onTrue(new InstantCommand(() -> {
                 autoAlign = !autoAlign; 

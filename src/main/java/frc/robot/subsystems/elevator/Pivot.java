@@ -100,6 +100,11 @@ public class Pivot extends SubsystemBase {
         return isPosePossible;
     }
 
+    public void stopMotors() {
+        m_Motor0.stopMotor();
+        m_Motor1.stopMotor();
+    }
+
     @Override
     public void periodic() {
         super.periodic();
