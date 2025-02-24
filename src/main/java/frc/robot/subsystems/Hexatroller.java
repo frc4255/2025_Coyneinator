@@ -55,7 +55,7 @@ public class Hexatroller extends SubsystemBase{
         blueAllianceTags.put(5, FieldLayout.AprilTags.APRIL_TAG_POSE.get(20).pose.toPose2d());
         blueAllianceTags.put(6, FieldLayout.AprilTags.APRIL_TAG_POSE.get(19).pose.toPose2d());
 
-        //flipped in accordance with unit circle so that operator doesn't crash out while trying to figure out what to click.
+        //flipped with respect to alliance driver station so that operator doesn't crash out while trying to figure out what to click.
         redAllianceTags.put(1, FieldLayout.AprilTags.APRIL_TAG_POSE.get(7).pose.toPose2d()); 
         redAllianceTags.put(2, FieldLayout.AprilTags.APRIL_TAG_POSE.get(8).pose.toPose2d());
         redAllianceTags.put(3, FieldLayout.AprilTags.APRIL_TAG_POSE.get(9).pose.toPose2d());

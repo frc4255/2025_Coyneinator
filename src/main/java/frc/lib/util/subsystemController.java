@@ -9,9 +9,8 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.elevator.*;
 import frc.robot.subsystems.wrist.WristManager;
 
-public class Grabber2D {
+public class subsystemController {
     private final Elevator elevator;
-    private final Arm arm;
     private final Pivot pivot;
     private final WristManager wrist;
 
@@ -20,13 +19,13 @@ public class Grabber2D {
 
 
 
-    public Grabber2D(Elevator elevator, Arm arm, Pivot pivot, WristManager wrist) {
+    public subsystemController(Elevator elevator, WristManager wrist, Pivot pivot) {
         this.elevator = elevator;
-        this.arm = arm;
         this.pivot = pivot;
         this.wrist = wrist;
     }
 
+    /*
     public void moveTo(double x, double y) {
         
         double radians = Math.atan2(x, y);
@@ -34,9 +33,7 @@ public class Grabber2D {
         elevator.setPos(y);
         arm.setPos(radians);
     }
-
-    public void moveToWithFixedAngle(double y, double angle) {
-    }
+    */
 
     public void BotShouldGoTo(double pivotAngle, double elevatorExtension, 
                             double wristPitchAngle, double wristRollAngle) {
@@ -55,6 +52,13 @@ public class Grabber2D {
 
         wrist.setPitch(wristPitchAngle);
         wrist.setRoll(wristRollAngle);
+    }
+
+    public void stopAllMotors() {
+        elevator.stopMotors();
+        pivot.stopMotors();
+        wrist.stopPitchMotor();
+        wrist.stopRollMotor();
     }
 }
 

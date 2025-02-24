@@ -49,7 +49,7 @@ public class SwerveSim extends SubsystemBase {
 
     private double rotation;
 
-    private StructArrayPublisher<SwerveModuleState> publisher =publisher = NetworkTableInstance.getDefault()
+    private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
     .getStructArrayTopic("SimSwerveModuleStates", SwerveModuleState.struct).publish(); //YES IT DOES THE CODE WILL BREAK IF YOU DELETE THIS
 
     private Pose2d simulatedPose = new Pose2d(); 

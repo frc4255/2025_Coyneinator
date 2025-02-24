@@ -77,6 +77,11 @@ public class Elevator extends SubsystemBase {
         return isPosePossible;
     }
 
+    public void stopMotors() {
+        m_LeftMotor.stopMotor();
+        m_RightMotor.stopMotor();
+    }
+
     @Override
     public void periodic() {
         super.periodic();

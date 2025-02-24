@@ -32,11 +32,11 @@ public class WristManager extends SubsystemBase{
         return rollController.getCurrentAngle();
     }
 
-    public void stopPitch(){
+    public void stopPitchMotor(){
         pitchController.Stop();
     }
 
-    public void stopRoll(){
+    public void stopRollMotor(){
         rollController.Stop();
     }
 
