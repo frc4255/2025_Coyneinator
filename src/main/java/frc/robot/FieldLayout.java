@@ -273,6 +273,12 @@ public class FieldLayout {
 
 
     public static class Reef {
+
+    public static final double reefdFacesWidth = Units.inchesToMeters(30.27);
+    public static final double reefdFacesHeight = Units.inchesToMeters(37.27);
+
+    public static final double reefHitboxRadius = Units.inchesToMeters(83); //TODO tune this value if it doesn't work well
+
     public static final Translation2d center =
         new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501));
     public static final double faceToZoneLine =

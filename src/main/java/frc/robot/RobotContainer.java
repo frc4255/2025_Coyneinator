@@ -88,7 +88,7 @@ public class RobotContainer {
     
         private final Elevator s_Elevator = new Elevator();
         private final Pivot s_Pivot = new Pivot();
-        private final Arm s_Arm = new Arm();
+
         private final WristManager s_Wrist = new WristManager();
         private final EndEffector s_EndEffector = new EndEffector();
         
@@ -135,6 +135,8 @@ public class RobotContainer {
     
             // Configure the button bindings
             configureButtonBindings();
+
+            configureAutoChooser();
 
             
         }
