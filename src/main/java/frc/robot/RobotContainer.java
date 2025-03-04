@@ -20,17 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.sim.SwerveSim;
 import frc.lib.sim.TeleopSwerveSim;
-import frc.lib.util.subsystemController;
 import frc.lib.util.OnTheFlyTrajectory;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
-import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.Pivot;
-import frc.robot.subsystems.wrist.EndEffector;
-import frc.robot.subsystems.wrist.WristManager;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -88,21 +84,10 @@ public class RobotContainer {
     
         private final Elevator s_Elevator = new Elevator();
         private final Pivot s_Pivot = new Pivot();
-
-        private final WristManager s_Wrist = new WristManager();
-        private final EndEffector s_EndEffector = new EndEffector();
         
-        private final subsystemController subsystemController = new subsystemController(s_Elevator, s_Wrist, s_Pivot);
-    
-        private final Stow s_Stow = new Stow(s_Elevator, s_Pivot, s_Wrist, subsystemController);
 
         /* auto stuff */
         public SendableChooser<Command> autoChooser;
-
-        intake autoIntake = new intake(s_Elevator, s_Pivot, s_Wrist, s_EndEffector);
-        driverManualScoring autoScoreL4 = new driverManualScoring(s_Elevator, s_Wrist, 
-                StateManager.Positions.L4, subsystemController);
-        Stow autoStow = new Stow(s_Elevator, s_Pivot, s_Wrist, subsystemController);
 
         OnTheFlyTrajectory OnTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
     
@@ -129,9 +114,6 @@ public class RobotContainer {
                     () -> false //For the love of god do not change this
                 )
             );
-
-            NamedCommands.registerCommand("Intake", autoIntake);
-            NamedCommands.registerCommand("ScoreL4", autoScoreL4);
     
             // Configure the button bindings
             configureButtonBindings();
@@ -152,26 +134,6 @@ public class RobotContainer {
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
     
             toggleRobotState.onTrue(new InstantCommand(() -> s_RobotState.toggleRobotState()));
-    
-            stow.onTrue(s_Stow);
-    
-            scoreL1.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L1, subsystemController));
-            scoreL2.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L2, subsystemController));
-            scoreL3.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L3, subsystemController));
-            scoreL4.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.L4, subsystemController));
-    
-            scoreNet.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.NET, subsystemController));
-            intakeFromHP.onTrue(new driverManualScoring(s_Elevator, s_Wrist, StateManager.Positions.HP, subsystemController));
-    
-            autoPathPlanningInTeleop.onTrue(new InstantCommand(() -> {
-                autoAlign = !autoAlign; 
-
-                if (autoAlign) {
-                    new scoringAutoAlign(s_Swerve, OnTheFlyTrajectory).schedule();
-                } else {
-                    CommandScheduler.getInstance().cancel(new scoringAutoAlign(s_Swerve, OnTheFlyTrajectory));
-                }
-            }));
         
 
 

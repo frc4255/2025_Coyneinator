@@ -20,17 +20,13 @@ import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.StateManager.RobotStateMachine;
 
-public class Pivot extends SubsystemBase {
+public class WristRoll extends SubsystemBase {
     
     private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
-    private TalonFX m_Motor1 = new TalonFX(Constants.Elevator.PIVOT_RIGHT_MOTOR_ID);
 
     private VoltageOut m_Motor0Request = new VoltageOut(0.0);
-    private VoltageOut m_Motor1Request = new VoltageOut(0.0);
 
-    private ArmFeedforward elevatorPivotFeedforward;
-
-    private StateManager s_RobotState = new StateManager();
+    //TODO: Custom Feedforward Controller
 
     private ProfiledPIDController m_PIDController;
 
@@ -40,7 +36,7 @@ public class Pivot extends SubsystemBase {
 
     private DataLog log;
 
-    public Pivot() {
+    public WristRoll() {
         m_PIDController = new ProfiledPIDController(
             Constants.Elevator.kP, 
             0, 
@@ -52,39 +48,26 @@ public class Pivot extends SubsystemBase {
         );
 
         m_Motor0.setNeutralMode(NeutralModeValue.Brake);
-        m_Motor1.setNeutralMode(NeutralModeValue.Brake);
-
-        elevatorPivotFeedforward = new ArmFeedforward(Constants.Elevator.Pivot.kS, 
-                                            Constants.Elevator.Pivot.kG, Constants.Elevator.Pivot.kV, 
-                                            Constants.Elevator.Pivot.kA);
-
     }
 
     protected double getMeasurement() {
-        return getPivotPosition();
+        return getCurrentPos();
     }
 
     protected void useOutput(double output, TrapezoidProfile.State setpoint) {
     
-        double finalOut = output + elevatorPivotFeedforward.calculate(setpoint.position, setpoint.velocity);
-
+        double finalOut = output;
+        
         m_Motor0.setControl(m_Motor0Request.withOutput(finalOut));
-        m_Motor1.setControl(m_Motor1Request.withOutput(finalOut));
 
     }
 
-    /* 
-    public double getArmPosition() {
-        return ((m_Motor0.getPosition().getValueAsDouble()) / 161.290322581)* (2 * Math.PI); //TODO get GEAR RATIO PLEASE
-    } */
-
-    public double getPivotPosition() {
-        return m_Motor0.getPosition().getValueAsDouble();
+    public double getCurrentPos() {
+        return m_Motor0.getPosition().getValueAsDouble(); //TODO: Gear Ratio
     }
 
-    public void setPivotAsHomed() {
+    public void setHomed() {
         m_Motor0.setPosition(0.0);
-        m_Motor1.setPosition(0.0);
         isHomed = true;
     }
 
@@ -92,7 +75,7 @@ public class Pivot extends SubsystemBase {
         return isHomed;
     }
 
-    public void setPos(double pos) {
+    public void setGoal(double pos) {
        m_PIDController.setGoal(pos);
     }
 
@@ -102,7 +85,6 @@ public class Pivot extends SubsystemBase {
 
     public void stopMotors() {
         m_Motor0.stopMotor();
-        m_Motor1.stopMotor();
     }
 
     @Override
@@ -114,13 +96,6 @@ public class Pivot extends SubsystemBase {
 
         useOutput(pidOutput, m_PIDController.getSetpoint());
 
-        SmartDashboard.putNumber("PivotPosition", getPivotPosition());
-        
-        if (getPivotPosition() > Constants.Elevator.PivotMaxLimit ||
-            getPivotPosition() < Constants.Elevator.PivotMinLimit) {
-                isPosePossible = false;
-            } else {
-                isPosePossible = true;
-            }
+        SmartDashboard.putNumber("WristRoll", getCurrentPos());
     }
 }

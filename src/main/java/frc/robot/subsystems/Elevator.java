@@ -1,4 +1,4 @@
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems;
 
 import java.util.HashMap;
 
@@ -69,12 +69,16 @@ public class Elevator extends SubsystemBase {
         isHomed = true;
     }
 
-    public void setPos(double pos) {
+    public void setGoal(double pos) {
        m_PIDController.setGoal(pos);
     }
 
     public boolean isElevatorPosePossible() {
         return isPosePossible;
+    }
+
+    public boolean atGoal() {
+        return atGoal();
     }
 
     public void stopMotors() {
