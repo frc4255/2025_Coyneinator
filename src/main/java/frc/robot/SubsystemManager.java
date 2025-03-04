@@ -4,7 +4,6 @@ import java.util.List;
 
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
-import frc.lib.util.graph.GraphParser.GraphData;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.WristPitch;
@@ -45,7 +44,7 @@ public class SubsystemManager {
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
 
-        graph.getFastestPath(currentNode.getName(), requestedNode.getName());
+        this.path = graph.getFastestPath(currentNode.getName(), requestedNode.getName());
         this.active = (path != null && !path.isEmpty());
     }
 

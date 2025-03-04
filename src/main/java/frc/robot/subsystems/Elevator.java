@@ -12,8 +12,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.StateManager;
-import frc.robot.StateManager.RobotStateMachine;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -24,8 +23,6 @@ public class Elevator extends SubsystemBase {
 
     private VoltageOut m_LeftMotorRequest = new VoltageOut(0.0);
     private VoltageOut m_rightMotorRequest = new VoltageOut(0.0);
-
-    private StateManager s_RobotState = new StateManager();
 
     private ProfiledPIDController m_PIDController;
 

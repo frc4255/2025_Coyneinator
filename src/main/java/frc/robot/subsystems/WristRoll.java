@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.StateManager;
-import frc.robot.StateManager.RobotStateMachine;
 
 public class WristRoll extends SubsystemBase {
     
@@ -77,6 +75,10 @@ public class WristRoll extends SubsystemBase {
 
     public void setGoal(double pos) {
        m_PIDController.setGoal(pos);
+    }
+
+    public boolean atGoal() {
+        return atGoal();
     }
 
     public boolean isPivotPosePossible() {

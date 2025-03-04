@@ -17,8 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.StateManager;
-import frc.robot.StateManager.RobotStateMachine;
+
 
 public class Pivot extends SubsystemBase {
     
@@ -30,11 +29,10 @@ public class Pivot extends SubsystemBase {
 
     private ArmFeedforward elevatorPivotFeedforward;
 
-    private StateManager s_RobotState = new StateManager();
-
     private ProfiledPIDController m_PIDController;
 
     private boolean isHomed = false;
+    private boolean needsHoming = false;
 
     private boolean isPosePossible = true;
 
@@ -92,12 +90,16 @@ public class Pivot extends SubsystemBase {
         return isHomed;
     }
 
-    public void setPos(double pos) {
+    public void setGoal(double pos) {
        m_PIDController.setGoal(pos);
     }
 
     public boolean isPivotPosePossible() {
         return isPosePossible;
+    }
+
+    public boolean atGoal() {
+        return atGoal();
     }
 
     public void stopMotors() {

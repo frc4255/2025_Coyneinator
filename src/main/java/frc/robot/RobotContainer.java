@@ -2,25 +2,21 @@ package frc.robot;
 
 import org.photonvision.PhotonCamera;
 
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.sim.SwerveSim;
 import frc.lib.sim.TeleopSwerveSim;
-import frc.lib.util.OnTheFlyTrajectory;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -58,19 +54,6 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
 
     private final JoystickButton toggleRobotState = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-
-    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
-    private final POVButton scoreL1 = new POVButton(driver, 0);
-    private final POVButton scoreL2 = new POVButton(driver, 90);
-    private final POVButton scoreL3 = new POVButton(driver, 180);
-    private final POVButton scoreL4 = new POVButton(driver, 270);
-
-    private final JoystickButton scoreNet = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton intakeFromHP = new JoystickButton(driver, XboxController.Button.kX.value);
-
-    private final JoystickButton autoPathPlanningInTeleop = new JoystickButton(driver, XboxController.Button.kA.value);
-    private boolean autoAlign = false;
     
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
@@ -80,17 +63,13 @@ public class RobotContainer {
 
         private final SwerveSim s_SwerveSim = new SwerveSim(s_VisionSubystem);
     
-        private final StateManager s_RobotState = new StateManager();
-    
         private final Elevator s_Elevator = new Elevator();
         private final Pivot s_Pivot = new Pivot();
+        private final WristPitch s_WristPitch = new WristPitch();
+        private final WristRoll s_WristRoll = new WristRoll();
         
-
         /* auto stuff */
-        public SendableChooser<Command> autoChooser;
-
-        OnTheFlyTrajectory OnTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
-    
+        public SendableChooser<Command> autoChooser;    
     
     
         /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -132,11 +111,6 @@ public class RobotContainer {
         private void configureButtonBindings() {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-    
-            toggleRobotState.onTrue(new InstantCommand(() -> s_RobotState.toggleRobotState()));
-        
-
-
     }
 
     private void configureAutoChooser() {
