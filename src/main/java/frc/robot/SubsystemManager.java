@@ -20,8 +20,6 @@ public class SubsystemManager {
     private int currentIndex;
     private boolean active;
 
-    private GraphParser graph;
-
     private Node currentNode;
     private Node requestedNode;
 
@@ -36,15 +34,13 @@ public class SubsystemManager {
         
         this.active = false;
         this.currentIndex = 0;
-
-        graph = new GraphParser();
     }
 
     public void requestNode(Node requestedNode) {
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
 
-        this.path = graph.getFastestPath(currentNode.getName(), requestedNode.getName());
+        this.path = GraphParser.getFastestPath(currentNode, requestedNode);
         this.active = (path != null && !path.isEmpty());
     }
 

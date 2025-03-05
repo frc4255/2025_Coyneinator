@@ -63,8 +63,8 @@ public class RobotContainer {
 
         private final SwerveSim s_SwerveSim = new SwerveSim(s_VisionSubystem);
     
-        private final Elevator s_Elevator = new Elevator();
         private final Pivot s_Pivot = new Pivot();
+        private final Elevator s_Elevator = new Elevator(s_Pivot::getPivotPosition);
         private final WristPitch s_WristPitch = new WristPitch();
         private final WristRoll s_WristRoll = new WristRoll();
         

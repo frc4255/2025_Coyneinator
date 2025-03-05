@@ -60,6 +60,15 @@ public final class Constants {
 
     public static final class Elevator {
         public static final double kP = 0.05; //Todo Tune this
+        public static final double kI = 0;
+        public static final double kD = 0;
+
+        public static final double MAX_VEL = 0;
+        public static final double MAX_ACC = 0;
+        public static final double kS = 0;
+        public static final double kG = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
 
         public static final class Pivot {
             public static final double kS = 0; //TODO tune this 
