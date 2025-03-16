@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.lib.util.FlippingUtil;
 import frc.robot.Constants;
-
+import frc.robot.FieldLayout;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.VecBuilder;
@@ -21,6 +22,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
 
@@ -239,6 +241,24 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
         }
+    }
+
+    public char findClosestBranch(boolean flipForAlliance) {
+        // Compute the angle from the reef center to the robot
+
+        Translation2d allianceReef = flipForAlliance ? FlippingUtil.flipFieldPosition(FieldLayout.Reef.center) : FieldLayout.Reef.center;
+        double dx = getPose().getX() - allianceReef.getX();
+        double dy = getPose().getY() - allianceReef.getY();
+        double angle = Math.toDegrees(Math.atan2(dy, dx));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        // Map angle to branch letters
+        char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
+        int sectorIndex = (int) (angle / 30.0);
+        return branches[sectorIndex];
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -25,6 +26,22 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    public static final Map<Character, Pose2d> BLUE_REEF_SCORINGS_POSITIONS = new HashMap<>();
+
+    static {
+        BLUE_REEF_SCORINGS_POSITIONS.put('A', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('B', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('C', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('D', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('E', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('F', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('G', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('H', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('I', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('J', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('K', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('L', new Pose2d());
+    }
     public final class Wrist {
         public static final double kS = 0.0; //TODO tune this 
         public static final double kG = 0.0; //TODO tune this 
