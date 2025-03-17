@@ -131,9 +131,25 @@ public class RobotContainer {
         ShuffleboardTab wristTab = Shuffleboard.getTab("Wrist Tuning");
 
         // If no component exists with the title "Wrist Pitch ks", create it
-        wristTab.add("Wrist Pitch ks" + System.currentTimeMillis(), Constants.Wrist.kS).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        wristTab.add("Wrist ks" + System.currentTimeMillis(), Constants.Wrist.kS).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        wristTab.add("Wrist kg" + System.currentTimeMillis(), Constants.Wrist.kG).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        wristTab.add("Wrist kv" + System.currentTimeMillis(), Constants.Wrist.kV).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        wristTab.add("Wrist ka" + System.currentTimeMillis(), Constants.Wrist.kA).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        wristTab.add("Wrist Pitch kp" + System.currentTimeMillis(), Constants.Wrist.Pitch_kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        wristTab.add("Wrist Roll kp" + System.currentTimeMillis(), Constants.Wrist.Roll_kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
 
-        System.out.println("Wrist Tuning tab and widgets added successfully.");
+        ShuffleboardTab ElevatorTab = Shuffleboard.getTab("Elevator Tuning");
+
+        ElevatorTab.add("Elevator ks" + System.currentTimeMillis(), Constants.Elevator.kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        ElevatorTab.add("Elevator kg" + System.currentTimeMillis(), Constants.Elevator.kI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        ElevatorTab.add("Elevator kv" + System.currentTimeMillis(), Constants.Elevator.kD).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+
+        ShuffleboardTab PivotTab = Shuffleboard.getTab("Pivot Tuning");
+
+        PivotTab.add("Pivot ks" + System.currentTimeMillis(), Constants.Elevator.Pivot.kS).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        PivotTab.add("Pivot kg" + System.currentTimeMillis(), Constants.Elevator.Pivot.kG).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        PivotTab.add("Pivot kv" + System.currentTimeMillis(), Constants.Elevator.Pivot.kV).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+        PivotTab.add("Pivot ka" + System.currentTimeMillis(), Constants.Elevator.Pivot.kA).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
 
         Shuffleboard.update();
     }
