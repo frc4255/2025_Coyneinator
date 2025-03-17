@@ -37,12 +37,16 @@ public class TwoPiece extends SequentialCommandGroup {
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+        if (s_path == null) {
+            Alert alert = new Alert("Auto Path not found this would be really bad to see during comp Rad & Nick", AlertType.kError);
+            alert.set(true);
+        } else {
+            addCommands(
+                new InstantCommand(() -> s_Swerve.setPose(DriverStation.getAlliance().get() == Alliance.Red ?
+                    s_path.flipPath().getStartingDifferentialPose(): s_path.getStartingDifferentialPose())),
 
-        addCommands(
-            new InstantCommand(() -> s_Swerve.setPose(DriverStation.getAlliance().get() == Alliance.Red ?
-                s_path.flipPath().getStartingDifferentialPose(): s_path.getStartingDifferentialPose())),
-
-            s_Swerve.followPathCommand(s_path)
-        );    
+                s_Swerve.followPathCommand(s_path)
+            ); 
+        }   
     }
 }

@@ -1,7 +1,11 @@
 package frc.robot;
 
+import java.security.Timestamp;
+import java.util.Map;
+
 import org.photonvision.PhotonCamera;
 
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -9,6 +13,10 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -69,8 +77,7 @@ public class RobotContainer {
         private final WristRoll s_WristRoll = new WristRoll();
         
         /* auto stuff */
-        public SendableChooser<Command> autoChooser;    
-    
+        public SendableChooser<Command> autoChooser;   
     
         /** The container for the robot. Contains subsystems, OI devices, and commands. */
         public RobotContainer() {
@@ -99,7 +106,7 @@ public class RobotContainer {
 
             configureAutoChooser();
 
-            
+            addTuningSliders();
         }
     
         /**
@@ -119,6 +126,19 @@ public class RobotContainer {
 
         SmartDashboard.putData(autoChooser);
     }
+    
+    private void addTuningSliders() {
+        ShuffleboardTab wristTab = Shuffleboard.getTab("Wrist Tuning");
+
+        // If no component exists with the title "Wrist Pitch ks", create it
+        wristTab.add("Wrist Pitch ks" + System.currentTimeMillis(), Constants.Wrist.kS).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
+
+        System.out.println("Wrist Tuning tab and widgets added successfully.");
+
+        Shuffleboard.update();
+    }
+    
+    
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

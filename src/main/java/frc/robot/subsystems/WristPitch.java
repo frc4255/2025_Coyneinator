@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -13,6 +14,8 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +38,7 @@ public class WristPitch extends SubsystemBase {
     private boolean isPosePossible = true;
 
     private DataLog log;
-
+    
     public WristPitch() {
         m_PIDController = new ProfiledPIDController(
             Constants.Elevator.kP, 
@@ -49,6 +52,7 @@ public class WristPitch extends SubsystemBase {
 
         m_Motor0.setNeutralMode(NeutralModeValue.Brake);
         m_Motor1.setNeutralMode(NeutralModeValue.Brake);
+
     }
 
     protected double getMeasurement() {
@@ -105,5 +109,6 @@ public class WristPitch extends SubsystemBase {
         useOutput(pidOutput, m_PIDController.getSetpoint());
 
         SmartDashboard.putNumber("WristPitch", getCurrentPos());
+
     }
 }
