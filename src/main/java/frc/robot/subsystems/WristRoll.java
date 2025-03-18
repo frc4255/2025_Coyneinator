@@ -20,7 +20,7 @@ import frc.robot.Constants;
 
 public class WristRoll extends SubsystemBase {
     
-    private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
+    private TalonFX m_Motor0 = new TalonFX(Constants.Wrist.ROLL_MOTOR_ID);
 
     private VoltageOut m_Motor0Request = new VoltageOut(0.0);
 
@@ -32,20 +32,24 @@ public class WristRoll extends SubsystemBase {
 
     private boolean isPosePossible = true;
 
+    private boolean active = false;
+    
     private DataLog log;
 
     public WristRoll() {
         m_PIDController = new ProfiledPIDController(
-            Constants.Elevator.kP, 
+            15, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
-                4, //TODO tune this
-                5 // TODO tune this
+                10, //TODO tune this
+                12 // TODO tune this
             )
         );
 
-        m_Motor0.setNeutralMode(NeutralModeValue.Brake);
+        m_Motor0.setNeutralMode(NeutralModeValue.Coast);
+
+        m_Motor0.setPosition(0);
     }
 
     protected double getMeasurement() {
@@ -61,7 +65,7 @@ public class WristRoll extends SubsystemBase {
     }
 
     public double getCurrentPos() {
-        return m_Motor0.getPosition().getValueAsDouble(); //TODO: Gear Ratio
+        return (m_Motor0.getPosition().getValueAsDouble()/60)*2*Math.PI; //TODO: Gear Ratio
     }
 
     public void setHomed() {
@@ -93,11 +97,12 @@ public class WristRoll extends SubsystemBase {
     public void periodic() {
         super.periodic();
 
-        double currentPosition = getMeasurement(); 
-        double pidOutput = m_PIDController.calculate(currentPosition); 
+        if (active) {
+            double currentPosition = getMeasurement(); 
+            double pidOutput = m_PIDController.calculate(currentPosition); 
 
-        useOutput(pidOutput, m_PIDController.getSetpoint());
-
+            useOutput(pidOutput, m_PIDController.getSetpoint());
+        }
         SmartDashboard.putNumber("WristRoll", getCurrentPos());
     }
 }

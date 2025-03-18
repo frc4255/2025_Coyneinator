@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends SubsystemBase {
     
-    private TalonFX m_LeftMotor = new TalonFX(Constants.Elevator.LEFT_MOTOR_ID);
-    private TalonFX m_RightMotor = new TalonFX(Constants.Elevator.RIGHT_MOTOR_ID);
+    private TalonFX m_LeftMotor = new TalonFX(Constants.Elevator.LEFT_MOTOR_ID, "rio");
+    private TalonFX m_RightMotor = new TalonFX(Constants.Elevator.RIGHT_MOTOR_ID, "rio");
 
     private VoltageOut m_LeftMotorRequest = new VoltageOut(0.0);
     private VoltageOut m_rightMotorRequest = new VoltageOut(0.0);
@@ -33,33 +33,39 @@ public class Elevator extends SubsystemBase {
 
     private boolean isPosePossible = true;
 
+    private boolean active = false;
+
     private DoubleSupplier pivotAngleSupplier;
 
     public Elevator(DoubleSupplier pivotAngleSupplier) {
 
         m_Feedforward = new PivotingElevatorFeedforward(
-            Constants.Elevator.kG,
-            Constants.Elevator.kV,
-            Constants.Elevator.kA
+            0.3,
+            3.1,
+            0.01
         );
 
         m_PIDController = new ProfiledPIDController(
-            Constants.Elevator.kP, 
-            Constants.Elevator.kI, 
-            Constants.Elevator.kD, 
+            0.1, 
+            0, 
+            0, 
             new TrapezoidProfile.Constraints(
-                Constants.Elevator.MAX_VEL, //TODO tune this
-                Constants.Elevator.MAX_ACC // TODO tune this
+                5, //TODO tune this
+                7 // TODO tune this
             )
         );
 
         this.pivotAngleSupplier = pivotAngleSupplier;
 
+        
         m_LeftMotor.setNeutralMode(NeutralModeValue.Brake);
         m_RightMotor.setNeutralMode(NeutralModeValue.Brake);
 
+        m_RightMotor.setInverted(true);
         m_LeftMotor.setControl(new Follower(m_RightMotor.getDeviceID(), true));
 
+        m_RightMotor.setPosition(0);
+        setGoal(0);
     }
 
     protected double getMeasurement() {
@@ -67,14 +73,18 @@ public class Elevator extends SubsystemBase {
     }
 
     protected void useOutput(double output, TrapezoidProfile.State setpoint) {
+
+        SmartDashboard.putNumber("elevator setpoint velocity", setpoint.velocity);
+        SmartDashboard.putNumber("elevator Setpoint position", setpoint.position);
+
         m_RightMotor.setControl(m_rightMotorRequest.withOutput(output));
     }
 
 
     //Returns in meters
-    // Math is pitch diameter (48T HTD 5mm = 70 smthn mm, divided by 1000, all over 4 (gear reduction))
+    // Math is pitch diameter (32T HTD 5mm = 2.005 smthn in, divided by 1000, all over 4 (gear reduction))
     public double getElevatorPosition() {
-        return ((m_RightMotor.getPosition().getValueAsDouble() * (0.0190975))); 
+        return (m_RightMotor.getPosition().getValueAsDouble()*0.04); 
     }
 
     public void setElevatorAsHomed() {
@@ -99,15 +109,19 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         super.periodic();
 
-        double totalOutput = m_PIDController.calculate(getElevatorPosition()) +
-            m_Feedforward.calculate(
-                m_PIDController.getSetpoint().velocity,
-                m_PIDController.getSetpoint().position,
-                pivotAngleSupplier.getAsDouble()
-            ); 
+        if (active) {
+            double totalOutput = m_PIDController.calculate(getElevatorPosition()) +
+                m_Feedforward.calculate(
+                    m_PIDController.getSetpoint().velocity,
+                    m_PIDController.getSetpoint().position,
+                    pivotAngleSupplier.getAsDouble()
+                ); 
 
-        useOutput(totalOutput, m_PIDController.getSetpoint());
-
+            useOutput(totalOutput, m_PIDController.getSetpoint());
+        }
         SmartDashboard.putNumber("ElevatorPosition", getElevatorPosition());
+        SmartDashboard.putNumber("Elevator velocity", (m_RightMotor.getVelocity().getValueAsDouble()*0.04));
+        SmartDashboard.putNumber("Elevator Acceleration", (m_RightMotor.getAcceleration().getValueAsDouble()*0.04));
+        SmartDashboard.putNumber("Elevator Motors Applied Voltage", m_RightMotor.getMotorVoltage().getValueAsDouble());
     }
 }

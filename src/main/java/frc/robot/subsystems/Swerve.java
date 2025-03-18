@@ -106,6 +106,13 @@ public class Swerve extends SubsystemBase {
             false
         );
     }
+
+    public void testing() {
+        mSwerveMods[0].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), false);
+        mSwerveMods[1].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), false);
+        mSwerveMods[2].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), false);
+        mSwerveMods[3].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), false);
+    }
     
     /*
     public Command followPathCommand(PathPlannerPath path) {

@@ -58,7 +58,7 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-
+    private final JoystickButton swerveangletest = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton toggleRobotState = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     
         /* Subsystems */
@@ -104,6 +104,8 @@ public class RobotContainer {
         private void configureButtonBindings() {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+            swerveangletest.onTrue(new test(s_Elevator));
+
     }
 
     private void configureAutoChooser() {
@@ -114,30 +116,6 @@ public class RobotContainer {
     }
     
     private void addTuningSliders() {
-        ShuffleboardTab wristTab = Shuffleboard.getTab("Wrist Tuning");
-
-        // If no component exists with the title "Wrist Pitch ks", create it
-        wristTab.add("Wrist ks" + System.currentTimeMillis(), Constants.Wrist.kS).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        wristTab.add("Wrist kg" + System.currentTimeMillis(), Constants.Wrist.kG).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        wristTab.add("Wrist kv" + System.currentTimeMillis(), Constants.Wrist.kV).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        wristTab.add("Wrist ka" + System.currentTimeMillis(), Constants.Wrist.kA).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        wristTab.add("Wrist Pitch kp" + System.currentTimeMillis(), Constants.Wrist.Pitch_kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        wristTab.add("Wrist Roll kp" + System.currentTimeMillis(), Constants.Wrist.Roll_kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-
-        ShuffleboardTab ElevatorTab = Shuffleboard.getTab("Elevator Tuning");
-
-        ElevatorTab.add("Elevator ks" + System.currentTimeMillis(), Constants.Elevator.kP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        ElevatorTab.add("Elevator kg" + System.currentTimeMillis(), Constants.Elevator.kI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        ElevatorTab.add("Elevator kv" + System.currentTimeMillis(), Constants.Elevator.kD).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-
-        ShuffleboardTab PivotTab = Shuffleboard.getTab("Pivot Tuning");
-
-        PivotTab.add("Pivot ks" + System.currentTimeMillis(), Constants.Elevator.Pivot.kS).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        PivotTab.add("Pivot kg" + System.currentTimeMillis(), Constants.Elevator.Pivot.kG).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        PivotTab.add("Pivot kv" + System.currentTimeMillis(), Constants.Elevator.Pivot.kV).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-        PivotTab.add("Pivot ka" + System.currentTimeMillis(), Constants.Elevator.Pivot.kA).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1));
-
-        Shuffleboard.update();
     }
     
     

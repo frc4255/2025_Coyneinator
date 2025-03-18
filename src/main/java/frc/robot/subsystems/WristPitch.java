@@ -23,8 +23,7 @@ import frc.robot.Constants;
 
 public class WristPitch extends SubsystemBase {
     
-    private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
-    private TalonFX m_Motor1 = new TalonFX(Constants.Elevator.PIVOT_RIGHT_MOTOR_ID);
+    private TalonFX m_Motor1 = new TalonFX(Constants.Wrist.PITCH_MOTOR_ID);
 
     private VoltageOut m_Motor0Request = new VoltageOut(0.0);
     private VoltageOut m_Motor1Request = new VoltageOut(0.0);
@@ -32,27 +31,32 @@ public class WristPitch extends SubsystemBase {
     //TODO: Custom Feedforward Controller
 
     private ProfiledPIDController m_PIDController;
-
+    private ArmFeedforward m_Feedforward;
     private boolean isHomed = false;
 
     private boolean isPosePossible = true;
 
+    private boolean active = false;
     private DataLog log;
     
     public WristPitch() {
         m_PIDController = new ProfiledPIDController(
-            Constants.Elevator.kP, 
+            20,
             0, 
             0, 
             new TrapezoidProfile.Constraints(
-                4, //TODO tune this
-                5 // TODO tune this
+                10
+                , //TODO tune this
+                12 // TODO tune this
             )
         );
 
-        m_Motor0.setNeutralMode(NeutralModeValue.Brake);
+        m_Feedforward = new ArmFeedforward(0.05, 0.0, 0.8);
+
         m_Motor1.setNeutralMode(NeutralModeValue.Brake);
 
+        m_Motor1.setPosition(0);
+        setGoal(0);
     }
 
     protected double getMeasurement() {
@@ -61,19 +65,20 @@ public class WristPitch extends SubsystemBase {
 
     protected void useOutput(double output, TrapezoidProfile.State setpoint) {
     
-        double finalOut = output;
+        double finalOut = output + m_Feedforward.calculate(setpoint.position, setpoint.velocity);
         
-        m_Motor0.setControl(m_Motor0Request.withOutput(finalOut));
+        SmartDashboard.putNumber("Wrist P setpoint velocity", setpoint.velocity);
+        SmartDashboard.putNumber("Wrist P Setpoint position", setpoint.position);
+
         m_Motor1.setControl(m_Motor1Request.withOutput(finalOut));
 
     }
 
     public double getCurrentPos() {
-        return m_Motor0.getPosition().getValueAsDouble(); //TODO: Gear Ratio
+        return (m_Motor1.getPosition().getValueAsDouble()/51)*2*Math.PI; //TODO: Gear Ratio
     }
 
     public void setHomed() {
-        m_Motor0.setPosition(0.0);
         m_Motor1.setPosition(0.0);
         isHomed = true;
     }
@@ -91,7 +96,6 @@ public class WristPitch extends SubsystemBase {
     }
 
     public void stopMotors() {
-        m_Motor0.stopMotor();
         m_Motor1.stopMotor();
     }
 
@@ -103,12 +107,16 @@ public class WristPitch extends SubsystemBase {
     public void periodic() {
         super.periodic();
 
-        double currentPosition = getMeasurement(); 
-        double pidOutput = m_PIDController.calculate(currentPosition); 
+        if (active) {
+            double currentPosition = getMeasurement(); 
+            double pidOutput = m_PIDController.calculate(currentPosition); 
 
-        useOutput(pidOutput, m_PIDController.getSetpoint());
-
-        SmartDashboard.putNumber("WristPitch", getCurrentPos());
+            useOutput(pidOutput, m_PIDController.getSetpoint());
+        } 
+        SmartDashboard.putNumber("Wrist Pitch", getCurrentPos());
+        SmartDashboard.putNumber("Wrist velocity", ((m_Motor1.getVelocity().getValueAsDouble())*2*Math.PI)/51);
+        SmartDashboard.putNumber("Wrist Acceleration", ((m_Motor1.getAcceleration().getValueAsDouble()/51)*2*Math.PI));
+        SmartDashboard.putNumber("Wrist Motors Applied Voltage", m_Motor1.getMotorVoltage().getValueAsDouble());
 
     }
 }

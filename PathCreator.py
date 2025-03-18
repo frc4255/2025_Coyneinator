@@ -12,27 +12,27 @@ def placeholder_setpoints():
 nodes = [
     {
         "name": "Stow",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0,0,0,0]
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.275,0,-1.7,-3.14]
     },
     {
         "name": "Lollipop Coral Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0,0,-1.46,-1.56]
     },
     {
         "name": "Reef Align",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.57, 0, -1.38, -1.73]
     },
     {
         "name": "L4 Init",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.523, 0.804, -0.684, -1.73]
     },
     {
         "name": "L4 Dunk",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.523 ,0.804,-0.36,-1.73]
     },
     {
         "name": "L3 Init",
@@ -52,7 +52,7 @@ nodes = [
     },
     {
         "name": "Algae Ground Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0,0,-1.57,-1.51]
     },
     {
         "name": "Processor Score",
@@ -68,7 +68,7 @@ nodes = [
     },
     {
         "name": "L1 Score",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.46, 0, -1.31, -3.14]
     },
 ]
 
