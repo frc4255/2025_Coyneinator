@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.sim.SwerveModuleSim;
-import frc.lib.sim.SwerveSim;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -29,13 +27,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
-  private final List<SwerveModuleSim> swerveModules = List.of(
-      new SwerveModuleSim(0, Constants.Swerve.Mod0.constants),
-      new SwerveModuleSim(1, Constants.Swerve.Mod1.constants),
-      new SwerveModuleSim(2, Constants.Swerve.Mod2.constants),
-      new SwerveModuleSim(3, Constants.Swerve.Mod3.constants)
-  );
 
 
   /**
@@ -123,8 +114,5 @@ public class Robot extends TimedRobot {
     // Perform any simulation-specific initialization here.
     m_robotContainer = new RobotContainer();
 
-    for (SwerveModuleSim module : swerveModules) {
-      module.updateSim();
-    }
   }
 }

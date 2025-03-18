@@ -34,6 +34,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,7 +49,7 @@ public class Swerve extends SubsystemBase {
     public Swerve(VisionSubsystem vision) {
         this.vision = vision;
         
-        gyro = new Pigeon2(Constants.Swerve.pigeonID);
+        gyro = new Pigeon2(Constants.Swerve.pigeonID, "Drivetrain");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
         
@@ -106,6 +107,7 @@ public class Swerve extends SubsystemBase {
         );
     }
     
+    /*
     public Command followPathCommand(PathPlannerPath path) {
 
         PathFollowingController HolonomicController = new PathFollowingController() {
@@ -276,7 +278,7 @@ public class Swerve extends SubsystemBase {
             );
         }
         
-        SmartDashboard.putNumberArray("Robot Pose", new Double[]{getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
+        //SmartDashboard.putNumberArray("Robot Pose", new Double[]{getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
         
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());

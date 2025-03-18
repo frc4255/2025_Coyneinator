@@ -23,8 +23,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.lib.sim.SwerveSim;
-import frc.lib.sim.TeleopSwerveSim;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -68,8 +66,6 @@ public class RobotContainer {
                 new Camera[]{LeftCam, RightCam}/*new Camera[]{}/*new Camera[]{rightCam, leftCam}*/);
                 
         private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
-
-        private final SwerveSim s_SwerveSim = new SwerveSim(s_VisionSubystem);
     
         private final Pivot s_Pivot = new Pivot();
         private final Elevator s_Elevator = new Elevator(s_Pivot::getPivotPosition);
@@ -87,20 +83,10 @@ public class RobotContainer {
                     () -> -driver.getRawAxis(translationAxis), 
                     () -> -driver.getRawAxis(strafeAxis), 
                     () -> -driver.getRawAxis(rotationAxis), 
-                    () -> false //For the love of god do not change this
+                    () -> true //For the love of god do not change this
                 )
             );
 
-            s_SwerveSim.setDefaultCommand(
-                new TeleopSwerveSim(
-                    s_SwerveSim, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
-                    () -> -driver.getRawAxis(rotationAxis), 
-                    () -> false //For the love of god do not change this
-                )
-            );
-    
             // Configure the button bindings
             configureButtonBindings();
 

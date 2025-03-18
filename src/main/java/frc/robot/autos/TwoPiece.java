@@ -43,9 +43,9 @@ public class TwoPiece extends SequentialCommandGroup {
         } else {
             addCommands(
                 new InstantCommand(() -> s_Swerve.setPose(DriverStation.getAlliance().get() == Alliance.Red ?
-                    s_path.flipPath().getStartingDifferentialPose(): s_path.getStartingDifferentialPose())),
+                    s_path.flipPath().getStartingDifferentialPose(): s_path.getStartingDifferentialPose()))
 
-                s_Swerve.followPathCommand(s_path)
+                //s_Swerve.followPathCommand(s_path)
             ); 
         }   
     }

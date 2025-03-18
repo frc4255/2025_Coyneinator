@@ -41,27 +41,17 @@ public class SwerveModule {
         this.angleOffset = moduleConstants.angleOffset;
         
         /* Angle Encoder Config */
-        angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleEncoder = new CANcoder(moduleConstants.cancoderID, "Drivetrain");
         angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+        mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "Drivetrain");
         mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "Drivetrain");
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
-
-        if (Robot.isSimulation()) {
-            var mAngleMotorSim = mAngleMotor.getSimState();
-            var mDriveMotorSim = mDriveMotor.getSimState();
-            var angleEncoderSim = angleEncoder.getSimState();
-
-            mAngleMotorSim.setSupplyVoltage(12);
-            mDriveMotorSim.setSupplyVoltage(12);
-            
-        }
 
         moduleSpeedLog = new DoubleLogEntry(DataLogManager.getLog(), "swerve/module" + moduleNumber + "/speed");
         moduleAngleLog = new DoubleLogEntry(DataLogManager.getLog(), "swerve/module" + moduleNumber + "/angle");
@@ -72,7 +62,7 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
-        desiredState = SwerveModuleState.optimize(desiredState, getState().angle); //This will be removed next year which kinda breaks this file.
+        desiredState.optimize(getState().angle);; //This will be removed next year which kinda breaks this file.
         mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
 
