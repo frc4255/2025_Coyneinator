@@ -1,5 +1,8 @@
 package frc.lib.util.graph;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Node {
     private String name;
     private double[] setpoints; // length 4
@@ -11,7 +14,8 @@ public class Node {
      * Index 3 = Wrist Roll
     */
 
-    public Node(String name, double[] setpoints) {
+    @JsonCreator
+    public Node(@JsonProperty("name") String name,@JsonProperty("setpoints") double[] setpoints) {
         this.name = name;
         this.setpoints = setpoints;
     }

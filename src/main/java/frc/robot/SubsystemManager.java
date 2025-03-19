@@ -23,6 +23,8 @@ public class SubsystemManager {
     private Node currentNode;
     private Node requestedNode;
 
+    private Node lastNode;
+
     public SubsystemManager(
             Pivot sPivot, Elevator sElevator, WristPitch sWristPitch, WristRoll sWristRoll
         ) {
@@ -34,11 +36,22 @@ public class SubsystemManager {
         
         this.active = false;
         this.currentIndex = 0;
+
+        double[] test = new double[]{0,0,0,0};
     }
 
+    public void setInactive() {
+        active = false;
+    }
     public void requestNode(Node requestedNode) {
+
+        if (currentNode == null) {
+            currentNode = GraphParser.getNodeByName("Stow");
+        }
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
+
+        System.out.println(GraphParser.getFastestPath(currentNode, requestedNode));
 
         this.path = GraphParser.getFastestPath(currentNode, requestedNode);
         this.active = (path != null && !path.isEmpty());
@@ -68,17 +81,25 @@ public class SubsystemManager {
             }
         }
        */
+
+       if (currentNode != lastNode) {
+        sWristPitch.setActive();
+        sWristRoll.setActive();
+
+
         sPivot.setGoal(setpoints[0]);
         sElevator.setGoal(setpoints[1]);
         sWristPitch.setGoal(setpoints[2]);
         sWristRoll.setGoal(setpoints[3]);
 
+       }
         // If all subsystems have reached their targets, move to the next node.
         if (hasReachedTarget()) {
             currentIndex++;
             if (currentIndex >= path.size()) {
                 active = false;
             }
+            System.out.println("IT FUCKING WORKS");
         }
     }
 

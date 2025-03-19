@@ -44,7 +44,7 @@ public class Pivot extends SubsystemBase {
 
     public Pivot() {
         m_PIDController = new ProfiledPIDController(
-            0.055, 
+            0.1, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
@@ -64,6 +64,8 @@ public class Pivot extends SubsystemBase {
 
         m_rightMotor.setPosition(0);
         setGoal(0);
+
+        m_PIDController.setTolerance(0.25);
 
     }
 
@@ -109,7 +111,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return atGoal();
+        return  (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
     }
 
     public void stopMotors() {

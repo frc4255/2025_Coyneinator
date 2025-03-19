@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -76,7 +77,7 @@ public class RobotContainer {
         private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
         
         /* auto stuff */
-        public SendableChooser<Command> autoChooser;   
+        public SendableChooser<Command> autoChooser;
     
         /** The container for the robot. Contains subsystems, OI devices, and commands. */
         public RobotContainer() {
@@ -89,7 +90,6 @@ public class RobotContainer {
                     () -> false //For the love of god do not change this
                 )
             );
-
             // Configure the button bindings
             configureButtonBindings();
 
@@ -104,6 +104,15 @@ public class RobotContainer {
          * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
          * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
          */
+
+        public void setManagerAsInactive () {
+            manager.setInactive();
+        }
+
+        public void updateManager() {
+            manager.update();
+        }
+        
         private void configureButtonBindings() {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));

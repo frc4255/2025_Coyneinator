@@ -33,7 +33,7 @@ public class WristRoll extends SubsystemBase {
     private boolean isPosePossible = true;
 
     private boolean active = false;
-    
+
     private DataLog log;
 
     public WristRoll() {
@@ -50,6 +50,12 @@ public class WristRoll extends SubsystemBase {
         m_Motor0.setNeutralMode(NeutralModeValue.Coast);
 
         m_Motor0.setPosition(0);
+        
+        m_PIDController.setTolerance(0.2);
+    }
+
+    public void setActive() {
+        active = true;
     }
 
     protected double getMeasurement() {
@@ -82,7 +88,7 @@ public class WristRoll extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return atGoal();
+        return  (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
     }
 
     public boolean isPivotPosePossible() {

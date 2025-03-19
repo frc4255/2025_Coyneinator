@@ -57,8 +57,13 @@ public class WristPitch extends SubsystemBase {
 
         m_Motor1.setPosition(0);
         setGoal(0);
+
+        m_PIDController.setTolerance(0.2);
     }
 
+    public void setActive() {
+        active = true;
+    }
     protected double getMeasurement() {
         return getCurrentPos();
     }
@@ -100,7 +105,9 @@ public class WristPitch extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return atGoal();
+        System.out.println(m_PIDController.atGoal() + " Wrist Pitch");
+
+        return  (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
     }
 
     @Override
@@ -113,6 +120,8 @@ public class WristPitch extends SubsystemBase {
 
             useOutput(pidOutput, m_PIDController.getSetpoint());
         } 
+        SmartDashboard.putNumber("Wrist Error", m_PIDController.getVelocityError());
+
         SmartDashboard.putNumber("Wrist Pitch", getCurrentPos());
         SmartDashboard.putNumber("Wrist velocity", ((m_Motor1.getVelocity().getValueAsDouble())*2*Math.PI)/51);
         SmartDashboard.putNumber("Wrist Acceleration", ((m_Motor1.getAcceleration().getValueAsDouble()/51)*2*Math.PI));

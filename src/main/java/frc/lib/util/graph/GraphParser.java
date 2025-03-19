@@ -1,7 +1,11 @@
 package frc.lib.util.graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.wpi.first.wpilibj.Filesystem;
+
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 public class GraphParser {
@@ -27,9 +31,11 @@ public class GraphParser {
 
     // Static initializer: load the graph once when the class is first referenced.
     static {
-        loadGraph("./graph_data.json");
+        loadGraph("/graph_data.json");
     }
 
+    public static void funny() {
+    }
     /**
      * Loads the graph from the JSON file. It first deserializes the JSON into a GraphDataRaw
      * (which expects shortestPaths as lists of String) and then converts it into our GraphData
@@ -39,9 +45,10 @@ public class GraphParser {
      */
     private static void loadGraph(String filePath) {
         ObjectMapper mapper = new ObjectMapper();
+        File depoyFile = new File(Filesystem.getDeployDirectory(), "graph_data.json");
         try {
             // First, deserialize the raw JSON data.
-            GraphDataRaw raw = mapper.readValue(new File(filePath), GraphDataRaw.class);
+            GraphDataRaw raw = mapper.readValue(depoyFile, GraphDataRaw.class);
 
             // Create our GraphData instance.
             graphData = new GraphData();
@@ -58,6 +65,8 @@ public class GraphParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println(nodeLookup);
     }
 
     /**

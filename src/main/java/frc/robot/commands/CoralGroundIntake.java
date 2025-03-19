@@ -17,14 +17,17 @@ public class CoralGroundIntake extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Coral Ground Pickup"));
+        manager.requestNode(GraphParser.getNodeByName("L4 Init"));
         endEffector.setDutyCycle(-0.5);
+
+
     }
 
     @Override
     public void execute() {
         if (endEffector.getMotorCurrent() > 10) {
             endEffector.setDutyCycle(-0.05);
+
         }
     }
 

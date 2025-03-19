@@ -66,6 +66,8 @@ public class Elevator extends SubsystemBase {
 
         m_RightMotor.setPosition(0);
         setGoal(0);
+
+        m_PIDController.setTolerance(0.3);
     }
 
     protected double getMeasurement() {
@@ -98,7 +100,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return atGoal();
+        System.out.println((Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position));
+        return (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
     }
 
     public void stopMotors() {
@@ -119,6 +122,7 @@ public class Elevator extends SubsystemBase {
 
             useOutput(totalOutput, m_PIDController.getSetpoint());
         }
+        SmartDashboard.putNumber("Elevator Goal", m_PIDController.getVelocityError());
         SmartDashboard.putNumber("ElevatorPosition", getElevatorPosition());
         SmartDashboard.putNumber("Elevator velocity", (m_RightMotor.getVelocity().getValueAsDouble()*0.04));
         SmartDashboard.putNumber("Elevator Acceleration", (m_RightMotor.getAcceleration().getValueAsDouble()*0.04));
