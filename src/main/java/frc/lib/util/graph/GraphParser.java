@@ -45,10 +45,10 @@ public class GraphParser {
      */
     private static void loadGraph(String filePath) {
         ObjectMapper mapper = new ObjectMapper();
-        File depoyFile = new File(Filesystem.getDeployDirectory(), "graph_data.json");
+        File deployFile = new File(Filesystem.getDeployDirectory(), "graph_data.json");
         try {
             // First, deserialize the raw JSON data.
-            GraphDataRaw raw = mapper.readValue(depoyFile, GraphDataRaw.class);
+            GraphDataRaw raw = mapper.readValue(deployFile, GraphDataRaw.class);
 
             // Create our GraphData instance.
             graphData = new GraphData();

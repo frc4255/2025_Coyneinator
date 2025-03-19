@@ -114,7 +114,6 @@ public class Swerve extends SubsystemBase {
         mSwerveMods[3].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), false);
     }
     
-    /*
     public Command followPathCommand(PathPlannerPath path) {
 
         PathFollowingController HolonomicController = new PathFollowingController() {

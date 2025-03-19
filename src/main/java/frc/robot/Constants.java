@@ -145,7 +145,7 @@ public final class Constants {
         public static final double ROBOT_MOMENT_OF_INERTIA = 0.0; //TODO get real value in KG * M^2
         public static final int NUMBER_OF_MODULES = 4; 
         public static final double WHEEL_FRICTION_FORCE = 0.0; //TODO get the force of static friction between the wheels and ground in newtons (on carpet)
-    /*
+    
         public static final ModuleConfig swerveModuleConfig = new ModuleConfig(
                                         WHEEL_RADIUS_METERS,
                                         MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
@@ -158,7 +158,7 @@ public final class Constants {
                                                     swerveModuleConfig, 
                                                     SWERVE_MODULE_LOCATIONS);
 
-                                                    */
+        public static final double MAX_VELOCITY = 0.0; //TODO get real value
         public static final int pigeonID = 0;
 
         public static final COTSTalonFXSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
