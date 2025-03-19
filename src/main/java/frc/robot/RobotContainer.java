@@ -59,7 +59,7 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton swerveangletest = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton toggleRobotState = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
@@ -71,6 +71,9 @@ public class RobotContainer {
         private final Elevator s_Elevator = new Elevator(s_Pivot::getPivotPosition);
         private final WristPitch s_WristPitch = new WristPitch();
         private final WristRoll s_WristRoll = new WristRoll();
+        private final EndEffector s_EndEffector = new EndEffector();
+
+        private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
         
         /* auto stuff */
         public SendableChooser<Command> autoChooser;   
@@ -83,7 +86,7 @@ public class RobotContainer {
                     () -> -driver.getRawAxis(translationAxis), 
                     () -> -driver.getRawAxis(strafeAxis), 
                     () -> -driver.getRawAxis(rotationAxis), 
-                    () -> true //For the love of god do not change this
+                    () -> false //For the love of god do not change this
                 )
             );
 
@@ -105,6 +108,7 @@ public class RobotContainer {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
             swerveangletest.onTrue(new test(s_Elevator));
+            groundIntake.toggleOnTrue(new CoralGroundIntake(manager, s_EndEffector));
 
     }
 

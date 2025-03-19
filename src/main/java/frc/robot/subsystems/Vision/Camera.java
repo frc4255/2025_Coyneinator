@@ -83,6 +83,7 @@ public class Camera {
         /* Clear last estimate */
         estimate = null;
 
+        //TODO: Fix use of deprecated function
         var opt = poseEstimator.update(cam.getLatestResult());
         EstimatedRobotPose result = opt.isPresent() ? opt.get() : null;
 
