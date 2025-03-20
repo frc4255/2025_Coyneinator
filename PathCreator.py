@@ -300,7 +300,7 @@ graph_data = {
 }
 
 # Write the JSON file.
-with open("./src/main/deploy", "w") as f:
+with open("./src/main/deploy/graph_data.json", "w") as f:
     json.dump(graph_data, f, indent=2)
 
 print("graph_data.json generated successfully with setpoints and precomputed shortest paths!")

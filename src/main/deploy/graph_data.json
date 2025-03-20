@@ -10,6 +10,15 @@
       ]
     },
     {
+      "name": "Intake Intermediate",
+      "setpoints": [
+        0.275,
+        0,
+        0,
+        -3.14
+      ]
+    },
+    {
       "name": "Coral Ground Pickup",
       "setpoints": [
         0.275,
@@ -139,7 +148,7 @@
   "edges": [
     {
       "start": "Stow",
-      "end": "Coral Ground Pickup"
+      "end": "Intake Intermediate"
     },
     {
       "start": "Stow",
@@ -170,8 +179,16 @@
       "end": "Processor Score"
     },
     {
-      "start": "Coral Ground Pickup",
+      "start": "Intake Intermediate",
       "end": "Stow"
+    },
+    {
+      "start": "Intake Intermediate",
+      "end": "Coral Ground Pickup"
+    },
+    {
+      "start": "Coral Ground Pickup",
+      "end": "Intake Intermediate"
     },
     {
       "start": "Coral Ground Pickup",
@@ -291,8 +308,13 @@
       "Stow": [
         "Stow"
       ],
+      "Intake Intermediate": [
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "Stow",
+        "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -353,17 +375,104 @@
         "L2 Algae Pickup"
       ]
     },
+    "Intake Intermediate": {
+      "Stow": [
+        "Intake Intermediate",
+        "Stow"
+      ],
+      "Intake Intermediate": [
+        "Intake Intermediate"
+      ],
+      "Coral Ground Pickup": [
+        "Intake Intermediate",
+        "Coral Ground Pickup"
+      ],
+      "Lollipop Coral Pickup": [
+        "Intake Intermediate",
+        "Stow",
+        "Lollipop Coral Pickup"
+      ],
+      "Reef Align": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align"
+      ],
+      "L4 Init": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L4 Init"
+      ],
+      "L4 Dunk": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L4 Init",
+        "L4 Dunk"
+      ],
+      "L3 Init": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Init"
+      ],
+      "L3 Dunk": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Init",
+        "L3 Dunk"
+      ],
+      "L3 Algae Pickup": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Algae Pickup"
+      ],
+      "Algae Ground Pickup": [
+        "Intake Intermediate",
+        "Stow",
+        "Algae Ground Pickup"
+      ],
+      "Processor Score": [
+        "Intake Intermediate",
+        "Stow",
+        "Processor Score"
+      ],
+      "Coral HP Pickup": [],
+      "L2 Align": [
+        "Intake Intermediate",
+        "Stow",
+        "L2 Align"
+      ],
+      "L1 Score": [
+        "Intake Intermediate",
+        "Stow",
+        "L1 Score"
+      ],
+      "L2 Algae Pickup": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ]
+    },
     "Coral Ground Pickup": {
       "Stow": [
         "Coral Ground Pickup",
+        "Intake Intermediate",
         "Stow"
+      ],
+      "Intake Intermediate": [
+        "Coral Ground Pickup",
+        "Intake Intermediate"
       ],
       "Coral Ground Pickup": [
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
         "Coral Ground Pickup",
-        "Stow",
+        "Reef Align",
         "Lollipop Coral Pickup"
       ],
       "Reef Align": [
@@ -399,22 +508,26 @@
       ],
       "Algae Ground Pickup": [
         "Coral Ground Pickup",
+        "Intake Intermediate",
         "Stow",
         "Algae Ground Pickup"
       ],
       "Processor Score": [
         "Coral Ground Pickup",
+        "Intake Intermediate",
         "Stow",
         "Processor Score"
       ],
       "Coral HP Pickup": [],
       "L2 Align": [
         "Coral Ground Pickup",
+        "Intake Intermediate",
         "Stow",
         "L2 Align"
       ],
       "L1 Score": [
         "Coral Ground Pickup",
+        "Intake Intermediate",
         "Stow",
         "L1 Score"
       ],
@@ -429,9 +542,14 @@
         "Lollipop Coral Pickup",
         "Stow"
       ],
-      "Coral Ground Pickup": [
+      "Intake Intermediate": [
         "Lollipop Coral Pickup",
         "Stow",
+        "Intake Intermediate"
+      ],
+      "Coral Ground Pickup": [
+        "Lollipop Coral Pickup",
+        "Reef Align",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -500,6 +618,11 @@
         "Reef Align",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "Reef Align",
         "Coral Ground Pickup"
@@ -564,6 +687,12 @@
         "L4 Init",
         "Reef Align",
         "Stow"
+      ],
+      "Intake Intermediate": [
+        "L4 Init",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
       ],
       "Coral Ground Pickup": [
         "L4 Init",
@@ -636,6 +765,12 @@
         "L4 Dunk",
         "Reef Align",
         "Stow"
+      ],
+      "Intake Intermediate": [
+        "L4 Dunk",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
       ],
       "Coral Ground Pickup": [
         "L4 Dunk",
@@ -711,6 +846,12 @@
         "Reef Align",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "L3 Init",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "L3 Init",
         "Reef Align",
@@ -782,6 +923,12 @@
         "L3 Dunk",
         "Reef Align",
         "Stow"
+      ],
+      "Intake Intermediate": [
+        "L3 Dunk",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
       ],
       "Coral Ground Pickup": [
         "L3 Dunk",
@@ -858,6 +1005,12 @@
         "Reef Align",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "L3 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "L3 Algae Pickup",
         "Reef Align",
@@ -933,9 +1086,15 @@
         "Algae Ground Pickup",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "Algae Ground Pickup",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "Algae Ground Pickup",
         "Stow",
+        "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -1010,9 +1169,15 @@
         "Processor Score",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "Processor Score",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "Processor Score",
         "Stow",
+        "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -1088,9 +1253,15 @@
         "Coral HP Pickup",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "Coral HP Pickup",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "Coral HP Pickup",
         "Stow",
+        "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -1170,9 +1341,15 @@
         "L2 Align",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "L2 Align",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "L2 Align",
         "Stow",
+        "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -1248,9 +1425,15 @@
         "L1 Score",
         "Stow"
       ],
+      "Intake Intermediate": [
+        "L1 Score",
+        "Stow",
+        "Intake Intermediate"
+      ],
       "Coral Ground Pickup": [
         "L1 Score",
         "Stow",
+        "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
@@ -1326,6 +1509,12 @@
         "L2 Algae Pickup",
         "Reef Align",
         "Stow"
+      ],
+      "Intake Intermediate": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
       ],
       "Coral Ground Pickup": [
         "L2 Algae Pickup",
