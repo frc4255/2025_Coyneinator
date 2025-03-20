@@ -33,20 +33,18 @@ public class L1Assist extends Command {
     
     private char sector;
 
-    public L1Assist(SubsystemManager manager, Swerve swerve, AlignTool AlignTool, OnTheFlyTrajectory onTheFlyTrajectory) {
+    public L1Assist(SubsystemManager manager, Swerve swerve) {
         this.manager = manager;
         this.s_Swerve = swerve;
-        this.AlignTool = AlignTool;
-        this.onTheFlyTrajectory = onTheFlyTrajectory;
         
-        addRequirements(s_Swerve, AlignTool);
+        addRequirements(s_Swerve);
     }
 
     @Override
     public void initialize() {
         //TODO: Insert try catch here bc we don't want stupid code to make us die
         //dector = s_Swerve.getCurrentBranchSector(DriverStation.getAlliance().get() == Alliance.Red ? true : false);
-
+        /*
         char requestedBranch = s_Swerve.findClosestBranch(
             DriverStation.getAlliance().orElse(null) == Alliance.Red ? 
             true : false
@@ -55,11 +53,13 @@ public class L1Assist extends Command {
         Pose2d whereToAlign = AlignTool.AlignTo(requestedBranch);
 
         s_Swerve.followPathCommand(onTheFlyTrajectory.newOnTheFlyPath(whereToAlign));
+         */
+        manager.requestNode(GraphParser.getNodeByName("L1 Score"));
+
     }
 
     @Override
     public void execute() {
-
-        manager.requestNode(GraphParser.getNodeByName("L1 Score"));
     }
+
 }

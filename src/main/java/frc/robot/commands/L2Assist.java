@@ -16,7 +16,7 @@ import frc.robot.subsystems.AlignTool;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision.Camera;
 
-public class L4Assist extends Command {
+public class L2Assist extends Command {
 
     private PIDController rotPidController;
     private ProfiledPIDController translationPidController;
@@ -33,9 +33,10 @@ public class L4Assist extends Command {
     
     private char sector;
 
-    public L4Assist(SubsystemManager manager, Swerve swerve) {
+    public L2Assist(SubsystemManager manager, Swerve swerve) {
         this.manager = manager;
         this.s_Swerve = swerve;
+
         
         addRequirements(s_Swerve);
     }
@@ -54,7 +55,7 @@ public class L4Assist extends Command {
 
         s_Swerve.followPathCommand(onTheFlyTrajectory.newOnTheFlyPath(whereToAlign));
          */
-        manager.requestNode(GraphParser.getNodeByName("L4 Dunk"));
+        manager.requestNode(GraphParser.getNodeByName("L2 Align"));
 
     }
 

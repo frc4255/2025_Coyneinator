@@ -49,8 +49,8 @@ public class AlignTool extends SubsystemBase{
     private final HashMap<Character, Integer> redAllianceBranch = new HashMap<>();
     private HashMap<Character, Integer> selectedBranch;
 
-    public AlignTool(int port) {
-        hexaTroller = new Joystick(port);
+    public AlignTool() {
+       // hexaTroller = new Joystick(500); //Ignore
 
         blueAllianceTags.put(1, FieldLayout.AprilTags.APRIL_TAG_POSE.get(18).pose.toPose2d());
         blueAllianceTags.put(2, FieldLayout.AprilTags.APRIL_TAG_POSE.get(17).pose.toPose2d());

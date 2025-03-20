@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.lib.util.OnTheFlyTrajectory;
 import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
@@ -59,8 +60,13 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton swerveangletest = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+
+    private final POVButton L1 = new POVButton(driver, 90);
+    private final POVButton L2 = new POVButton(driver, 180);
+    private final POVButton L3 = new POVButton(driver, 270);
+    private final POVButton L4 = new POVButton(driver, 0);
     
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
@@ -73,6 +79,9 @@ public class RobotContainer {
         private final WristPitch s_WristPitch = new WristPitch();
         private final WristRoll s_WristRoll = new WristRoll();
         private final EndEffector s_EndEffector = new EndEffector();
+
+        //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
+        //private final AlignTool alignTool = new AlignTool();
 
         private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
         
@@ -116,8 +125,14 @@ public class RobotContainer {
         private void configureButtonBindings() {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-            swerveangletest.onTrue(new test(s_Elevator));
             groundIntake.toggleOnTrue(new CoralGroundIntake(manager, s_EndEffector));
+
+            L1.onTrue(new L1Assist(manager, s_Swerve));
+            L2.onTrue(new L2Assist(manager, s_Swerve));
+            L3.onTrue(new L3Assist(manager, s_Swerve));
+            L4.onTrue(new L4Assist(manager, s_Swerve));
+
+            stow.onTrue(new Stow(manager, s_Swerve, s_Pivot, s_Elevator));
 
     }
 

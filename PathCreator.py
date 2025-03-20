@@ -28,19 +28,19 @@ nodes = [
     },
     {
         "name": "L4 Init",
-        "setpoints": [1.523, 0.804, -0.684, -1.73]
+        "setpoints": [1.65, 0.77, -1.02, -1.53]
     },
     {
         "name": "L4 Dunk",
-        "setpoints": [1.523 ,0.804,-0.36,-1.73]
+        "setpoints": [1.65 ,0.77,-0.37,-1.53]
     },
     {
         "name": "L3 Init",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.5, .05, -0.8, -1.53]
     },
     {
         "name": "L3 Dunk",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.75, 0, -0.76, -1.53]
     },
     {
         "name": "L3 Algae Pickup",
@@ -64,11 +64,11 @@ nodes = [
     },
     {
         "name": "L2 Align",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.37, 0, -0.2, -1.56]
     },
     {
         "name": "L1 Score",
-        "setpoints": [0.46, 0, -1.31, -3.14]
+        "setpoints": [1.4, 0, 0, 0.04]
     },
 ]
 

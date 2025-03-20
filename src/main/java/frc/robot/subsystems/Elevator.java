@@ -40,13 +40,13 @@ public class Elevator extends SubsystemBase {
     public Elevator(DoubleSupplier pivotAngleSupplier) {
 
         m_Feedforward = new PivotingElevatorFeedforward(
-            1,
+            1.2,
             3.1,
             0.01
         );
 
         m_PIDController = new ProfiledPIDController(
-            1, 
+            3, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
@@ -58,8 +58,8 @@ public class Elevator extends SubsystemBase {
         this.pivotAngleSupplier = pivotAngleSupplier;
 
         
-        m_LeftMotor.setNeutralMode(NeutralModeValue.Brake);
-        m_RightMotor.setNeutralMode(NeutralModeValue.Brake);
+        m_LeftMotor.setNeutralMode(NeutralModeValue.Coast);
+        m_RightMotor.setNeutralMode(NeutralModeValue.Coast);
 
         m_RightMotor.setInverted(true);
         m_LeftMotor.setControl(new Follower(m_RightMotor.getDeviceID(), true));
@@ -90,7 +90,7 @@ public class Elevator extends SubsystemBase {
     //Returns in meters
     // Math is pitch diameter (32T HTD 5mm = 2.005 smthn in, divided by 1000, all over 4 (gear reduction))
     public double getElevatorPosition() {
-        return (m_RightMotor.getPosition().getValueAsDouble()*0.04); 
+        return (m_RightMotor.getPosition().getValueAsDouble()*0.0375); 
     }
 
     public void setElevatorAsHomed() {
