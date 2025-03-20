@@ -85,6 +85,7 @@ public class SubsystemManager {
        if (currentNode != lastNode) {
         sWristPitch.setActive();
         sWristRoll.setActive();
+        sElevator.setActive();
 
 
         sPivot.setGoal(setpoints[0]);
@@ -99,7 +100,7 @@ public class SubsystemManager {
             if (currentIndex >= path.size()) {
                 active = false;
             }
-            System.out.println("IT FUCKING WORKS");
+            System.out.println("Hello" + currentNode.getName());
         }
     }
 

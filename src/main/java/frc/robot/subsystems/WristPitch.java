@@ -58,7 +58,7 @@ public class WristPitch extends SubsystemBase {
         m_Motor1.setPosition(0);
         setGoal(0);
 
-        m_PIDController.setTolerance(0.2);
+        m_PIDController.setTolerance(0.3);
     }
 
     public void setActive() {
@@ -105,9 +105,9 @@ public class WristPitch extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        System.out.println(m_PIDController.atGoal() + " Wrist Pitch");
-
-        return  (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        System.out.println(x+"Pitch");
+        return x;
     }
 
     @Override

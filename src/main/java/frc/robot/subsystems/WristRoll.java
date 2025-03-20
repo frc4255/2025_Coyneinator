@@ -88,7 +88,9 @@ public class WristRoll extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return  (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        System.out.println(x+"Roll");
+        return x;
     }
 
     public boolean isPivotPosePossible() {

@@ -40,18 +40,18 @@ public class Elevator extends SubsystemBase {
     public Elevator(DoubleSupplier pivotAngleSupplier) {
 
         m_Feedforward = new PivotingElevatorFeedforward(
-            0.3,
+            1,
             3.1,
             0.01
         );
 
         m_PIDController = new ProfiledPIDController(
-            0.1, 
+            1, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
-                5, //TODO tune this
-                7 // TODO tune this
+                3, //TODO tune this
+                2 // TODO tune this
             )
         );
 
@@ -82,6 +82,10 @@ public class Elevator extends SubsystemBase {
         m_RightMotor.setControl(m_rightMotorRequest.withOutput(output));
     }
 
+    public void setActive() {
+        active = true;
+    }
+
 
     //Returns in meters
     // Math is pitch diameter (32T HTD 5mm = 2.005 smthn in, divided by 1000, all over 4 (gear reduction))
@@ -100,8 +104,9 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        System.out.println((Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position));
-        return (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.05) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        System.out.println(x+"Elevator");
+        return x;
     }
 
     public void stopMotors() {

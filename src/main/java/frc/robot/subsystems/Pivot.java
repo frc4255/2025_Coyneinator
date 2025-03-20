@@ -44,7 +44,7 @@ public class Pivot extends SubsystemBase {
 
     public Pivot() {
         m_PIDController = new ProfiledPIDController(
-            0.1, 
+            4.4, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
@@ -60,7 +60,7 @@ public class Pivot extends SubsystemBase {
 
         m_rightMotor.setInverted(true);
         m_leftMotor.setControl(new Follower(m_rightMotor.getDeviceID(), true));
-        elevatorPivotFeedforward = new ArmFeedforward(0,0.18,4.5,0);
+        elevatorPivotFeedforward = new ArmFeedforward(0,0.18,4.7,0);
 
         m_rightMotor.setPosition(0);
         setGoal(0);
@@ -111,7 +111,9 @@ public class Pivot extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return  (Math.abs(m_PIDController.getSetpoint().position) < 0.02) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.05) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        System.out.println(x+"Pivot");
+        return x;
     }
 
     public void stopMotors() {
