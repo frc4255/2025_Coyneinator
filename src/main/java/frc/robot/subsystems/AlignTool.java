@@ -16,7 +16,7 @@ import frc.robot.StateManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-public class Hexatroller extends SubsystemBase{
+public class AlignTool extends SubsystemBase{
     
     private Joystick hexaTroller;
 
@@ -45,7 +45,11 @@ public class Hexatroller extends SubsystemBase{
     private final HashMap<Integer, Pose2d> redAllianceTags = new HashMap<>();
     private HashMap<Integer, Pose2d> selected;
 
-    public Hexatroller(int port) {
+    private final HashMap<Character, Integer> blueAllianceBranch = new HashMap<>();
+    private final HashMap<Character, Integer> redAllianceBranch = new HashMap<>();
+    private HashMap<Character, Integer> selectedBranch;
+
+    public AlignTool(int port) {
         hexaTroller = new Joystick(port);
 
         blueAllianceTags.put(1, FieldLayout.AprilTags.APRIL_TAG_POSE.get(18).pose.toPose2d());
@@ -63,11 +67,49 @@ public class Hexatroller extends SubsystemBase{
         redAllianceTags.put(5, FieldLayout.AprilTags.APRIL_TAG_POSE.get(11).pose.toPose2d());
         redAllianceTags.put(6, FieldLayout.AprilTags.APRIL_TAG_POSE.get(6).pose.toPose2d());
 
+
+        blueAllianceBranch.put('A', 1);
+        blueAllianceBranch.put('B', 2);
+        blueAllianceBranch.put('C', 3);
+        blueAllianceBranch.put('D', 4);
+        blueAllianceBranch.put('E', 5);
+        blueAllianceBranch.put('F', 6);
+        blueAllianceBranch.put('G', 7);
+        blueAllianceBranch.put('H', 8);
+        blueAllianceBranch.put('I', 9);
+        blueAllianceBranch.put('J', 10);
+        blueAllianceBranch.put('K', 11);
+        blueAllianceBranch.put('L', 12);
+
+        redAllianceBranch.put('G', 1);
+        redAllianceBranch.put('H', 2);
+        redAllianceBranch.put('I', 3);
+        redAllianceBranch.put('J', 4);
+        redAllianceBranch.put('K', 5);
+        redAllianceBranch.put('L', 6);
+        redAllianceBranch.put('A', 7);
+        redAllianceBranch.put('B', 8);
+        redAllianceBranch.put('C', 9);
+        redAllianceBranch.put('D', 10);
+        redAllianceBranch.put('E', 11);
+        redAllianceBranch.put('F', 12);
     }
 
     public static Pose2d getRequestedPosition() {
         //the robot will go up 6.5 and left or right 6.5 inches (the hexagon creates an equilateral triangle)
         return currentRobotPoseSelection;
+    }
+
+    public int SelectedBranch(char requested) {
+
+        if (DriverStation.getAlliance().orElse(null) == Alliance.Red) {
+            selectedBranch = redAllianceBranch;
+        } else {
+            selectedBranch = blueAllianceBranch;
+        }
+
+        return selectedBranch.get(requested);
+        
     }
 
     public Pose2d chosenAprilTag(ScoringPosition wanted) {
@@ -215,37 +257,37 @@ public class Hexatroller extends SubsystemBase{
 
             case A:
             case B:
-                chosenOffset = new Pose2d(0.0, Units.inchesToMeters(-14), new Rotation2d(Units.degreesToRadians(0)));
+                chosenOffset = new Pose2d(0.0, Units.inchesToMeters(-21.5), new Rotation2d(Units.degreesToRadians(0)));
                 break;
 
 
             case C:
             case D:
-                chosenOffset = new Pose2d(Units.inchesToMeters(14 * Math.sin(225)), Units.inchesToMeters(14 * Math.cos(225)), new Rotation2d(Units.degreesToRadians(60)));
+                chosenOffset = new Pose2d(Units.inchesToMeters(21.5 * Math.sin(225)), Units.inchesToMeters(21.5 * Math.cos(225)), new Rotation2d(Units.degreesToRadians(60)));
                 break;
 
 
             case E:
             case F:
-                chosenOffset = new Pose2d(Units.inchesToMeters(14 * Math.sin(315)), Units.inchesToMeters(14 * Math.cos(315)), new Rotation2d(Units.degreesToRadians(120)));
+                chosenOffset = new Pose2d(Units.inchesToMeters(21.5 * Math.sin(315)), Units.inchesToMeters(21.5 * Math.cos(315)), new Rotation2d(Units.degreesToRadians(120)));
                 break;
 
 
             case G:
             case H:
-                chosenOffset = new Pose2d(0.0, Units.inchesToMeters(14), new Rotation2d(Units.degreesToRadians(180)));
+                chosenOffset = new Pose2d(0.0, Units.inchesToMeters(21.5), new Rotation2d(Units.degreesToRadians(180)));
                 break;
 
 
             case I:
             case J:
-                chosenOffset = new Pose2d(Units.inchesToMeters(14 * Math.sin(45)), Units.inchesToMeters(14 * Math.cos(45)), new Rotation2d(Units.degreesToRadians(240)));
+                chosenOffset = new Pose2d(Units.inchesToMeters(21.5 * Math.sin(45)), Units.inchesToMeters(21.5 * Math.cos(45)), new Rotation2d(Units.degreesToRadians(240)));
                 break;
 
 
             case K:
             case L:
-                chosenOffset = new Pose2d(Units.inchesToMeters(14 * Math.sin(135)), Units.inchesToMeters(14 * Math.cos(135)), new Rotation2d(Units.degreesToRadians(300)));
+                chosenOffset = new Pose2d(Units.inchesToMeters(21.5 * Math.sin(135)), Units.inchesToMeters(21.5 * Math.cos(135)), new Rotation2d(Units.degreesToRadians(300)));
                 break;
 
         }
@@ -283,6 +325,18 @@ public class Hexatroller extends SubsystemBase{
 
     public double[] whereToScore() {
         return wantedScoringLevel;
+    }
+
+    public Pose2d AlignTo(char requestedBranch) {
+
+        int i = SelectedBranch(requestedBranch);
+
+        Pose2d calculatedPosition = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(), 
+                                                       chosenAprilTag(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(), 
+                                                       robotPoseOffset(selectPosition(i)).getRotation());
+
+
+        return calculatedPosition;
     }
 
     @Override

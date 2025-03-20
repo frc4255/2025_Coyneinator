@@ -20,7 +20,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.Swerve;
 import frc.robot.FieldLayout;
-import frc.robot.subsystems.Hexatroller;
+import frc.robot.subsystems.AlignTool;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -55,12 +55,9 @@ public class OnTheFlyTrajectory {
 
 
     
-    public PathPlannerPath newOnTheFlyPath() {
+    public PathPlannerPath newOnTheFlyPath(Pose2d endPose) {
         Pose2d currentPose = s_Swerve.getPose();
         Pose2d startPose = new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getRotation());
-
-
-        Pose2d endPose = Hexatroller.getRequestedPosition(); 
 
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
                 startPose,                           
@@ -79,7 +76,7 @@ public class OnTheFlyTrajectory {
                 waypoints,
                 constraints,
                 null,
-                new GoalEndState(0.0, Hexatroller.getRequestedPosition().getRotation()) // Goal end state (can set holonomic rotation for swerve)
+                new GoalEndState(0.0, endPose.getRotation()) // Goal end state (can set holonomic rotation for swerve)
         );
 
         path.preventFlipping = true;
@@ -104,12 +101,11 @@ public class OnTheFlyTrajectory {
         return false;
     }
 
-    public PathPlannerPath generatePathWithAvoidance() {
+    public PathPlannerPath generatePathWithAvoidance(Pose2d endPose) {
         Pose2d startPose = s_Swerve.getPose();
-        Pose2d endPose = Hexatroller.getRequestedPosition();
         
         // Create initial path
-        PathPlannerPath path = newOnTheFlyPath();
+        PathPlannerPath path = newOnTheFlyPath(endPose);
     
         if (!doesPathGoesThroughReef(path)) {
             return path; 

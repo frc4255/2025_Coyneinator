@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import frc.robot.subsystems.AlignTool;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.lib.util.OnTheFlyTrajectory;
 import frc.robot.RobotContainer;
 import frc.robot.SubsystemManager;
 import frc.robot.commands.CoralHumanPlayerIntake;
@@ -30,7 +32,10 @@ import frc.robot.commands.L1Assist;
 import frc.robot.commands.L4Assist;
 
 public class OnePieceL1 extends SequentialCommandGroup{
-    public OnePieceL1(Swerve s_Swerve, Pivot s_Pivot, Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager) throws FileVersionException, IOException, ParseException {
+    public OnePieceL1(Swerve s_Swerve, AlignTool alignTool, OnTheFlyTrajectory onTheFlyTrajectory, 
+        Pivot s_Pivot, Elevator s_Elevator, WristPitch s_WristPitch, 
+        WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager) 
+        throws FileVersionException, IOException, ParseException {
         
         PathPlannerPath path0 = PathPlannerPath.fromPathFile("1Pc");
 
@@ -58,7 +63,7 @@ public class OnePieceL1 extends SequentialCommandGroup{
                 s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L1Assist(manager, s_Swerve).withTimeout(1) //TODO TUNE THIS
+                    new L1Assist(manager, s_Swerve, alignTool, onTheFlyTrajectory).withTimeout(1) //TODO TUNE THIS
                 )
             )
 
