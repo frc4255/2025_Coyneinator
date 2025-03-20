@@ -33,12 +33,11 @@ public class L2Assist extends Command {
     
     private char sector;
 
-    public L2Assist(SubsystemManager manager, Swerve swerve) {
+    public L2Assist(SubsystemManager manager) {
         this.manager = manager;
-        this.s_Swerve = swerve;
 
         
-        addRequirements(s_Swerve);
+        addRequirements();
     }
 
     @Override

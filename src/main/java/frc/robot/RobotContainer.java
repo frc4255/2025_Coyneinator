@@ -131,12 +131,12 @@ public class RobotContainer {
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
             groundIntake.toggleOnTrue(new CoralGroundIntake(manager, s_EndEffector));
 
-            L1.onTrue(new L1Assist(manager, s_Swerve));
-            L2.onTrue(new L2Assist(manager, s_Swerve));
-            L3.onTrue(new L3Assist(manager, s_Swerve));
-            L4.onTrue(new L4Assist(manager, s_Swerve));
+            L1.onTrue(new L1Assist(manager));
+            L2.onTrue(new L2Assist(manager));
+            L3.onTrue(new L3Assist(manager));
+            L4.onTrue(new L4Assist(manager));
 
-            stow.onTrue(new Stow(manager, s_Swerve, s_Pivot, s_Elevator));
+            stow.onTrue(new Stow(manager, s_Pivot, s_Elevator));
 
             runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
 

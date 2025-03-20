@@ -15,13 +15,11 @@ public class Stow extends Command {
     private PIDController rotPidController;
     private ProfiledPIDController translationPidController;
     private SubsystemManager manager;
-    private Swerve s_Swerve;
 
-    public Stow(SubsystemManager manager, Swerve swerve, Pivot s_Pivot, Elevator s_Elevator) {
+    public Stow(SubsystemManager manager, Pivot s_Pivot, Elevator s_Elevator) {
         this.manager = manager;
-        this.s_Swerve = swerve;
         
-        addRequirements(s_Swerve);
+        addRequirements();
     }
 
     @Override

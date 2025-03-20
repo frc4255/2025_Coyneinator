@@ -26,19 +26,19 @@ public class EndEffector extends SubsystemBase {
     
     private TalonFX motor;
 
-    private DutyCycleOut motorRequest;
+    private VoltageOut motorRequest;
 
     public EndEffector() {
         motor = new TalonFX(6);
-        motorRequest = new DutyCycleOut(0);
+        motorRequest = new VoltageOut(0);
     }
 
     public double getMotorCurrent() {
         return motor.getStatorCurrent().getValueAsDouble();
     }
 
-    public void setDutyCycle(double dutyCycle) {
-        motor.setControl(motorRequest.withOutput(dutyCycle));
+    public void setDutyCycle(double Voltage) {
+        motor.setControl(motorRequest.withOutput(Voltage));
     }
 
     public void stop() {

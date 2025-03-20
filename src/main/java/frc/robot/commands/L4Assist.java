@@ -33,11 +33,10 @@ public class L4Assist extends Command {
     
     private char sector;
 
-    public L4Assist(SubsystemManager manager, Swerve swerve) {
+    public L4Assist(SubsystemManager manager) {
         this.manager = manager;
-        this.s_Swerve = swerve;
         
-        addRequirements(s_Swerve);
+        addRequirements();
     }
 
     @Override

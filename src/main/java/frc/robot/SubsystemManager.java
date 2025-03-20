@@ -67,7 +67,7 @@ public class SubsystemManager {
             return;
         }
 
-        Node currentNode = path.get(currentIndex);
+        currentNode = path.get(currentIndex);
         double[] setpoints = currentNode.getSetpoints();
 
         /*  Code to automatically go to reef align, can be added back based on driver feedback
@@ -96,6 +96,7 @@ public class SubsystemManager {
        }
         // If all subsystems have reached their targets, move to the next node.
         if (hasReachedTarget()) {
+            lastNode = currentNode;
             currentIndex++;
             if (currentIndex >= path.size()) {
                 active = false;

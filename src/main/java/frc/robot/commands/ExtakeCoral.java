@@ -15,7 +15,7 @@ public class ExtakeCoral extends Command{
 
     @Override
     public void initialize() {
-        s_EndEffector.setDutyCycle(0.2);
+        s_EndEffector.setDutyCycle(2);
     }
 
     @Override

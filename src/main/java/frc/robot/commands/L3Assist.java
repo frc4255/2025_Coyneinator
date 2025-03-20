@@ -33,11 +33,10 @@ public class L3Assist extends Command {
     
     private char sector;
 
-    public L3Assist(SubsystemManager manager, Swerve swerve) {
+    public L3Assist(SubsystemManager manager) {
         this.manager = manager;
-        this.s_Swerve = swerve;
         
-        addRequirements(s_Swerve);
+        addRequirements();
     }
 
     @Override
