@@ -47,7 +47,7 @@ public class OnePieceL1 extends SequentialCommandGroup{
                     s_Swerve.setPose(adjustedPose);
                 },
                 () -> {
-                    System.out.println("Warning: 4 pc auto has no path, Rad and Nick are cooked");
+                    System.out.println("Warning: 1 pc auto has no path, Rad and Nick are cooked");
                     }
                 );
             }), 
