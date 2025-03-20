@@ -63,6 +63,10 @@ public class RobotContainer {
     private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
+    private final JoystickButton extakeCoral = new JoystickButton(driver, XboxController.Button.kX.value);
+
+    private final JoystickButton runElevatorTesting = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+
     private final POVButton L1 = new POVButton(driver, 90);
     private final POVButton L2 = new POVButton(driver, 180);
     private final POVButton L3 = new POVButton(driver, 270);
@@ -133,6 +137,10 @@ public class RobotContainer {
             L4.onTrue(new L4Assist(manager, s_Swerve));
 
             stow.onTrue(new Stow(manager, s_Swerve, s_Pivot, s_Elevator));
+
+            runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
+
+            extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
 
     }
 

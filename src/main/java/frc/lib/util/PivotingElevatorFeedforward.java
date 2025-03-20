@@ -12,6 +12,6 @@ public class PivotingElevatorFeedforward {
     }
 
     public double calculate(double velocity, double acceleration, double angleRadians) {
-        return kG * Math.cos(angleRadians) + kV * velocity + kA * acceleration;
+        return kG * Math.sin(angleRadians) + kV * velocity + kA * acceleration;
     }
 }

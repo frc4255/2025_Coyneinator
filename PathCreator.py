@@ -15,6 +15,10 @@ nodes = [
         "setpoints": [0,0,0,0]
     },
     {
+        "name" : "Intake Intermediate",
+        "setpoints": [0.275, 0, 0, -3.14]
+    },
+    {
         "name": "Coral Ground Pickup",
         "setpoints": [0.275,0,-1.7,-3.14]
     },
@@ -76,7 +80,7 @@ nodes = [
 edges = [
     {
         "start": "Stow",
-        "end": "Coral Ground Pickup"
+        "end": "Intake Intermediate"
     },
     {
         "start": "Stow",
@@ -107,8 +111,16 @@ edges = [
         "end": "Processor Score"
     },
     {
-        "start": "Coral Ground Pickup",
+        "start": "Intake Intermediate",
         "end": "Stow"
+    },
+    {
+        "start": "Intake Intermediate",
+        "end": "Coral Ground Pickup"
+    },
+    {
+        "start": "Coral Ground Pickup",
+        "end": "Intake Intermediate"
     },
     {
         "start": "Coral Ground Pickup",

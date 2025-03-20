@@ -40,18 +40,18 @@ public class Elevator extends SubsystemBase {
     public Elevator(DoubleSupplier pivotAngleSupplier) {
 
         m_Feedforward = new PivotingElevatorFeedforward(
-            1.2,
+            0.35,
             3.1,
             0.01
         );
 
         m_PIDController = new ProfiledPIDController(
-            3, 
+            8, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
                 3, //TODO tune this
-                2 // TODO tune this
+                2.25 // TODO tune this
             )
         );
 
@@ -124,7 +124,7 @@ public class Elevator extends SubsystemBase {
                     m_PIDController.getSetpoint().position,
                     pivotAngleSupplier.getAsDouble()
                 ); 
-
+            
             useOutput(totalOutput, m_PIDController.getSetpoint());
         }
         SmartDashboard.putNumber("Elevator Goal", m_PIDController.getVelocityError());
