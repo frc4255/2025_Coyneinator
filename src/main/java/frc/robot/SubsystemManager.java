@@ -37,7 +37,8 @@ public class SubsystemManager {
         this.active = false;
         this.currentIndex = 0;
 
-        double[] test = new double[]{0,0,0,0};
+        lastNode = new Node("Empty", new double[]{0,0,0,0});
+
     }
 
     public void setInactive() {
@@ -48,6 +49,9 @@ public class SubsystemManager {
         if (currentNode == null) {
             currentNode = GraphParser.getNodeByName("Stow");
         }
+
+        lastNode = new Node("Empty", new double[]{0,0,0,0});
+        
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
 
@@ -82,7 +86,7 @@ public class SubsystemManager {
         }
        */
 
-       if (currentNode != lastNode) {
+       if (!currentNode.getName().equals(lastNode.getName())) {
         sWristPitch.setActive();
         sWristRoll.setActive();
         sElevator.setActive();

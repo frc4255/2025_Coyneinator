@@ -129,7 +129,7 @@ public class RobotContainer {
         private void configureButtonBindings() {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-            groundIntake.toggleOnTrue(new CoralGroundIntake(manager, s_EndEffector));
+            groundIntake.onTrue(new CoralGroundIntake(manager, s_EndEffector));
 
             L1.onTrue(new L1Assist(manager));
             L2.onTrue(new L2Assist(manager));
