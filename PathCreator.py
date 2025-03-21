@@ -47,7 +47,7 @@ nodes = [
         "setpoints": [1.75, 0, -0.76, -1.53]
     },
     {
-        "name": "Net Score",
+        "name": "Net Score", 
         "setpoints": [1.76, 1, -1.12, 3.14]
     },
     {
