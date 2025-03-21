@@ -46,22 +46,7 @@ public class FourPieceNoHPL4 extends SequentialCommandGroup{
         PathPlannerPath path3 = PathPlannerPath.fromPathFile("4pcA 3");
 
         addCommands(
-            new InstantCommand(() -> {
-            path0.getStartingHolonomicPose().ifPresentOrElse(
-                startingPose -> {
-                    Pose2d adjustedPose = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red
-                        ? new Pose2d(
-                            startingPose.getTranslation(),
-                            startingPose.getRotation().plus(Rotation2d.fromDegrees(180))
-                        )
-                        : startingPose;
-                    s_Swerve.setPose(adjustedPose);
-                },
-                () -> {
-                    System.out.println("Warning: 4 pc auto has no path, Rad and Nick are cooked");
-                    }
-                );
-            }), 
+            new InstantCommand(() -> s_Swerve.setPose(path0.getStartingHolonomicPose().get())), 
             new WaitCommand(0.05),
             new ParallelCommandGroup(
                 s_Swerve.followPathCommand(path0),
@@ -94,13 +79,6 @@ public class FourPieceNoHPL4 extends SequentialCommandGroup{
             ),
             new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll),
             new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-
-            
-
         );
-
-
-
-
     }
 }

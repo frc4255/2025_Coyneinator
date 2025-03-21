@@ -41,12 +41,12 @@ public class Elevator extends SubsystemBase {
 
         m_Feedforward = new PivotingElevatorFeedforward(
             0.35,
-            3.1,
+            3.5,
             0.01
         );
 
         m_PIDController = new ProfiledPIDController(
-            8, 
+            10, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(

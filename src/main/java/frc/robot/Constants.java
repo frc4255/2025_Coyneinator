@@ -115,58 +115,49 @@ public final class Constants {
         public static final double floor = 0.0;
         public static final double maxVerticalRobotExtension = 90.389937; //TODO get real value approx whatever I put there (I didn't account for end effector height yet)
         public static final double maxHorizontalRobotExtension = 33.75; //Robot length / 2 + extension limit from frame perimeter.
-
-
     }
 
 
     public static final class Swerve {
 
-        public static final double ROBOT_MASS_KG = 0.0; //TODO get real value with bumpers and battery
-        public static final double MAX_TORQUE_FRICTION = 0.0; //TODO get real value (max torque a drive module can apply without slipping the wheels)
+        public static final double ROBOT_MASS_KG = 64; //TODO get real value with bumpers and battery
 
-        public static final double MAX_DRIVE_VELOCITY_MPS = 0.0; //TODO get real value
-        public static final double WHEEL_COF = 1.542; //I got this one chief delphi so this might just be straight up wrong
-        public static final double WHEEL_RADIUS_METERS = 0.0; //TODO get real value
-        public static final double DRIVE_MOTOR_CURRENT_LIMIT = 35.0; //TODO make sure this is right
+        public static final double MAX_DRIVE_VELOCITY_MPS = 6.75; //TODO get real value
+        public static final double WHEEL_COF = 1; //I got this one chief delphi so this might just be straight up wrong
+        public static final double WHEEL_RADIUS_METERS = 0.0508; //TODO get real value
+        public static final double DRIVE_MOTOR_CURRENT_LIMIT = 60; //TODO make sure this is right
 
-        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = 
-                {new Translation2d(Units.inchesToMeters(-12.105518), Units.inchesToMeters(12.105518)),
-                new Translation2d(Units.inchesToMeters(12.105518), Units.inchesToMeters(12.105518)),
-                new Translation2d(Units.inchesToMeters(-12.105518), Units.inchesToMeters(-12.105518)),
-                new Translation2d(Units.inchesToMeters(12.105518), Units.inchesToMeters(-12.105518))};
+        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = {
+                new Translation2d(Units.inchesToMeters(12.875), Units.inchesToMeters(10.375)),
+                new Translation2d(Units.inchesToMeters(12.875), Units.inchesToMeters(-10.375)),
+                new Translation2d(Units.inchesToMeters(-12.875), Units.inchesToMeters(10.375)),
+                new Translation2d(Units.inchesToMeters(-12.875), Units.inchesToMeters(-10.375))
+            };
         
-        public static final double[] MODULE_PIVOT_DISTANCE = {
-            Units.inchesToMeters(16.779097),
-            Units.inchesToMeters(16.779097),
-            Units.inchesToMeters(16.779097),    
-            Units.inchesToMeters(16.779097)}; //TODO find each Modules distance form the center of the robot in METERS
-
-        public static final double ROBOT_MOMENT_OF_INERTIA = 0.0; //TODO get real value in KG * M^2
+        public static final double ROBOT_MOMENT_OF_INERTIA = 11; //TODO get real value in KG * M^2
         public static final int NUMBER_OF_MODULES = 4; 
-        public static final double WHEEL_FRICTION_FORCE = 0.0; //TODO get the force of static friction between the wheels and ground in newtons (on carpet)
     
         public static final ModuleConfig swerveModuleConfig = new ModuleConfig(
                                         WHEEL_RADIUS_METERS,
                                         MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
                                         DCMotor.getKrakenX60(1), 
                                         DRIVE_MOTOR_CURRENT_LIMIT, 
-                                        1); //TODO figure out if I am actually insane or this is what im supposed to be doing
+                                        1); 
 
         public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, 
                                                     ROBOT_MOMENT_OF_INERTIA, 
                                                     swerveModuleConfig, 
                                                     SWERVE_MODULE_LOCATIONS);
 
-        public static final double MAX_VELOCITY = 0.0; //TODO get real value
+        public static final double MAX_VELOCITY = 5; //TODO get real value
         public static final int pigeonID = 0;
 
-        public static final COTSTalonFXSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
+        public static final COTSTalonFXSwerveConstants chosenModule =
         COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(23.75); //TODO: This must be tuned to specific robot
-        public static final double wheelBase = Units.inchesToMeters(23.75); //TODO: This must be tuned to specific robot
+        public static final double trackWidth = Units.inchesToMeters(20.75);
+        public static final double wheelBase = Units.inchesToMeters(25.75);
         public static final double wheelCircumference = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -270,21 +261,5 @@ public final class Constants {
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
-    }
-
-    public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-    
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
-    
-        /* Constraint for the motion profilied robot angle controller */
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-            new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 }

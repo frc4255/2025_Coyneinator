@@ -44,7 +44,7 @@ public class Pivot extends SubsystemBase {
 
     public Pivot() {
         m_PIDController = new ProfiledPIDController(
-            4.4, 
+            6, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(

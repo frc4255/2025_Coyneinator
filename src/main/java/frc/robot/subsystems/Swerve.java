@@ -21,6 +21,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import frc.robot.subsystems.Vision.VisionSubsystem;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -98,7 +100,7 @@ public class Swerve extends SubsystemBase {
         }
     }    
 
-    private void follow(ChassisSpeeds speeds) {
+    private void follow(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
         drive(
             new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
             speeds.omegaRadiansPerSecond,
@@ -106,73 +108,38 @@ public class Swerve extends SubsystemBase {
             false
         );
     }
-
-    public void testing() {
-        mSwerveMods[0].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), false);
-        mSwerveMods[1].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), false);
-        mSwerveMods[2].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), false);
-        mSwerveMods[3].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), false);
-    }
     
-    public Command followPathCommand(PathPlannerPath path) {
-
-        PathFollowingController HolonomicController = new PathFollowingController() {
-
-            @Override
-            public ChassisSpeeds calculateRobotRelativeSpeeds(Pose2d currentPose, PathPlannerTrajectoryState targetState) {
-                Translation2d positionError = targetState.pose.getTranslation().minus(currentPose.getTranslation());
-                Rotation2d rotationError = targetState.pose.getRotation().minus(currentPose.getRotation());
-        
-                // Apply basic proportional control (adjust gains as needed)
-                double vx = positionError.getX() * Constants.Swerve.driveKP;
-                double vy = positionError.getY() * Constants.Swerve.driveKP;
-                double omega = rotationError.getRadians() * Constants.Swerve.driveKP;
-        
-                return new ChassisSpeeds(vx, vy, omega);
-
-            }
-
-            @Override
-            public void reset(Pose2d currentPose, ChassisSpeeds currentSpeeds) {
-                
-            }
-
-            @Override
-            public boolean isHolonomic() {
-                return true;
-            }
-            
-            
-        };
-
+  // Assuming this is a method in your drive subsystem
+  public Command followPathCommand(PathPlannerPath path) {
+    try{
         return new FollowPathCommand(
                 path,
                 this::getPose, // Robot pose supplier
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> {
-                    // Drive the robot using calculated ChassisSpeeds and feedforwards
-                    drive(
-                        new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
-                        speeds.omegaRadiansPerSecond,
-                        false,
-                        false
-                    );}, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                HolonomicController, // PathFollowerController
-                Constants.Swerve.robotConfig,
+                this::follow, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds, AND feedforwards
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                ),
+                Constants.Swerve.robotConfig, // The robot configuration
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                  // Boolean supplier that controls when the path will be mirrored for the red alliance
+                  // This will flip the path being followed to the red side of the field.
+                  // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
+                  var alliance = DriverStation.getAlliance();
+                  if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                  }
+                  return false;
                 },
                 this // Reference to this subsystem to set requirements
         );
+    } catch (Exception e) {
+        DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+        return Commands.none();
     }
+  }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {

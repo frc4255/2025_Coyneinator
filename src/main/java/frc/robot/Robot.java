@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.json.simple.parser.ParseException;
+
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,7 +46,12 @@ public class Robot extends TimedRobot {
     DriverStation.startDataLog(DataLogManager.getLog());
 
     GraphParser.funny();
-    m_robotContainer = new RobotContainer();
+    try {
+      m_robotContainer = new RobotContainer();
+    } catch (FileVersionException | IOException | ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     
   }
 
@@ -116,7 +125,12 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationInit() {
     // Perform any simulation-specific initialization here.
-    m_robotContainer = new RobotContainer();
+    try {
+      m_robotContainer = new RobotContainer();
+    } catch (FileVersionException | IOException | ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
   }
 }

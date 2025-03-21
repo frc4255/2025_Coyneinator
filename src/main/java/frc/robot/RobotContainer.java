@@ -1,11 +1,14 @@
 package frc.robot;
 
+import java.io.IOException;
 import java.security.Timestamp;
 import java.util.Map;
 
+import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -92,14 +95,17 @@ public class RobotContainer {
         /* auto stuff */
         public SendableChooser<Command> autoChooser;
     
-        /** The container for the robot. Contains subsystems, OI devices, and commands. */
-        public RobotContainer() {
+        /** The container for the robot. Contains subsystems, OI devices, and commands. 
+                 * @throws ParseException 
+                 * @throws IOException 
+                 * @throws FileVersionException */
+                public RobotContainer() throws FileVersionException, IOException, ParseException {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
                     () -> -driver.getRawAxis(translationAxis), 
                     () -> -driver.getRawAxis(strafeAxis), 
-                    () -> -driver.getRawAxis(rotationAxis), 
+                    () -> driver.getRawAxis(rotationAxis), 
                     () -> false //For the love of god do not change this
                 )
             );
@@ -144,9 +150,9 @@ public class RobotContainer {
 
     }
 
-    private void configureAutoChooser() {
+    private void configureAutoChooser() throws FileVersionException, IOException, ParseException {
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption("2 piece test auto", new TwoPiece(s_Swerve));
+        autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));
 
         SmartDashboard.putData(autoChooser);
     }

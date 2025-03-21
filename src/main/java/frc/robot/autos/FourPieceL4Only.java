@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -45,25 +46,11 @@ public class FourPieceL4Only extends SequentialCommandGroup{
         PathPlannerPath path6 = PathPlannerPath.fromPathFile("4pc 6");
 
         addCommands(
-            new InstantCommand(() -> {
-            path0.getStartingHolonomicPose().ifPresentOrElse(
-                startingPose -> {
-                    Pose2d adjustedPose = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red
-                        ? new Pose2d(
-                            startingPose.getTranslation(),
-                            startingPose.getRotation().plus(Rotation2d.fromDegrees(180))
-                        )
-                        : startingPose;
-                    s_Swerve.setPose(adjustedPose);
-                },
-                () -> {
-                    System.out.println("Warning: 4 pc auto has no path, Rad and Nick are cooked");
-                    }
-                );
-            }), 
-
+            new InstantCommand(() -> 
+                s_Swerve.setPose(path0.getStartingHolonomicPose().get())
+            ), 
             new WaitCommand(0.1),
-
+            new PrintCommand("kinda works?"),
             new ParallelCommandGroup(
                 s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
@@ -71,7 +58,6 @@ public class FourPieceL4Only extends SequentialCommandGroup{
                     new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
                 )
             ),
-
             new ParallelCommandGroup(
                 s_Swerve.followPathCommand(path1),
                 new SequentialCommandGroup(
