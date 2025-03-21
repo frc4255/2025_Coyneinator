@@ -20,7 +20,7 @@ nodes = [
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": [0.275,0,-1.7,-3.14]
+        "setpoints": [0.35, 0.05, -1.89, -3.14]
     },
     {
         "name": "Lollipop Coral Pickup",
@@ -47,24 +47,28 @@ nodes = [
         "setpoints": [1.75, 0, -0.76, -1.53]
     },
     {
-        "name": "L3 Algae Pickup",
-        "setpoints": placeholder_setpoints()
+        "name": "Net Score",
+        "setpoints": [1.76, 1, -1.12, 3.14]
+    },
+    {
+        "name": "L2 Algae Pickup",
+        "setpoints": [1.21, 0, -0.01, 3.14]
     },
     {
         "name": "L3 Algae Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.43, 0.23, -0.27, 3.14]
     },
     {
         "name": "Algae Ground Pickup",
-        "setpoints": [0,0,-1.57,-1.51]
+        "setpoints": [0,0,-1.43,-0.13]
     },
     {
         "name": "Processor Score",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.01, 0, -1.14, 0]
     },
     {
         "name": "Coral HP Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.99, 0, -1.44, -3.14]
     },
     {
         "name": "L2 Align",

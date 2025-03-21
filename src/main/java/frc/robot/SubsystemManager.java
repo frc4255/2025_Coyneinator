@@ -25,6 +25,8 @@ public class SubsystemManager {
 
     private Node lastNode;
 
+    private boolean reactivation = false;
+
     public SubsystemManager(
             Pivot sPivot, Elevator sElevator, WristPitch sWristPitch, WristRoll sWristRoll
         ) {
@@ -49,9 +51,9 @@ public class SubsystemManager {
         if (currentNode == null) {
             currentNode = GraphParser.getNodeByName("Stow");
         }
-
+        reactivation = true;
         lastNode = new Node("Empty", new double[]{0,0,0,0});
-        
+
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
 
@@ -86,7 +88,8 @@ public class SubsystemManager {
         }
        */
 
-       if (!currentNode.getName().equals(lastNode.getName())) {
+       if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
+        reactivation = false;
         sWristPitch.setActive();
         sWristRoll.setActive();
         sElevator.setActive();

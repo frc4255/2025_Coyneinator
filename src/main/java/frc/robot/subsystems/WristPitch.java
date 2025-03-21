@@ -45,9 +45,9 @@ public class WristPitch extends SubsystemBase {
             0, 
             0, 
             new TrapezoidProfile.Constraints(
-                10
+                8
                 , //TODO tune this
-                12 // TODO tune this
+                8 // TODO tune this
             )
         );
 

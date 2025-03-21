@@ -63,7 +63,7 @@ public class OnePieceL1 extends SequentialCommandGroup{
                 s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L1Assist(manager).withTimeout(1) //TODO TUNE THIS
+                    new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
                 )
             )
 

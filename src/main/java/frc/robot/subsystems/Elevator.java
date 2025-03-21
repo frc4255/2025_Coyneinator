@@ -50,8 +50,8 @@ public class Elevator extends SubsystemBase {
             0, 
             0, 
             new TrapezoidProfile.Constraints(
-                3, //TODO tune this
-                2.25 // TODO tune this
+                2, //TODO tune this
+                2 // TODO tune this
             )
         );
 

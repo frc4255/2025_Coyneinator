@@ -68,7 +68,7 @@ public class FourPieceL4Only extends SequentialCommandGroup{
                 s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L4Assist(manager).withTimeout(1) //TODO TUNE THIS
+                    new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
                 )
             ),
 
@@ -84,7 +84,7 @@ public class FourPieceL4Only extends SequentialCommandGroup{
                 s_Swerve.followPathCommand(path2),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L4Assist(manager).withTimeout(1) //TODO TUNE THIS
+                    new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
                 )
             ),
 
@@ -100,7 +100,7 @@ public class FourPieceL4Only extends SequentialCommandGroup{
                 s_Swerve.followPathCommand(path4),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L4Assist(manager).withTimeout(1) //TODO TUNE THIS
+                    new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
                 )
             ),
 
@@ -116,7 +116,7 @@ public class FourPieceL4Only extends SequentialCommandGroup{
                 s_Swerve.followPathCommand(path6),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L4Assist(manager).withTimeout(1) //TODO TUNE THIS
+                    new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
                 )
             )
 

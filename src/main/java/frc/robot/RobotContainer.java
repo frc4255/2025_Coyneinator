@@ -129,14 +129,14 @@ public class RobotContainer {
         private void configureButtonBindings() {
             /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-            groundIntake.onTrue(new CoralGroundIntake(manager, s_EndEffector));
+            groundIntake.onTrue(new CoralGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            L1.onTrue(new L1Assist(manager));
-            L2.onTrue(new L2Assist(manager));
-            L3.onTrue(new L3Assist(manager));
-            L4.onTrue(new L4Assist(manager));
+            L1.onTrue(new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            L2.onTrue(new L2Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            L3.onTrue(new L3Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            L4.onTrue(new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            stow.onTrue(new Stow(manager, s_Pivot, s_Elevator));
+            stow.onTrue(new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
             runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
 
