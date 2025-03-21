@@ -47,6 +47,10 @@ nodes = [
         "setpoints": [1.75, 0, -0.76, -1.53]
     },
     {
+        "name" : "Net Intermediate",
+        "setpoints" : [1.76, 0, -1.12, 3.14]
+    },
+    {
         "name": "Net Score", 
         "setpoints": [1.76, 1, -1.12, 3.14]
     },
@@ -238,8 +242,18 @@ edges = [
         "start": "L1 Score",
         "end": "Stow"
     },
-    
-
+    {
+        "start":"Net Intermediate",
+        "end" : "Stow"
+    },
+    {
+        "start":"Net Intermediate",
+        "end" : "Net Score"
+    },
+    {
+        "start":"Net Score",
+        "end": "Net Intermediate"
+    }
 ]
 
 # Build an adjacency list representation.

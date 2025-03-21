@@ -21,9 +21,9 @@
     {
       "name": "Coral Ground Pickup",
       "setpoints": [
-        0.275,
-        0,
-        -1.7,
+        0.35,
+        0.05,
+        -1.89,
         -3.14
       ]
     },
@@ -82,21 +82,39 @@
       ]
     },
     {
-      "name": "L3 Algae Pickup",
+      "name": "Net Intermediate",
       "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        1.76,
+        0,
+        -1.12,
+        3.14
+      ]
+    },
+    {
+      "name": "Net Score",
+      "setpoints": [
+        1.76,
+        1,
+        -1.12,
+        3.14
+      ]
+    },
+    {
+      "name": "L2 Algae Pickup",
+      "setpoints": [
+        1.21,
+        0,
+        -0.01,
+        3.14
       ]
     },
     {
       "name": "L3 Algae Pickup",
       "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        1.43,
+        0.23,
+        -0.27,
+        3.14
       ]
     },
     {
@@ -104,26 +122,26 @@
       "setpoints": [
         0,
         0,
-        -1.57,
-        -1.51
+        -1.43,
+        -0.13
       ]
     },
     {
       "name": "Processor Score",
       "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        0.01,
+        0,
+        -1.14,
+        0
       ]
     },
     {
       "name": "Coral HP Pickup",
       "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        0.99,
+        0,
+        -1.44,
+        -3.14
       ]
     },
     {
@@ -301,6 +319,18 @@
     {
       "start": "L1 Score",
       "end": "Stow"
+    },
+    {
+      "start": "Net Intermediate",
+      "end": "Stow"
+    },
+    {
+      "start": "Net Intermediate",
+      "end": "Net Score"
+    },
+    {
+      "start": "Net Score",
+      "end": "Net Intermediate"
     }
   ],
   "shortestPaths": {
@@ -347,6 +377,13 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Stow",
         "Reef Align",
@@ -368,11 +405,6 @@
       "L1 Score": [
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Intake Intermediate": {
@@ -423,6 +455,14 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Intake Intermediate",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Intake Intermediate",
         "Stow",
@@ -449,12 +489,6 @@
         "Intake Intermediate",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Coral Ground Pickup": {
@@ -501,6 +535,13 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Coral Ground Pickup",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Coral Ground Pickup",
         "Reef Align",
@@ -530,11 +571,6 @@
         "Intake Intermediate",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Lollipop Coral Pickup": {
@@ -581,6 +617,13 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Lollipop Coral Pickup",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Lollipop Coral Pickup",
         "Reef Align",
@@ -606,11 +649,6 @@
         "Lollipop Coral Pickup",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Reef Align": {
@@ -652,6 +690,12 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Reef Align",
         "L3 Algae Pickup"
@@ -676,10 +720,6 @@
         "Reef Align",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "L4 Init": {
@@ -724,6 +764,13 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L4 Init",
+        "L4 Dunk",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L4 Init",
         "Reef Align",
@@ -753,11 +800,6 @@
         "Reef Align",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L4 Init",
-        "L4 Dunk",
-        "L2 Algae Pickup"
       ]
     },
     "L4 Dunk": {
@@ -805,6 +847,12 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L4 Dunk",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L4 Dunk",
         "Reef Align",
@@ -834,10 +882,6 @@
         "Reef Align",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L4 Dunk",
-        "L2 Algae Pickup"
       ]
     },
     "L3 Init": {
@@ -882,6 +926,13 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L3 Init",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L3 Init",
         "Reef Align",
@@ -911,11 +962,6 @@
         "Reef Align",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L3 Init",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "L3 Dunk": {
@@ -963,6 +1009,13 @@
       "L3 Dunk": [
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L3 Dunk",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L3 Dunk",
         "Reef Align",
@@ -992,11 +1045,291 @@
         "Reef Align",
         "Stow",
         "L1 Score"
+      ]
+    },
+    "Net Intermediate": {
+      "Stow": [
+        "Net Intermediate",
+        "Stow"
+      ],
+      "Intake Intermediate": [
+        "Net Intermediate",
+        "Stow",
+        "Intake Intermediate"
+      ],
+      "Coral Ground Pickup": [
+        "Net Intermediate",
+        "Stow",
+        "Intake Intermediate",
+        "Coral Ground Pickup"
+      ],
+      "Lollipop Coral Pickup": [
+        "Net Intermediate",
+        "Stow",
+        "Lollipop Coral Pickup"
+      ],
+      "Reef Align": [
+        "Net Intermediate",
+        "Stow",
+        "Reef Align"
+      ],
+      "L4 Init": [
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L4 Init"
+      ],
+      "L4 Dunk": [
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L4 Init",
+        "L4 Dunk"
+      ],
+      "L3 Init": [
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Init"
+      ],
+      "L3 Dunk": [
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Init",
+        "L3 Dunk"
+      ],
+      "Net Intermediate": [
+        "Net Intermediate"
+      ],
+      "Net Score": [
+        "Net Intermediate",
+        "Net Score"
       ],
       "L2 Algae Pickup": [
-        "L3 Dunk",
+        "Net Intermediate",
+        "Stow",
         "Reef Align",
         "L2 Algae Pickup"
+      ],
+      "L3 Algae Pickup": [
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Algae Pickup"
+      ],
+      "Algae Ground Pickup": [
+        "Net Intermediate",
+        "Stow",
+        "Algae Ground Pickup"
+      ],
+      "Processor Score": [
+        "Net Intermediate",
+        "Stow",
+        "Processor Score"
+      ],
+      "Coral HP Pickup": [],
+      "L2 Align": [
+        "Net Intermediate",
+        "Stow",
+        "L2 Align"
+      ],
+      "L1 Score": [
+        "Net Intermediate",
+        "Stow",
+        "L1 Score"
+      ]
+    },
+    "Net Score": {
+      "Stow": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow"
+      ],
+      "Intake Intermediate": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Intake Intermediate"
+      ],
+      "Coral Ground Pickup": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Intake Intermediate",
+        "Coral Ground Pickup"
+      ],
+      "Lollipop Coral Pickup": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Lollipop Coral Pickup"
+      ],
+      "Reef Align": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align"
+      ],
+      "L4 Init": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L4 Init"
+      ],
+      "L4 Dunk": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L4 Init",
+        "L4 Dunk"
+      ],
+      "L3 Init": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Init"
+      ],
+      "L3 Dunk": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Init",
+        "L3 Dunk"
+      ],
+      "Net Intermediate": [
+        "Net Score",
+        "Net Intermediate"
+      ],
+      "Net Score": [
+        "Net Score"
+      ],
+      "L2 Algae Pickup": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
+      "L3 Algae Pickup": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Reef Align",
+        "L3 Algae Pickup"
+      ],
+      "Algae Ground Pickup": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Algae Ground Pickup"
+      ],
+      "Processor Score": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Processor Score"
+      ],
+      "Coral HP Pickup": [],
+      "L2 Align": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "L2 Align"
+      ],
+      "L1 Score": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "L1 Score"
+      ]
+    },
+    "L2 Algae Pickup": {
+      "Stow": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow"
+      ],
+      "Intake Intermediate": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Intake Intermediate"
+      ],
+      "Coral Ground Pickup": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Coral Ground Pickup"
+      ],
+      "Lollipop Coral Pickup": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Lollipop Coral Pickup"
+      ],
+      "Reef Align": [
+        "L2 Algae Pickup",
+        "Reef Align"
+      ],
+      "L4 Init": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "L4 Init"
+      ],
+      "L4 Dunk": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "L4 Init",
+        "L4 Dunk"
+      ],
+      "L3 Init": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "L3 Init"
+      ],
+      "L3 Dunk": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "L3 Init",
+        "L3 Dunk"
+      ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L2 Algae Pickup"
+      ],
+      "L3 Algae Pickup": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "L3 Algae Pickup"
+      ],
+      "Algae Ground Pickup": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Algae Ground Pickup"
+      ],
+      "Processor Score": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Processor Score"
+      ],
+      "Coral HP Pickup": [],
+      "L2 Align": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "L2 Align"
+      ],
+      "L1 Score": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "L1 Score"
       ]
     },
     "L3 Algae Pickup": {
@@ -1047,6 +1380,13 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L3 Algae Pickup",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L3 Algae Pickup"
       ],
@@ -1074,11 +1414,6 @@
         "Reef Align",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Algae Ground Pickup": {
@@ -1133,6 +1468,14 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Algae Ground Pickup",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Algae Ground Pickup",
         "Stow",
@@ -1156,12 +1499,6 @@
         "Algae Ground Pickup",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Processor Score": {
@@ -1216,6 +1553,14 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Processor Score",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Processor Score",
         "Stow",
@@ -1240,12 +1585,6 @@
         "Processor Score",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "Coral HP Pickup": {
@@ -1300,6 +1639,14 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "Coral HP Pickup",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "Coral HP Pickup",
         "Stow",
@@ -1328,12 +1675,6 @@
         "Coral HP Pickup",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "L2 Align": {
@@ -1388,6 +1729,14 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L2 Align",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L2 Align",
         "Stow",
@@ -1412,12 +1761,6 @@
         "L2 Align",
         "Stow",
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
       ]
     },
     "L1 Score": {
@@ -1472,6 +1815,14 @@
         "L3 Init",
         "L3 Dunk"
       ],
+      "Net Intermediate": [],
+      "Net Score": [],
+      "L2 Algae Pickup": [
+        "L1 Score",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
       "L3 Algae Pickup": [
         "L1 Score",
         "Stow",
@@ -1496,94 +1847,6 @@
       ],
       "L1 Score": [
         "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
-      ]
-    },
-    "L2 Algae Pickup": {
-      "Stow": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow"
-      ],
-      "Intake Intermediate": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
-      ],
-      "Coral Ground Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Coral Ground Pickup"
-      ],
-      "Lollipop Coral Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Lollipop Coral Pickup"
-      ],
-      "Reef Align": [
-        "L2 Algae Pickup",
-        "Reef Align"
-      ],
-      "L4 Init": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L4 Init"
-      ],
-      "L4 Dunk": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L4 Init",
-        "L4 Dunk"
-      ],
-      "L3 Init": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Init"
-      ],
-      "L3 Dunk": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Init",
-        "L3 Dunk"
-      ],
-      "L3 Algae Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Algae Pickup"
-      ],
-      "Algae Ground Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
-      ],
-      "Processor Score": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
-      ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
-      ],
-      "L1 Score": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
-      ],
-      "L2 Algae Pickup": [
-        "L2 Algae Pickup"
       ]
     }
   }

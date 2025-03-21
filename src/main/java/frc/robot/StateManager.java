@@ -37,6 +37,7 @@ public class StateManager {
         coral.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
         coral.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
         coral.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
+
         coral.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
 
         algae.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
