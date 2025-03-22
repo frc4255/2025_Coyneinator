@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.photonvision.PhotonCamera;
 
+import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -23,8 +24,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
+import frc.robot.autos.autocommands.testAuto;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.Camera;
@@ -89,7 +92,7 @@ public class RobotContainer {
         private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
         
         /* auto stuff */
-        public SendableChooser<Command> autoChooser;
+        private final AutoChooser autoChooser;
 
         private final AutoFactory autoFactory;
     
@@ -121,6 +124,17 @@ public class RobotContainer {
             true, // If alliance flipping should be enabled 
             s_Swerve // The drive subsystem
         );
+
+        autoChooser = new AutoChooser();
+
+        // Add options to the chooser
+        autoChooser.addCmd("Example Routine", () -> new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));
+
+        // Put the auto chooser on the dashboard
+        SmartDashboard.putData(autoChooser);
+
+        // Schedule the selected auto during the autonomous period
+        RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
         }
     
         /**
@@ -157,9 +171,6 @@ public class RobotContainer {
     }
 
     private void configureAutoChooser() {
-
-        autoChooser = new SendableChooser<>();
-        autoChooser.setDefaultOption("nothing", null);
         //autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
         SmartDashboard.putData(autoChooser);
     }
@@ -174,8 +185,9 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
+    /*
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         return autoChooser.getSelected();
-    }
+    }*/
 }
