@@ -10,12 +10,16 @@ import java.util.List;
 import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.util.FileVersionException;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.graph.GraphParser;
@@ -52,7 +56,12 @@ public class Robot extends TimedRobot {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+
+    FollowPathCommand.warmupCommand().schedule();
     
+    PathPlannerLogging.setLogActivePathCallback((poses) -> {
+      SmartDashboard.putNumber("Pose size", poses.size());
+    });
   }
 
   /**

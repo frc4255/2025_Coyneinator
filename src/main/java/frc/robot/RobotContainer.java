@@ -8,6 +8,7 @@ import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -151,9 +152,15 @@ public class RobotContainer {
     }
 
     private void configureAutoChooser() throws FileVersionException, IOException, ParseException {
-        autoChooser = new SendableChooser<>();
-        autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));
 
+        PathPlannerPath path0 = PathPlannerPath.fromPathFile("1Pc");
+
+        autoChooser = new SendableChooser<>();
+        autoChooser.setDefaultOption("nothing", null);
+        autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));
+        autoChooser.addOption("test", s_Swerve.followPathCommand(path0)
+            
+        );
         SmartDashboard.putData(autoChooser);
     }
     
