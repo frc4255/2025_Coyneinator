@@ -74,6 +74,8 @@ public class WristPitch extends SubsystemBase {
 
         if (getMotorCurrent() >= 40 && m_Motor1.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_Motor1.setPosition(0);
+
+            m_Motor1.stopMotor();
             }
     }
 

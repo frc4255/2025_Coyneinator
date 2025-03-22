@@ -94,6 +94,9 @@ public class Elevator extends SubsystemBase {
         if (getMotorCurrent() >= 40 && m_RightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_LeftMotor.setPosition(0);   
             m_RightMotor.setPosition(0);
+
+            m_LeftMotor.stopMotor();
+            m_RightMotor.stopMotor();
             }
     }
 

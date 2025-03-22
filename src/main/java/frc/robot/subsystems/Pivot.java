@@ -82,6 +82,9 @@ public class Pivot extends SubsystemBase {
         if (getMotorCurrent() >= 40 && m_rightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_leftMotor.setPosition(0);   
             m_rightMotor.setPosition(0);
+
+            m_leftMotor.stopMotor();
+            m_rightMotor.stopMotor();
         }
     }
 
