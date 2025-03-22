@@ -38,6 +38,7 @@ public class OnePieceL1 extends SequentialCommandGroup{
         addCommands(
             factory.resetOdometry("test"),
             new WaitCommand(0.1),
+            factory.trajectoryCmd("test"),
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(

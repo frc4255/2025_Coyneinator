@@ -1,6 +1,5 @@
 package frc.robot.autos.autocommands;
 
-import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.graph.GraphParser;
 import frc.robot.SubsystemManager;
@@ -19,7 +18,6 @@ public class IntakeThenReefAlignWhenCurrentAction extends Command {
     private Elevator s_Elevator;
     private WristPitch s_WristPitch;
     private WristRoll s_WristRoll;
-    private AutoFactory autoFactory;
     
     public IntakeThenReefAlignWhenCurrentAction(SubsystemManager manager, EndEffector endEffector, Pivot s_Pivot, 
         Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {

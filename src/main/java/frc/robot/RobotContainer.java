@@ -92,7 +92,8 @@ public class RobotContainer {
         private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
         
         /* auto stuff */
-        private final AutoChooser autoChooser;
+        private SendableChooser<Command> autochooser;
+        //private final AutoChooser autoChooser;
 
         private final AutoFactory autoFactory;
     
@@ -113,8 +114,6 @@ public class RobotContainer {
             // Configure the button bindings
             configureButtonBindings();
 
-            configureAutoChooser();
-
             addTuningSliders();
 
             autoFactory = new AutoFactory(
@@ -123,8 +122,12 @@ public class RobotContainer {
             s_Swerve::followTrajectory, // The drive subsystem trajectory follower 
             true, // If alliance flipping should be enabled 
             s_Swerve // The drive subsystem
-        );
 
+            
+        );
+        configureAutoChooser();
+
+            /*
         autoChooser = new AutoChooser();
 
         // Add options to the chooser
@@ -134,7 +137,7 @@ public class RobotContainer {
         SmartDashboard.putData(autoChooser);
 
         // Schedule the selected auto during the autonomous period
-        RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+        RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());*/
         }
     
         /**
@@ -171,8 +174,9 @@ public class RobotContainer {
     }
 
     private void configureAutoChooser() {
-        //autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
-        SmartDashboard.putData(autoChooser);
+        autochooser = new SendableChooser<>();
+        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));            
+        SmartDashboard.putData(autochooser);
     }
     
     private void addTuningSliders() {
@@ -185,9 +189,9 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    /*
+    
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return autoChooser.getSelected();
-    }*/
+        return autochooser.getSelected();
+    }
 }
