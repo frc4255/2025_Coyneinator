@@ -65,9 +65,16 @@ public class RobotContainer {
     private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
+    private final JoystickButton algaeL2Pickup = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
+    private final JoystickButton algaeL3Pickup = new JoystickButton(driver, XboxController.Button.kRightStick.value);
+
     private final JoystickButton extakeCoral = new JoystickButton(driver, XboxController.Button.kX.value);
 
     private final JoystickButton runElevatorTesting = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+
+    private final JoystickButton scoreBarge = new JoystickButton(driver, XboxController.Button.kY.value);
+
+    private final JoystickButton algaeGroundIntake = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     private final POVButton L1 = new POVButton(driver, 90);
     private final POVButton L2 = new POVButton(driver, 180);
@@ -170,6 +177,14 @@ public class RobotContainer {
             runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
 
             extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
+
+            scoreBarge.onTrue(new NetAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+            algaeL2Pickup.onTrue(new AlgaeL2Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            algaeL3Pickup.onTrue(new AlgaeL3Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+
+            algaeGroundIntake.onTrue(new AlgaeGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
     }
 
