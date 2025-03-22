@@ -40,6 +40,8 @@ public class Pivot extends SubsystemBase {
 
     private boolean isPosePossible = true;
 
+    private boolean isStowed = false;
+
     private DataLog log;
 
     public Pivot() {
@@ -67,6 +69,24 @@ public class Pivot extends SubsystemBase {
 
         m_PIDController.setTolerance(0.25);
 
+    }
+
+    public void isStowed(boolean currentState) {
+        isStowed = currentState;
+    }
+
+    public void autoHome() {
+        m_leftMotor.set(-0.04);
+        m_rightMotor.set(-0.04);
+
+        if (getMotorCurrent() >= 40 && m_rightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+            m_leftMotor.setPosition(0);   
+            m_rightMotor.setPosition(0);
+        }
+    }
+
+    public double getMotorCurrent() {
+        return m_rightMotor.getStatorCurrent().getValueAsDouble();
     }
 
     protected double getMeasurement() {

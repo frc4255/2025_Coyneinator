@@ -38,7 +38,7 @@ public class WristPitch extends SubsystemBase {
 
     private boolean active = false;
     private DataLog log;
-    
+
     public WristPitch() {
         m_PIDController = new ProfiledPIDController(
             20,
@@ -61,11 +61,24 @@ public class WristPitch extends SubsystemBase {
         m_PIDController.setTolerance(0.3);
     }
 
+    protected double getMeasurement() {
+        return getCurrentPos();
+    }
+
     public void setActive() {
         active = true;
     }
-    protected double getMeasurement() {
-        return getCurrentPos();
+
+    public void autoHome() {
+        m_Motor1.set(-0.04);
+
+        if (getMotorCurrent() >= 40 && m_Motor1.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+            m_Motor1.setPosition(0);
+            }
+    }
+
+    public double getMotorCurrent() {
+        return m_Motor1.getStatorCurrent().getValueAsDouble();
     }
 
     protected void useOutput(double output, TrapezoidProfile.State setpoint) {
