@@ -4,12 +4,7 @@ import java.io.IOException;
 import java.security.Timestamp;
 import java.util.Map;
 
-import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
-
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -27,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.lib.util.OnTheFlyTrajectory;
 import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
@@ -100,7 +94,7 @@ public class RobotContainer {
                  * @throws ParseException 
                  * @throws IOException 
                  * @throws FileVersionException */
-                public RobotContainer() throws FileVersionException, IOException, ParseException {
+                public RobotContainer() {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
@@ -151,16 +145,11 @@ public class RobotContainer {
 
     }
 
-    private void configureAutoChooser() throws FileVersionException, IOException, ParseException {
-
-        PathPlannerPath path0 = PathPlannerPath.fromPathFile("1Pc");
+    private void configureAutoChooser() {
 
         autoChooser = new SendableChooser<>();
         autoChooser.setDefaultOption("nothing", null);
-        autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));
-        autoChooser.addOption("test", s_Swerve.followPathCommand(path0)
-            
-        );
+        //autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
         SmartDashboard.putData(autoChooser);
     }
     

@@ -8,8 +8,6 @@ import java.util.Map;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -136,18 +134,6 @@ public final class Constants {
         
         public static final double ROBOT_MOMENT_OF_INERTIA = 11; //TODO get real value in KG * M^2
         public static final int NUMBER_OF_MODULES = 4; 
-    
-        public static final ModuleConfig swerveModuleConfig = new ModuleConfig(
-                                        WHEEL_RADIUS_METERS,
-                                        MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
-                                        DCMotor.getKrakenX60(1), 
-                                        DRIVE_MOTOR_CURRENT_LIMIT, 
-                                        1); 
-
-        public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, 
-                                                    ROBOT_MOMENT_OF_INERTIA, 
-                                                    swerveModuleConfig, 
-                                                    SWERVE_MODULE_LOCATIONS);
 
         public static final double MAX_VELOCITY = 5; //TODO get real value
         public static final int pigeonID = 0;

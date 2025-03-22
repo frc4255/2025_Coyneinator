@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.OnTheFlyTrajectory;
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.GraphParser.GraphData;
 import frc.robot.SubsystemManager;
@@ -31,8 +30,6 @@ public class L1Assist extends Command {
     private AlignTool AlignTool;
 
     private Pose2d whereToAlign;
-
-    private OnTheFlyTrajectory onTheFlyTrajectory;
 
     private List<Camera> cams;
     

@@ -7,12 +7,7 @@ package frc.robot;
 import java.io.IOException;
 import java.util.List;
 
-import org.json.simple.parser.ParseException;
-
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.util.FileVersionException;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -50,18 +45,9 @@ public class Robot extends TimedRobot {
     DriverStation.startDataLog(DataLogManager.getLog());
 
     GraphParser.funny();
-    try {
-      m_robotContainer = new RobotContainer();
-    } catch (FileVersionException | IOException | ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    FollowPathCommand.warmupCommand().schedule();
     
-    PathPlannerLogging.setLogActivePathCallback((poses) -> {
-      SmartDashboard.putNumber("Pose size", poses.size());
-    });
+    m_robotContainer = new RobotContainer();
+
   }
 
   /**
@@ -134,12 +120,7 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationInit() {
     // Perform any simulation-specific initialization here.
-    try {
-      m_robotContainer = new RobotContainer();
-    } catch (FileVersionException | IOException | ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    m_robotContainer = new RobotContainer();
 
   }
 }
