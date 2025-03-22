@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.util.OnTheFlyTrajectory;
 import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
+import frc.robot.autos.autocommands.testAuto;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.Camera;
@@ -158,9 +160,11 @@ public class RobotContainer {
         autoChooser = new SendableChooser<>();
         autoChooser.setDefaultOption("nothing", null);
         autoChooser.addOption("4 piece left", new FourPieceNoHPL4(s_Swerve, s_Pivot, null, null, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));
-        autoChooser.addOption("test", s_Swerve.followPathCommand(path0)
-            
-        );
+        autoChooser.addOption("test", s_Swerve.followPathCommand(path0));
+        // TODO: fix? V
+        autoChooser.addOption("JustSwerveMobile", new testAuto(s_Swerve));
+
+        
         SmartDashboard.putData(autoChooser);
     }
     
