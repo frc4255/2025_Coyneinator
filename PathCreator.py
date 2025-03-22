@@ -127,6 +127,10 @@ edges = [
         "end": "Processor Score"
     },
     {
+        "start":"Stow",
+        "end":"Net Intermediate"
+    },
+    {
         "start": "Intake Intermediate",
         "end": "Stow"
     },
