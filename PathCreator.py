@@ -31,6 +31,10 @@ nodes = [
         "setpoints": [1.57, 0, -1.38, -1.73]
     },
     {
+        "name": "L4 Intermediate",
+        "setpoints": [1.65, 0.77, -1.38, -1.53]
+    },
+    {
         "name": "L4 Init",
         "setpoints": [1.65, 0.77, -1.02, -1.53]
     },
@@ -39,8 +43,12 @@ nodes = [
         "setpoints": [1.65 ,0.77,-0.37,-1.53]
     },
     {
+        "name":"L3 Intermediate",
+        "setpoints":[1.5, 0.05,-0.8,-1.53]
+    },
+    {
         "name": "L3 Init",
-        "setpoints": [1.5, .05, -0.8, -1.53]
+        "setpoints": [1.5, .05, -1.38, -1.53]
     },
     {
         "name": "L3 Dunk",
@@ -156,10 +164,14 @@ edges = [
     },
     {
         "start": "Reef Align",
-        "end": "L4 Init"
+        "end": "L3 Intermediate"
     },
     {
         "start": "Reef Align",
+        "end": "L4 Intermediate"
+    },
+    {
+        "start": "L3 Intermediate",
         "end": "L3 Init"
     },
     {
@@ -171,6 +183,22 @@ edges = [
         "end": "L2 Algae Pickup"
     },
     {
+        "start":"L3 Init",
+        "end": "L3 Intermediate"
+    },
+    {
+        "start": "L3 Intermediate",
+        "end": "Reef Align"
+    },
+    {
+        "start": "L4 Intermediate",
+        "end": "L4 Init"
+    },
+    {
+        "start": "L4 Intermediate",
+        "end": "Reef Align"
+    },
+    {
         "start": "L4 Init",
         "end": "L4 Dunk"
     },
@@ -180,7 +208,7 @@ edges = [
     },
     {
         "start": "L4 Init",
-        "end": "Reef Align"
+        "end": "L4 Intermediate"
     },
     {
         "start": "L3 Init",
