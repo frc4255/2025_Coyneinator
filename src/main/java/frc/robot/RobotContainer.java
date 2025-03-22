@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.photonvision.PhotonCamera;
 
+import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -89,12 +90,14 @@ public class RobotContainer {
         
         /* auto stuff */
         public SendableChooser<Command> autoChooser;
+
+        private final AutoFactory autoFactory;
     
         /** The container for the robot. Contains subsystems, OI devices, and commands. 
                  * @throws ParseException 
                  * @throws IOException 
                  * @throws FileVersionException */
-                public RobotContainer() {
+        public RobotContainer() {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
@@ -110,6 +113,14 @@ public class RobotContainer {
             configureAutoChooser();
 
             addTuningSliders();
+
+            autoFactory = new AutoFactory(
+            s_Swerve::getPose, // A function that returns the current robot pose
+            s_Swerve::setPose, // A function that resets the current robot pose to the provided Pose2d
+            s_Swerve::followTrajectory, // The drive subsystem trajectory follower 
+            true, // If alliance flipping should be enabled 
+            s_Swerve // The drive subsystem
+        );
         }
     
         /**

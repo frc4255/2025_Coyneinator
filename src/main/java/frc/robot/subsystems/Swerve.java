@@ -7,6 +7,7 @@ import frc.robot.FieldLayout;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import choreo.trajectory.SwerveSample;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
 
@@ -39,6 +41,10 @@ public class Swerve extends SubsystemBase {
     public Pigeon2 gyro;
 
     private VisionSubsystem vision;
+
+    private final PIDController xController = new PIDController(10.0, 0.0, 0.0);
+    private final PIDController yController = new PIDController(10.0, 0.0, 0.0);
+    private final PIDController headingController = new PIDController(7.5, 0.0, 0.0);
 
     public Swerve(VisionSubsystem vision) {
         this.vision = vision;
@@ -65,6 +71,9 @@ public class Swerve extends SubsystemBase {
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.45, 0.45, 6)
             );
+        
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
+
 
         resetModulesToAbsolute();
     }
@@ -101,6 +110,20 @@ public class Swerve extends SubsystemBase {
         );
     }
 
+    public void followTrajectory(SwerveSample sample) {
+        // Get the current pose of the robot
+        Pose2d pose = getPose();
+
+        // Generate the next speeds for the robot
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            sample.vx + xController.calculate(pose.getX(), sample.x),
+            sample.vy + yController.calculate(pose.getY(), sample.y),
+            sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading)
+        );
+
+        // Apply the generated speeds
+        follow(speeds);
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
