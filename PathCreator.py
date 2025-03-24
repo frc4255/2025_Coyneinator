@@ -90,6 +90,10 @@ nodes = [
         "name": "L1 Score",
         "setpoints": [1.4, 0, 0, 0.04]
     },
+    {
+        "name": "Climb",
+        "setpoints": [0, 0, 0, 0]
+    },
 ]
 
 # Define edges between nodes without descriptions.
@@ -129,6 +133,10 @@ edges = [
     {
         "start":"Stow",
         "end":"Net Intermediate"
+    },
+    {
+        "start": "Stow",
+        "end": "Climb"
     },
     {
         "start": "Intake Intermediate",
@@ -277,6 +285,10 @@ edges = [
     {
         "start":"Net Score",
         "end": "Net Intermediate"
+    },
+    {
+        "start": "Climb",
+        "end": "Stow"
     }
 ]
 

@@ -47,5 +47,9 @@ public class Stow extends Command {
     @Override
     public void end(boolean interrupted) {
 
+        s_Pivot.autoHome();
+        s_Elevator.autoHome();
+        s_WristPitch.autoHome();
+
     }
 }

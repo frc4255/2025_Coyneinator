@@ -87,6 +87,24 @@ public class Elevator extends SubsystemBase {
     }
 
 
+    public void autoHome() {
+        m_LeftMotor.set(-0.04);
+        m_RightMotor.set(-0.04);
+
+        if (getMotorCurrent() >= 40 && m_RightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+            m_LeftMotor.setPosition(0);   
+            m_RightMotor.setPosition(0);
+
+            m_LeftMotor.stopMotor();
+            m_RightMotor.stopMotor();
+            }
+    }
+
+    public double getMotorCurrent() {
+        return m_RightMotor.getStatorCurrent().getValueAsDouble();
+    }
+
+
     //Returns in meters
     // Math is pitch diameter (32T HTD 5mm = 2.005 smthn in, divided by 1000, all over 4 (gear reduction))
     public double getElevatorPosition() {
