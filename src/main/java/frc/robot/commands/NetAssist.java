@@ -27,6 +27,9 @@ public class NetAssist extends Command {
     private SubsystemManager manager;
 
     private Swerve s_Swerve;
+    private AlignTool AlignTool;
+
+    private Pose2d whereToAlign;
 
     private List<Camera> cams;
     
