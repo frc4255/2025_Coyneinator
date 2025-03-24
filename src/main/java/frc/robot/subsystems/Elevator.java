@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
         );
 
         m_PIDController = new ProfiledPIDController(
-            10, 
+            12, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
@@ -104,7 +104,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.05) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
+        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.1) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
         System.out.println(x+"Elevator");
         return x;
     }

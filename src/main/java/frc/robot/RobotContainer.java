@@ -22,9 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
 import frc.robot.autos.autocommands.testAuto;
@@ -61,20 +63,28 @@ public class RobotContainer {
     /* Driver Buttons */
 
     /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
     private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     private final JoystickButton algaeL2Pickup = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private final JoystickButton algaeL3Pickup = new JoystickButton(driver, XboxController.Button.kRightStick.value);
 
-    private final JoystickButton extakeCoral = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton processorScore = new JoystickButton(driver, XboxController.Button.kX.value);
 
     private final JoystickButton runElevatorTesting = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     private final JoystickButton scoreBarge = new JoystickButton(driver, XboxController.Button.kY.value);
 
     private final JoystickButton algaeGroundIntake = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+
+    private final CommandXboxController driverAgain = new CommandXboxController(0);
+    private final Trigger extakeAlgae = new Trigger(driverAgain.leftTrigger(0.1));
+    private final Trigger extakeCoral = new Trigger(driverAgain.rightTrigger(0.1));
+
+    private final JoystickButton reefAlign = new JoystickButton(driver, XboxController.Button.kB.value);
+
+    private final JoystickButton coralHPIntake = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     private final POVButton L1 = new POVButton(driver, 90);
     private final POVButton L2 = new POVButton(driver, 180);
@@ -183,11 +193,17 @@ public class RobotContainer {
             algaeL2Pickup.onTrue(new AlgaeL2Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
             algaeL3Pickup.onTrue(new AlgaeL3Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-
             algaeGroundIntake.onTrue(new AlgaeGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-    }
+            coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
+            processorScore.onTrue(new ProcessorAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+            extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
+
+            reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+    }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
         autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));            

@@ -36,15 +36,15 @@ public class AlgaeL3Pickup extends Command {
     @Override
     public void initialize() {
         manager.requestNode(GraphParser.getNodeByName("L3 Algae Pickup"));
-        endEffector.setDutyCycle(-8);
+        endEffector.setDutyCycle(10);
 
 
     }
 
     @Override
     public void execute() {
-        if (endEffector.getMotorCurrent() > 15) {
-            endEffector.setDutyCycle(-0.5);
+        if (endEffector.getMotorCurrent() > 30) {
+            endEffector.setDutyCycle(0.5);
 
         }
     }

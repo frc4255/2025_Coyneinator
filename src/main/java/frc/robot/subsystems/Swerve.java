@@ -222,6 +222,13 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
+
+        Pose2d currentPose = getPose();
+
+        double[] array = {getPose().getX(), getPose().getY()};
+
+        SmartDashboard.putNumberArray("Swerve Pose Estimation", array);
+
         m_SwervePoseEstimator.update(getGyroYaw(), getModulePositions());
         for (PoseAndTimestampAndDev poseAndTimestamp : vision.getResults()) {
             m_SwervePoseEstimator.addVisionMeasurement(

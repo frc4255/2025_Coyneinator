@@ -20,7 +20,7 @@ import frc.robot.subsystems.WristPitch;
 import frc.robot.subsystems.WristRoll;
 import frc.robot.subsystems.Vision.Camera;
 
-public class L4Assist extends Command {
+public class ProcessorAssist extends Command {
 
     private PIDController rotPidController;
     private ProfiledPIDController translationPidController;
@@ -40,7 +40,7 @@ public class L4Assist extends Command {
     private WristPitch s_WristPitch;
     private WristRoll s_WristRoll;
 
-    public L4Assist(SubsystemManager manager, Pivot s_Pivot, 
+    public ProcessorAssist(SubsystemManager manager, Pivot s_Pivot, 
         Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
 
         this.manager = manager;
@@ -67,7 +67,7 @@ public class L4Assist extends Command {
 
         s_Swerve.followPathCommand(onTheFlyTrajectory.newOnTheFlyPath(whereToAlign));
          */
-        manager.requestNode(GraphParser.getNodeByName("L4 Init"));
+        manager.requestNode(GraphParser.getNodeByName("Processor Score"));
 
     }
 

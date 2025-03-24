@@ -67,7 +67,7 @@ public class L3Assist extends Command {
 
         s_Swerve.followPathCommand(onTheFlyTrajectory.newOnTheFlyPath(whereToAlign));
          */
-        manager.requestNode(GraphParser.getNodeByName("L3 Dunk"));
+        manager.requestNode(GraphParser.getNodeByName("L3 Init"));
 
     }
 

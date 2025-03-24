@@ -44,7 +44,7 @@ nodes = [
     },
     {
         "name":"L3 Intermediate",
-        "setpoints":[1.5, 0.05,-0.8,-1.53]
+        "setpoints":[1.5, 0.05,-1.38,-1.53]
     },
     {
         "name": "L3 Init",
@@ -187,10 +187,6 @@ edges = [
         "end": "L2 Algae Pickup"
     },
     {
-        "start":"L3 Init",
-        "end": "L3 Intermediate"
-    },
-    {
         "start": "L3 Intermediate",
         "end": "Reef Align"
     },
@@ -209,10 +205,6 @@ edges = [
     {
         "start": "L4 Init",
         "end": "L3 Init"
-    },
-    {
-        "start": "L4 Init",
-        "end": "L4 Intermediate"
     },
     {
         "start": "L3 Init",

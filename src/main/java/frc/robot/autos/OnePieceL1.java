@@ -10,7 +10,9 @@ import frc.robot.subsystems.EndEffector;
 
 import java.io.IOException;
 
+import choreo.Choreo;
 import choreo.auto.AutoFactory;
+import choreo.trajectory.Trajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,8 +26,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.SubsystemManager;
 import frc.robot.commands.CoralHumanPlayerIntake;
+import frc.robot.commands.ExtakeCoral;
 import frc.robot.commands.L1Assist;
 import frc.robot.commands.L4Assist;
+import frc.robot.commands.Stow;
 
 public class OnePieceL1 extends SequentialCommandGroup{
     public OnePieceL1(Swerve s_Swerve, AlignTool alignTool,
@@ -33,7 +37,6 @@ public class OnePieceL1 extends SequentialCommandGroup{
         WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager, AutoFactory factory) {
         
         Command myTrajectory = factory.trajectoryCmd("test");
-
 
         addCommands(
             factory.resetOdometry("test"),
@@ -43,7 +46,10 @@ public class OnePieceL1 extends SequentialCommandGroup{
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(1) //TODO TUNE THIS
+                    new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
+                    new ExtakeCoral(s_EndEffector).withTimeout(0.5), //TODO TUNE THIS
+                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+                    
                 )
             )
 
