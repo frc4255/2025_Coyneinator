@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.HashMap;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -112,5 +114,7 @@ public class WristRoll extends SubsystemBase {
             useOutput(pidOutput, m_PIDController.getSetpoint());
         }
         SmartDashboard.putNumber("WristRoll", getCurrentPos());
+
+        Logger.recordOutput("WristRoll", getCurrentPos());
     }
 }

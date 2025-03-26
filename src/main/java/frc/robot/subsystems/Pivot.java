@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -87,6 +89,10 @@ public class Pivot extends SubsystemBase {
         System.err.println("Pivot LEft motor Velocty: " + m_leftMotor.getVelocity().getValueAsDouble());
         System.err.println("Pivot right Motor Velocty: " + m_rightMotor.getVelocity().getValueAsDouble());
 
+        Logger.recordOutput("Pivot Motor Current", getMotorCurrent());
+        Logger.recordOutput("Pivot LEft motor Velocty ", m_leftMotor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Pivot right Motor Velocty", m_rightMotor.getVelocity().getValueAsDouble());
+
 
         if (m_rightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_leftMotor.setPosition(0);   
@@ -114,6 +120,9 @@ public class Pivot extends SubsystemBase {
 
         SmartDashboard.putNumber("setpoint velocity", setpoint.velocity);
         SmartDashboard.putNumber("Setpoint position", setpoint.position);
+
+        Logger.recordOutput("setpoint velocity", setpoint.velocity);
+        Logger.recordOutput("Setpoint position", setpoint.position);
         m_rightMotor.setControl(m_Motor1Request.withOutput(finalOut));
 
     }
@@ -168,6 +177,11 @@ public class Pivot extends SubsystemBase {
         SmartDashboard.putNumber("Pivot velocity", ((m_rightMotor.getVelocity().getValueAsDouble())*2*Math.PI)/252);
         SmartDashboard.putNumber("Pivot Acceleration", ((m_rightMotor.getAcceleration().getValueAsDouble()/252)*2*Math.PI));
         SmartDashboard.putNumber("Pivot Motors Applied Voltage", m_rightMotor.getMotorVoltage().getValueAsDouble());
+        
+        Logger.recordOutput("PivotPosition", getPivotPosition());
+        Logger.recordOutput("Pivot velocity", ((m_rightMotor.getVelocity().getValueAsDouble())*2*Math.PI)/252);
+        Logger.recordOutput("Pivot Acceleration", ((m_rightMotor.getAcceleration().getValueAsDouble()/252)*2*Math.PI));
+        Logger.recordOutput("Pivot Motors Applied Voltage", m_rightMotor.getMotorVoltage().getValueAsDouble());
         
         if (getPivotPosition() > Constants.Elevator.PivotMaxLimit ||
             getPivotPosition() < Constants.Elevator.PivotMinLimit) {

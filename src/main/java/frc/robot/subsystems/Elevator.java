@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -100,6 +102,10 @@ public class Elevator extends SubsystemBase {
         System.err.println("Elevator LEft motor Velocty: " + m_LeftMotor.getVelocity().getValueAsDouble());
         System.err.println("Elevator right Motor Velocty: " + m_RightMotor.getVelocity().getValueAsDouble());
 
+        Logger.recordOutput("Elevaotor Motor Current: ", getMotorCurrent());
+        Logger.recordOutput("Elevator LEft motor Velocty: ", m_LeftMotor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Elevator right Motor Velocty: ", m_RightMotor.getVelocity().getValueAsDouble());
+
         if (m_RightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_LeftMotor.setPosition(0);   
             m_RightMotor.setPosition(0);
@@ -166,5 +172,11 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator velocity", (m_RightMotor.getVelocity().getValueAsDouble()*0.04));
         SmartDashboard.putNumber("Elevator Acceleration", (m_RightMotor.getAcceleration().getValueAsDouble()*0.04));
         SmartDashboard.putNumber("Elevator Motors Applied Voltage", m_RightMotor.getMotorVoltage().getValueAsDouble());
+
+        Logger.recordOutput("Elevator Goal", m_PIDController.getVelocityError());
+        Logger.recordOutput("ElevatorPosition", getElevatorPosition());
+        Logger.recordOutput("Elevator velocity", (m_RightMotor.getVelocity().getValueAsDouble()*0.04));
+        Logger.recordOutput("Elevator Acceleration", (m_RightMotor.getAcceleration().getValueAsDouble()*0.04));
+        Logger.recordOutput("Elevator Motors Applied Voltage", m_RightMotor.getMotorVoltage().getValueAsDouble());
     }
 }

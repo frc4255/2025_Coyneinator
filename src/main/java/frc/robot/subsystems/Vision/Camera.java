@@ -188,4 +188,9 @@ public class Camera {
             return false;
         }
     }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+    }
 }

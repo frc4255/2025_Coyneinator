@@ -7,6 +7,16 @@ package frc.robot;
 import java.io.IOException;
 import java.util.List;
 
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,12 +35,16 @@ import frc.lib.util.graph.GraphParser;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  public Robot() {
+    super(0.02);
+  }
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -41,6 +55,19 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
+    Logger.recordMetadata("myLogger", "this is just here for funzies"); // Set a metadata value
+
+    if (isReal()) {
+        Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+    } else {
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    }
+    
+    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
 

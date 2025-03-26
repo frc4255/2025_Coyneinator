@@ -14,6 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import java.lang.annotation.Target;
 import java.util.function.Consumer;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -121,8 +123,11 @@ public class Swerve extends SubsystemBase {
             sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading)
         );
 
+        Logger.recordOutput("Swerve Trajectory Sample", sample);
         // Apply the generated speeds
         follow(speeds);
+
+        Logger.recordOutput("Speeds given to Swerve to follow", speeds);
     }
 
     /* Used by SwerveControllerCommand in Auto */
@@ -244,6 +249,15 @@ public class Swerve extends SubsystemBase {
         
         //SmartDashboard.putNumberArray("Robot Pose", new Double[]{getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
         
+        Logger.recordOutput("Swerve Pose2d", getPose());
+        Logger.recordOutput("Gyro angle", getGyroYaw().getDegrees());
+        
+        for (SwerveModule mod : mSwerveMods) {
+            Logger.recordOutput("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+            Logger.recordOutput("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+            Logger.recordOutput("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond); 
+        }
+
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());

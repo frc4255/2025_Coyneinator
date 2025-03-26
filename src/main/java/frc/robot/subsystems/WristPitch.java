@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -148,6 +150,14 @@ public class WristPitch extends SubsystemBase {
         SmartDashboard.putNumber("Wrist velocity", ((m_Motor1.getVelocity().getValueAsDouble())*2*Math.PI)/51);
         SmartDashboard.putNumber("Wrist Acceleration", ((m_Motor1.getAcceleration().getValueAsDouble()/51)*2*Math.PI));
         SmartDashboard.putNumber("Wrist Motors Applied Voltage", m_Motor1.getMotorVoltage().getValueAsDouble());
+
+        Logger.recordOutput("Wrist Error", m_PIDController.getVelocityError());
+
+        Logger.recordOutput("Wrist Pitch", getCurrentPos());
+        Logger.recordOutput("Wrist velocity", ((m_Motor1.getVelocity().getValueAsDouble())*2*Math.PI)/51);
+        Logger.recordOutput("Wrist Acceleration", ((m_Motor1.getAcceleration().getValueAsDouble()/51)*2*Math.PI));
+        Logger.recordOutput("Wrist Motors Applied Voltage", m_Motor1.getMotorVoltage().getValueAsDouble());
+
 
     }
 }

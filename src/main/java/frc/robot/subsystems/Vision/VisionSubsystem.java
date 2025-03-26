@@ -1,8 +1,13 @@
 package frc.robot.subsystems.Vision;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
@@ -22,6 +27,23 @@ public class VisionSubsystem extends SubsystemBase {
         this.cameras = cameras;      
     }
 
+    public byte[] convertToByteArray(Optional<VisionSubsystem.PoseAndTimestampAndDev> optionalPose) {
+        if (optionalPose.isPresent()) {
+            VisionSubsystem.PoseAndTimestampAndDev pose = optionalPose.get();
+    
+            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+    
+                objectOutputStream.writeObject(pose);
+                return byteArrayOutputStream.toByteArray();
+    
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new byte[0]; // Return an empty byte array if the Optional is empty
+    }
+    
     @Override
     public void periodic() {
 
@@ -34,6 +56,10 @@ public class VisionSubsystem extends SubsystemBase {
             if (camEst != null) {
                 results.add(camEst.get());
             }
+        }
+
+        for (Camera cam : cameras) {
+            Logger.recordOutput("Camera " + cam + " Pose", convertToByteArray(cam.getEstimate()));
         }
     }  
 
