@@ -9,11 +9,16 @@ import frc.robot.subsystems.WristRoll;
 import frc.robot.subsystems.EndEffector;
 
 import java.io.IOException;
+import java.util.Optional;
 
+import choreo.Choreo;
 import choreo.auto.AutoFactory;
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,15 +35,19 @@ import frc.robot.commands.L4Assist;
 public class OnePieceL1 extends SequentialCommandGroup{
     public OnePieceL1(Swerve s_Swerve, AlignTool alignTool,
         Pivot s_Pivot, Elevator s_Elevator, WristPitch s_WristPitch, 
-        WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager, AutoFactory factory) {
+        WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager) {
         
-        Command myTrajectory = factory.trajectoryCmd("test");
+        Optional<Trajectory<SwerveSample>> optionalTrajectory = Choreo.loadTrajectory("test");
+        Trajectory<SwerveSample> myTrajectory = optionalTrajectory.get();
+
+        Optional<Pose2d> initialPose = optionalTrajectory.get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red));
 
 
         addCommands(
-            factory.resetOdometry("test"),
+            new InstantCommand(() -> s_Swerve.setHeading(initialPose.get().getRotation())),
+            new InstantCommand(() -> s_Swerve.setPose(initialPose.get())),
             new WaitCommand(0.1),
-            factory.trajectoryCmd("test"),
+            new InstantCommand(() -> s_Swerve.followTrajectory(myTrajectory.sampleAt(new Timer().get(), DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)).get())),
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(

@@ -190,7 +190,7 @@ public class RobotContainer {
 
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));            
+        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
         SmartDashboard.putData(autochooser);
     }
     
