@@ -86,18 +86,35 @@ public class Elevator extends SubsystemBase {
         active = true;
     }
 
+    public void setAutoHome(boolean request) {
+        isHomed = request;
+    }
 
     public void autoHome() {
-        m_LeftMotor.set(-0.04);
-        m_RightMotor.set(-0.04);
+        
+        System.err.println("Im being ran");
+        m_LeftMotor.set(-0.2);
+        m_RightMotor.set(-0.2);
 
-        if (getMotorCurrent() >= 40 && m_RightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+        System.err.println("Elevaotor Motor Current: " + getMotorCurrent());
+        System.err.println("Elevator LEft motor Velocty: " + m_LeftMotor.getVelocity().getValueAsDouble());
+        System.err.println("Elevator right Motor Velocty: " + m_RightMotor.getVelocity().getValueAsDouble());
+
+        if (m_RightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_LeftMotor.setPosition(0);   
             m_RightMotor.setPosition(0);
 
-            m_LeftMotor.stopMotor();
-            m_RightMotor.stopMotor();
+            m_LeftMotor.set(0);
+            m_RightMotor.set(0);
+
+            setAutoHome(true);
+
+            System.err.println("Elevator Homed");
             }
+    }
+
+    public boolean isHomed() {
+        return isHomed;
     }
 
     public double getMotorCurrent() {
@@ -114,7 +131,6 @@ public class Elevator extends SubsystemBase {
     public void setElevatorAsHomed() {
         m_LeftMotor.setPosition(0.0);
         m_RightMotor.setPosition(0.0);
-        isHomed = true;
     }
 
     public void setGoal(double pos) {

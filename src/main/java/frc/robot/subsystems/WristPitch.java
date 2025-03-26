@@ -69,16 +69,28 @@ public class WristPitch extends SubsystemBase {
         active = true;
     }
 
-    public void autoHome() {
-        m_Motor1.set(-0.04);
+    public void setAutoHome(boolean request) {
+        isHomed = request;
+    }
 
-        if (getMotorCurrent() >= 40 && m_Motor1.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+    public void autoHome() {
+        m_Motor1.set(0.04);
+        System.err.println("Pitch Motor Current: " + getMotorCurrent());
+        System.err.println("Pitch Velocty: " + m_Motor1.getVelocity().getValueAsDouble());
+        if (m_Motor1.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_Motor1.setPosition(0);
 
             m_Motor1.stopMotor();
+
+            setAutoHome(true);
+
+            System.err.println("Pitch homed");
             }
     }
 
+    public boolean isHomed() {
+        return isHomed;
+    }
     public double getMotorCurrent() {
         return m_Motor1.getStatorCurrent().getValueAsDouble();
     }
@@ -100,11 +112,6 @@ public class WristPitch extends SubsystemBase {
 
     public void setHomed() {
         m_Motor1.setPosition(0.0);
-        isHomed = true;
-    }
-
-    public boolean isHomed() {
-        return isHomed;
     }
 
     public void setGoal(double pos) {

@@ -75,16 +75,28 @@ public class Pivot extends SubsystemBase {
         isStowed = currentState;
     }
 
-    public void autoHome() {
-        m_leftMotor.set(-0.04);
-        m_rightMotor.set(-0.04);
+    public void setAutoHome(boolean request) {
+        isHomed = request;
+    }
 
-        if (getMotorCurrent() >= 40 && m_rightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+    public void autoHome() {
+        m_leftMotor.set(-0.2);
+        m_rightMotor.set(-0.2);
+
+        System.err.println("Pivot Motor Current: " + getMotorCurrent());
+        System.err.println("Pivot LEft motor Velocty: " + m_leftMotor.getVelocity().getValueAsDouble());
+        System.err.println("Pivot right Motor Velocty: " + m_rightMotor.getVelocity().getValueAsDouble());
+
+
+        if (m_rightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_leftMotor.setPosition(0);   
             m_rightMotor.setPosition(0);
 
             m_leftMotor.stopMotor();
             m_rightMotor.stopMotor();
+
+            setAutoHome(true);
+            System.err.println("Pivot Homed");
         }
     }
 
@@ -118,7 +130,6 @@ public class Pivot extends SubsystemBase {
     public void setPivotAsHomed() {
         m_leftMotor.setPosition(0.0);
         m_rightMotor.setPosition(0.0);
-        isHomed = true;
     }
 
     public boolean isHomed() {

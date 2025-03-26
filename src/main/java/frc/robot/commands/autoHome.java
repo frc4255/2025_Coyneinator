@@ -13,7 +13,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.WristPitch;
 import frc.robot.subsystems.WristRoll;
 
-public class Stow extends Command {
+public class autoHome extends Command {
 
     private PIDController rotPidController;
     private ProfiledPIDController translationPidController;
@@ -24,9 +24,7 @@ public class Stow extends Command {
     private WristPitch s_WristPitch;
     private WristRoll s_WristRoll;
 
-    private boolean stopHoming = false;
-
-    public Stow(SubsystemManager manager, Pivot s_Pivot, 
+    public autoHome(SubsystemManager manager, Pivot s_Pivot, 
         Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
         this.manager = manager;
 
@@ -40,27 +38,17 @@ public class Stow extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Stow"));
-
-        s_Elevator.setAutoHome(false);
-        s_Pivot.setAutoHome(false);
-        s_WristPitch.setAutoHome(false);
-
+        System.err.println("Hello AutoHome command");
     }
 
     @Override
     public void execute() {
-
-        System.err.println("stop homing is: " + stopHoming);
-        if (manager.canAutoHome() && !stopHoming) {
-            System.err.println("AutoHoming");
+        if (manager.canAutoHome()) {
             s_Pivot.autoHome();
             s_Elevator.autoHome();
             s_WristPitch.autoHome();
+            System.err.println("AutoHoming");
         }
-
-        if (s_Elevator.isHomed() && s_Pivot.isHomed() && s_WristPitch.isHomed())
-                stopHoming = true;
     }
 
     @Override

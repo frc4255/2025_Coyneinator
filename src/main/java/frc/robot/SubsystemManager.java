@@ -110,6 +110,8 @@ public class SubsystemManager {
             }
             System.out.println("Hello" + currentNode.getName());
         }
+
+        canAutoHome();
     }
 
     /**
@@ -118,9 +120,18 @@ public class SubsystemManager {
      *
      * @return true if all subsystems are at their target, false otherwise.
      */
-    private boolean hasReachedTarget() {
+    public boolean hasReachedTarget() {
         return sPivot.atGoal() && sElevator.atGoal() &&
                sWristPitch.atGoal() && sWristRoll.atGoal();
+    }
+
+    public boolean canAutoHome() {
+        if (currentNode.getName().equals("Stow") && hasReachedTarget() && currentNode != lastNode) {
+            System.err.println("can Auto Home");
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
