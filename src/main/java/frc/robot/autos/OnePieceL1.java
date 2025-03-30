@@ -56,8 +56,7 @@ public class OnePieceL1 extends SequentialCommandGroup{
                     new WaitCommand(2.4), //TODO TUNE THIS
                     new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5), //TODO TUNE THIS
-                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-                    
+                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
                 )
             )
 
