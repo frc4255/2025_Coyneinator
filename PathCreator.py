@@ -92,7 +92,7 @@ nodes = [
     },
     {
         "name": "Climb",
-        "setpoints": [0, 0, 0, 0]
+        "setpoints": [1.43, 0, -1.43, 0]
     },
 ]
 
