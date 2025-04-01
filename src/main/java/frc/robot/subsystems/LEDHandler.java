@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -10,7 +12,10 @@ import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.LEDs;
 
 public class LEDHandler extends SubsystemBase {
 
@@ -19,6 +24,7 @@ public class LEDHandler extends SubsystemBase {
 
     private final int LEDCount;
 
+    private HashMap<String, int[]> colorDatabase = new HashMap<String, int[]>();
 
     public LEDHandler(int deviceID, int LEDCount) {
 
@@ -33,6 +39,16 @@ public class LEDHandler extends SubsystemBase {
         config.brightnessScalar = 0.5;
         config.vBatOutputMode = VBatOutputMode.Modulated;
         candle.configAllSettings(config, 100);
+
+
+        colorDatabase.put("Red", new int[] {255, 0, 0});
+        colorDatabase.put("Green", new int[] {0, 255, 0});
+        colorDatabase.put("Blue", new int[] {0, 0, 255});
+        colorDatabase.put("Yellow", new int[] {255, 255, 0});
+        colorDatabase.put("Purple", new int[] {255, 0, 255});
+        colorDatabase.put("Cyan", new int[] {0, 255, 255});
+        colorDatabase.put("White", new int[] {255, 255, 255});
+        colorDatabase.put("noColor", new int[] {0, 0, 0});
     }
 
 
@@ -75,7 +91,7 @@ public class LEDHandler extends SubsystemBase {
                 applyAnimation(new RainbowAnimation(config.brightnessScalar, speed, LEDCount));
                 break;
             case "Larson":
-                applyAnimation(new LarsonAnimation(r, g, b, 0, speed, LEDCount, LarsonAnimation.BounceMode.Center, LEDCount / 3)); //TODO completley random might look back so fix
+                applyAnimation(new LarsonAnimation(r, g, b, 0, speed, LEDCount, LarsonAnimation.BounceMode.Center, LEDCount / 3)); //TODO completley random might look bad so fix
                 break;
             case "Strobe":
                 applyAnimation(new StrobeAnimation(r, g, b, 0, speed, LEDCount));
@@ -87,6 +103,16 @@ public class LEDHandler extends SubsystemBase {
                 break;
         }
 
+    }
+
+     public void updateFieldSetupLEDs() {
+        // Set Mechanism Status LEDs
+    
+        // Set combined status LE
+        // Set Connection Status LEDs
+        candle.setLEDs(DriverStation.isDSAttached() ? 0 : 255, DriverStation.isDSAttached() ? 255 : 0, 0, 0, 1, 1);
+        candle.setLEDs(DriverStation.isFMSAttached() ? 0 : 255, DriverStation.isFMSAttached() ? 255 : 0, 0, 0, 2, 1);
+        
     }
 
 }
