@@ -42,10 +42,10 @@ public final class Constants {
     }
 
     public final class Climber {
-        public static final int MOTOR_ID = 45; //TODO change this maybe
+        public static final int MOTOR_ID = 7; //TODO change this maybe
     }
     public final class Wrist {
-        public static final double kS = 0.0; //TODO tune this 
+        public static final double kS = 0.0; //TODO tune this
         public static final double kG = 0.0; //TODO tune this 
         public static final double kV = 0.0; //TODO tune this  
         public static final double kA = 0.0; //TODO tune this 

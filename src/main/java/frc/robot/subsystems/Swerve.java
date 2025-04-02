@@ -249,7 +249,7 @@ public class Swerve extends SubsystemBase {
         
         //SmartDashboard.putNumberArray("Robot Pose", new Double[]{getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
         
-        Logger.recordOutput("Swerve Pose2d", getPose());
+        Logger.recordOutput("Robot Pose2d", getPose());
         Logger.recordOutput("Gyro angle", getGyroYaw().getDegrees());
         
         for (SwerveModule mod : mSwerveMods) {

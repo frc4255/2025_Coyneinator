@@ -1,36 +1,22 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.security.Timestamp;
-import java.util.Map;
 
 import org.photonvision.PhotonCamera;
 
-import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.util.graph.GraphParser;
 import frc.robot.autos.*;
-import frc.robot.autos.autocommands.testAuto;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.Camera;
@@ -47,10 +33,16 @@ public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
+    private final Joystick operator = new Joystick(1);
+
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
+
+    /* Operator Controls */
+
+    private final int operatorHorizontalAxis = XboxController.Axis.kLeftX.value;
 
     /* When viewed from behind the bot */ //OFFSETS NEED TO BE REDONE
   /*  private final Camera RightCam = new Camera(new PhotonCamera("RightCam"), 
@@ -61,7 +53,12 @@ public class RobotContainer {
         new Transform3d(new Translation3d(0.258, 0.291, 0.2), //TODO re-do offsets
         new Rotation3d(0, -1.08, 0.523))); 
     //private final Camera LLCam = new Camera(new PhotonCamera("LLCam"), new Transform3d(new Translation3d(0.135, 0, 0.204), new Rotation3d(0, -1.04, 0)));*/
-    /* Driver Buttons */
+    /* Operator Buttons */
+
+    private final JoystickButton manualWristRoll = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton zeroWristRoll = new JoystickButton(operator, XboxController.Button.kBack.value);
+
+    private final JoystickButton coralHPIntake = new JoystickButton(operator, XboxController.Button.kB.value);
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
@@ -85,7 +82,7 @@ public class RobotContainer {
 
     private final JoystickButton reefAlign = new JoystickButton(driver, XboxController.Button.kB.value);
 
-    private final JoystickButton coralHPIntake = new JoystickButton(driver, XboxController.Button.kStart.value);
+    private final JoystickButton climb = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     private final POVButton L1 = new POVButton(driver, 90);
     private final POVButton L2 = new POVButton(driver, 180);
@@ -103,7 +100,7 @@ public class RobotContainer {
         private final WristPitch s_WristPitch = new WristPitch();
         private final WristRoll s_WristRoll = new WristRoll();
         private final EndEffector s_EndEffector = new EndEffector();
-
+        private final Climber s_Climber = new Climber();
         //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
         //private final AlignTool alignTool = new AlignTool();
 
@@ -129,6 +126,8 @@ public class RobotContainer {
                     () -> false //For the love of god do not change this
                 )
             );
+
+            s_WristRoll.setDefaultCommand(new WristRollManual(s_WristRoll, () -> operator.getRawAxis(operatorHorizontalAxis)));
             // Configure the button bindings
             configureButtonBindings();
 
@@ -140,9 +139,8 @@ public class RobotContainer {
             s_Swerve::followTrajectory, // The drive subsystem trajectory follower 
             true, // If alliance flipping should be enabled 
             s_Swerve // The drive subsystem
-
-            
         );
+
         configureAutoChooser();
 
             /*
@@ -203,6 +201,14 @@ public class RobotContainer {
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
             reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+            climb.onTrue(new ClimbAssist(manager, s_Climber, s_Pivot));
+
+            zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
+
+            manualWristRoll.whileTrue(new InstantCommand(() -> s_WristRoll.controlManually(operatorHorizontalAxis)));
+
+            
 
     }
     private void configureAutoChooser() {
