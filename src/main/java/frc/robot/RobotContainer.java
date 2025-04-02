@@ -120,8 +120,8 @@ public class RobotContainer {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
+                    () -> driver.getRawAxis(translationAxis), 
+                    () -> driver.getRawAxis(strafeAxis), 
                     () -> driver.getRawAxis(rotationAxis), 
                     () -> false //For the love of god do not change this
                 )

@@ -59,7 +59,7 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         for (Camera cam : cameras) {
-            Logger.recordOutput("Camera " + cam + " Pose", convertToByteArray(cam.getEstimate()));
+            Logger.recordOutput("Camera " + cam + " Pose", cam.getEstimate().get().getPose());
         }
     }  
 
