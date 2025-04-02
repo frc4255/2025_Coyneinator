@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.SubsystemManager;
+import frc.robot.autos.autocommands.SwerveFollower;
 import frc.robot.commands.CoralHumanPlayerIntake;
 import frc.robot.commands.ExtakeCoral;
 import frc.robot.commands.L1Assist;
@@ -42,22 +43,18 @@ public class OnePieceL1 extends SequentialCommandGroup{
         Optional<Trajectory<SwerveSample>> optionalTrajectory = Choreo.loadTrajectory("test");
         Trajectory<SwerveSample> myTrajectory = optionalTrajectory.get();
 
-        Optional<Pose2d> initialPose = optionalTrajectory.get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red));
-
 
         addCommands(
-            new InstantCommand(() -> s_Swerve.setHeading(initialPose.get().getRotation())),
-            new InstantCommand(() -> s_Swerve.setPose(initialPose.get())),
+            new InstantCommand(() -> s_Swerve.setPose(optionalTrajectory.get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)).get())),
             new WaitCommand(0.1),
-            new InstantCommand(() -> s_Swerve.followTrajectory(myTrajectory.sampleAt(new Timer().get(), DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)).get())),
+            new SwerveFollower(s_Swerve, myTrajectory),
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
                     new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5), //TODO TUNE THIS
-                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-                    
+                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
                 )
             )
 

@@ -184,9 +184,18 @@
     {
       "name": "Climb",
       "setpoints": [
+        1.82,
+        0,
+        -1.37,
+        0
+      ]
+    },
+    {
+      "name": "Climb End",
+      "setpoints": [
         0,
         0,
-        0,
+        -1.37,
         0
       ]
     }
@@ -382,6 +391,10 @@
     },
     {
       "start": "Climb",
+      "end": "Climb End"
+    },
+    {
+      "start": "Climb End",
       "end": "Stow"
     }
   ],
@@ -482,6 +495,11 @@
       "Climb": [
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Intake Intermediate": {
@@ -596,6 +614,12 @@
         "Intake Intermediate",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Intake Intermediate",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Coral Ground Pickup": {
@@ -709,6 +733,13 @@
         "Intake Intermediate",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Coral Ground Pickup",
+        "Intake Intermediate",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Lollipop Coral Pickup": {
@@ -815,6 +846,12 @@
         "Lollipop Coral Pickup",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Lollipop Coral Pickup",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Reef Align": {
@@ -912,6 +949,12 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L4 Intermediate": {
@@ -1021,6 +1064,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L4 Intermediate",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L4 Init": {
@@ -1143,6 +1193,14 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L4 Init",
+        "L4 Dunk",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L4 Dunk": {
@@ -1255,6 +1313,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L4 Dunk",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L3 Intermediate": {
@@ -1364,6 +1429,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L3 Intermediate",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L3 Init": {
@@ -1471,6 +1543,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L3 Init",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L3 Dunk": {
@@ -1584,6 +1663,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L3 Dunk",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Net Intermediate": {
@@ -1698,6 +1784,12 @@
         "Net Intermediate",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Net Intermediate",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Net Score": {
@@ -1830,6 +1922,13 @@
         "Net Intermediate",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Net Score",
+        "Net Intermediate",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L2 Algae Pickup": {
@@ -1945,6 +2044,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L3 Algae Pickup": {
@@ -2060,6 +2166,13 @@
         "Reef Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L3 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Algae Ground Pickup": {
@@ -2175,6 +2288,12 @@
         "Algae Ground Pickup",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Algae Ground Pickup",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Processor Score": {
@@ -2291,6 +2410,12 @@
         "Processor Score",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Processor Score",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Coral HP Pickup": {
@@ -2411,6 +2536,12 @@
         "Coral HP Pickup",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "Coral HP Pickup",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L2 Align": {
@@ -2527,6 +2658,12 @@
         "L2 Align",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L2 Align",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "L1 Score": {
@@ -2643,42 +2780,55 @@
         "L1 Score",
         "Stow",
         "Climb"
+      ],
+      "Climb End": [
+        "L1 Score",
+        "Stow",
+        "Climb",
+        "Climb End"
       ]
     },
     "Climb": {
       "Stow": [
         "Climb",
+        "Climb End",
         "Stow"
       ],
       "Intake Intermediate": [
         "Climb",
+        "Climb End",
         "Stow",
         "Intake Intermediate"
       ],
       "Coral Ground Pickup": [
         "Climb",
+        "Climb End",
         "Stow",
         "Intake Intermediate",
         "Coral Ground Pickup"
       ],
       "Lollipop Coral Pickup": [
         "Climb",
+        "Climb End",
         "Stow",
         "Lollipop Coral Pickup"
       ],
       "Reef Align": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align"
       ],
       "L4 Intermediate": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L4 Intermediate"
       ],
       "L4 Init": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L4 Intermediate",
@@ -2686,6 +2836,7 @@
       ],
       "L4 Dunk": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L4 Intermediate",
@@ -2694,12 +2845,14 @@
       ],
       "L3 Intermediate": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L3 Intermediate"
       ],
       "L3 Init": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L3 Intermediate",
@@ -2707,6 +2860,7 @@
       ],
       "L3 Dunk": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L3 Intermediate",
@@ -2715,50 +2869,183 @@
       ],
       "Net Intermediate": [
         "Climb",
+        "Climb End",
         "Stow",
         "Net Intermediate"
       ],
       "Net Score": [
         "Climb",
+        "Climb End",
         "Stow",
         "Net Intermediate",
         "Net Score"
       ],
       "L2 Algae Pickup": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L2 Algae Pickup"
       ],
       "L3 Algae Pickup": [
         "Climb",
+        "Climb End",
         "Stow",
         "Reef Align",
         "L3 Algae Pickup"
       ],
       "Algae Ground Pickup": [
         "Climb",
+        "Climb End",
         "Stow",
         "Algae Ground Pickup"
       ],
       "Processor Score": [
         "Climb",
+        "Climb End",
         "Stow",
         "Processor Score"
       ],
       "Coral HP Pickup": [],
       "L2 Align": [
         "Climb",
+        "Climb End",
         "Stow",
         "L2 Align"
       ],
       "L1 Score": [
         "Climb",
+        "Climb End",
         "Stow",
         "L1 Score"
       ],
       "Climb": [
         "Climb"
+      ],
+      "Climb End": [
+        "Climb",
+        "Climb End"
+      ]
+    },
+    "Climb End": {
+      "Stow": [
+        "Climb End",
+        "Stow"
+      ],
+      "Intake Intermediate": [
+        "Climb End",
+        "Stow",
+        "Intake Intermediate"
+      ],
+      "Coral Ground Pickup": [
+        "Climb End",
+        "Stow",
+        "Intake Intermediate",
+        "Coral Ground Pickup"
+      ],
+      "Lollipop Coral Pickup": [
+        "Climb End",
+        "Stow",
+        "Lollipop Coral Pickup"
+      ],
+      "Reef Align": [
+        "Climb End",
+        "Stow",
+        "Reef Align"
+      ],
+      "L4 Intermediate": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L4 Intermediate"
+      ],
+      "L4 Init": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L4 Intermediate",
+        "L4 Init"
+      ],
+      "L4 Dunk": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L4 Intermediate",
+        "L4 Init",
+        "L4 Dunk"
+      ],
+      "L3 Intermediate": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L3 Intermediate"
+      ],
+      "L3 Init": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L3 Intermediate",
+        "L3 Init"
+      ],
+      "L3 Dunk": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L3 Intermediate",
+        "L3 Init",
+        "L3 Dunk"
+      ],
+      "Net Intermediate": [
+        "Climb End",
+        "Stow",
+        "Net Intermediate"
+      ],
+      "Net Score": [
+        "Climb End",
+        "Stow",
+        "Net Intermediate",
+        "Net Score"
+      ],
+      "L2 Algae Pickup": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L2 Algae Pickup"
+      ],
+      "L3 Algae Pickup": [
+        "Climb End",
+        "Stow",
+        "Reef Align",
+        "L3 Algae Pickup"
+      ],
+      "Algae Ground Pickup": [
+        "Climb End",
+        "Stow",
+        "Algae Ground Pickup"
+      ],
+      "Processor Score": [
+        "Climb End",
+        "Stow",
+        "Processor Score"
+      ],
+      "Coral HP Pickup": [],
+      "L2 Align": [
+        "Climb End",
+        "Stow",
+        "L2 Align"
+      ],
+      "L1 Score": [
+        "Climb End",
+        "Stow",
+        "L1 Score"
+      ],
+      "Climb": [
+        "Climb End",
+        "Stow",
+        "Climb"
+      ],
+      "Climb End": [
+        "Climb End"
       ]
     }
   }

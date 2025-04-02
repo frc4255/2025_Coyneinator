@@ -46,9 +46,12 @@ public class Pivot extends SubsystemBase {
 
     private DataLog log;
 
+
+
+
     public Pivot() {
         m_PIDController = new ProfiledPIDController(
-            6, 
+            10, 
             0, 
             0, 
             new TrapezoidProfile.Constraints(
@@ -61,7 +64,6 @@ public class Pivot extends SubsystemBase {
         m_rightMotor = new TalonFX(0);
         m_leftMotor.setNeutralMode(NeutralModeValue.Coast);
         m_rightMotor.setNeutralMode(NeutralModeValue.Coast);
-
         m_rightMotor.setInverted(true);
         m_leftMotor.setControl(new Follower(m_rightMotor.getDeviceID(), true));
         elevatorPivotFeedforward = new ArmFeedforward(0,0.18,4.7,0);
@@ -72,6 +74,15 @@ public class Pivot extends SubsystemBase {
         m_PIDController.setTolerance(0.25);
 
     }
+
+    public void setVoltageForClimb() {
+        m_rightMotor.setVoltage(-9);
+    }
+
+    public double velocityOfMotors() {
+        return m_rightMotor.getVelocity().getValueAsDouble();
+    }
+
 
     public void isStowed(boolean currentState) {
         isStowed = currentState;

@@ -92,8 +92,12 @@ nodes = [
     },
     {
         "name": "Climb",
-        "setpoints": [0, 0, 0, 0]
+        "setpoints": [1.82, 0, -1.37, 0]
     },
+    {
+        "name": "Climb End",
+        "setpoints": [0, 0, -1.37, 0]
+    }
 ]
 
 # Define edges between nodes without descriptions.
@@ -288,6 +292,10 @@ edges = [
     },
     {
         "start": "Climb",
+        "end": "Climb End"
+    },
+    {
+        "start": "Climb End",
         "end": "Stow"
     }
 ]

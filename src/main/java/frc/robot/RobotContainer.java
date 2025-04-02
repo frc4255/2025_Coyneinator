@@ -196,13 +196,13 @@ public class RobotContainer {
 
             coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            processorScore.onTrue(new ProcessorAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            processorScore.onTrue(new ClimbEnd(manager, s_Climber, s_Pivot, s_WristPitch));
 
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
             reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            climb.onTrue(new ClimbAssist(manager, s_Climber, s_Pivot));
+            climb.onTrue(new ClimbAssist(manager, s_Climber, s_Pivot, s_WristPitch));
 
             zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
 
