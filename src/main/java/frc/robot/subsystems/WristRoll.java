@@ -56,6 +56,10 @@ public class WristRoll extends SubsystemBase {
         m_PIDController.setTolerance(0.2);
     }
 
+    public void controlManually(double request) {
+        m_Motor0.set(request);
+    }
+
     public void setActive() {
         active = true;
     }
@@ -99,7 +103,7 @@ public class WristRoll extends SubsystemBase {
         return isPosePossible;
     }
 
-    public void stopMotors() {
+    public void stopMotor() {
         m_Motor0.stopMotor();
     }
 

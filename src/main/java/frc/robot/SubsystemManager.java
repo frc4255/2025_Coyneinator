@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
 import frc.robot.subsystems.Elevator;
@@ -112,6 +114,10 @@ public class SubsystemManager {
         }
 
         canAutoHome();
+
+        Logger.recordOutput("CurrentNode", currentNode.getName());
+        Logger.recordOutput("hasReachedTarget", hasReachedTarget());
+        Logger.recordOutput("canAutoHome", canAutoHome());
     }
 
     /**

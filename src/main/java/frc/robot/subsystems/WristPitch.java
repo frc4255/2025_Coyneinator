@@ -79,6 +79,10 @@ public class WristPitch extends SubsystemBase {
         m_Motor1.set(0.04);
         System.err.println("Pitch Motor Current: " + getMotorCurrent());
         System.err.println("Pitch Velocty: " + m_Motor1.getVelocity().getValueAsDouble());
+
+        Logger.recordOutput("Pitch Velocty", m_Motor1.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Pitch Motor Current", getMotorCurrent());
+        
         if (m_Motor1.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
             m_Motor1.setPosition(0);
 

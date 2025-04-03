@@ -95,8 +95,7 @@ public class Elevator extends SubsystemBase {
     public void autoHome() {
         
         System.err.println("Im being ran");
-        m_LeftMotor.set(-0.2);
-        m_RightMotor.set(-0.2);
+        m_RightMotor.set(-0.3);
 
         System.err.println("Elevaotor Motor Current: " + getMotorCurrent());
         System.err.println("Elevator LEft motor Velocty: " + m_LeftMotor.getVelocity().getValueAsDouble());

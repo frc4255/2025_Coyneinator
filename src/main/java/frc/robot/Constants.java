@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -23,6 +24,43 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+
+    public static class LEDs {
+
+        public static HashMap<String, int[]> colorDatabase = new HashMap<String, int[]>();
+
+        static {
+            colorDatabase.put("Red", new int[] {255, 0, 0});
+            colorDatabase.put("Green", new int[] {0, 255, 0});
+            colorDatabase.put("Blue", new int[] {0, 0, 255});
+            colorDatabase.put("Yellow", new int[] {255, 255, 0});
+            colorDatabase.put("Purple", new int[] {255, 0, 255});
+            colorDatabase.put("Cyan", new int[] {0, 255, 255});
+            colorDatabase.put("White", new int[] {255, 255, 255});
+            colorDatabase.put("noColor", new int[] {0, 0, 0});
+        }
+        
+        public static enum LEDStates {
+            OFF(10, colorDatabase.get("noColor"));
+
+
+            
+            private final int[] color;
+            private final int priority;
+    
+            LEDStates(int priority, int[] color) {
+                            this.priority = priority;
+                            this.color = color;
+            }
+    
+            public int getPriority() {
+                return priority;
+            }
+            public int[] getColor() {
+                return color;
+            }
+        }
+    }
 
     public static final Map<Character, Pose2d> BLUE_REEF_SCORINGS_POSITIONS = new HashMap<>();
 
@@ -42,10 +80,10 @@ public final class Constants {
     }
 
     public final class Climber {
-        public static final int MOTOR_ID = 45; //TODO change this maybe
+        public static final int MOTOR_ID = 7; //TODO change this maybe
     }
     public final class Wrist {
-        public static final double kS = 0.0; //TODO tune this 
+        public static final double kS = 0.0; //TODO tune this
         public static final double kG = 0.0; //TODO tune this 
         public static final double kV = 0.0; //TODO tune this  
         public static final double kA = 0.0; //TODO tune this 

@@ -36,7 +36,7 @@ public class CoralHumanPlayerIntake extends Command {
     @Override
     public void initialize() {
         manager.requestNode(GraphParser.getNodeByName("Coral HP Pickup"));
-        endEffector.setDutyCycle(-10);
+        endEffector.setDutyCycle(10);
 
 
     }
@@ -44,7 +44,7 @@ public class CoralHumanPlayerIntake extends Command {
     @Override
     public void execute() {
         if (endEffector.getMotorCurrent() > 30) {
-            endEffector.setDutyCycle(-0.5);
+            endEffector.setDutyCycle(0.5);
 
         }
     }

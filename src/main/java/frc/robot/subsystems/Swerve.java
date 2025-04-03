@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -52,7 +53,7 @@ public class Swerve extends SubsystemBase {
         this.vision = vision;
         
         gyro = new Pigeon2(Constants.Swerve.pigeonID, "Drivetrain");
-        gyro.getConfigurator().apply(new Pigeon2Configuration());
+        gyro.getConfigurator().apply(new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(180)));
         gyro.setYaw(0);
         
         Timer.delay(1);
@@ -254,7 +255,7 @@ public class Swerve extends SubsystemBase {
         
         //SmartDashboard.putNumberArray("Robot Pose", new Double[]{getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
         
-        Logger.recordOutput("Swerve Pose2d", getPose());
+        Logger.recordOutput("Robot Pose2d", getPose());
         Logger.recordOutput("Gyro angle", getGyroYaw().getDegrees());
         
         for (SwerveModule mod : mSwerveMods) {

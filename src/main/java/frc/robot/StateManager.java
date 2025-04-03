@@ -1,6 +1,5 @@
 package frc.robot;
 
-import java.lang.Thread.State;
 import java.util.HashMap;
 
 public class StateManager {

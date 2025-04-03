@@ -16,63 +16,63 @@ nodes = [
     },
     {
         "name" : "Intake Intermediate",
-        "setpoints": [0.275, 0, 0, -3.14]
+        "setpoints": [0.275, 0, 0, 0]
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": [0.35, 0.05, -1.89, -3.14]
+        "setpoints": [0.35, 0.05, -1.98, 3.14 / 2]
     },
     {
         "name": "Lollipop Coral Pickup",
-        "setpoints": [0,0,-1.46,-1.56]
+        "setpoints": [0,0,-1.46, 3.14 / 2]
     },
     {
         "name": "Reef Align",
-        "setpoints": [1.57, 0, -1.38, -1.73]
+        "setpoints": [1.57, 0, -1.38, 0]
     },
     {
         "name": "L4 Intermediate",
-        "setpoints": [1.65, 0.77, -1.38, -1.53]
+        "setpoints": [1.65, 0.77, -1.38, 0]
     },
     {
         "name": "L4 Init",
-        "setpoints": [1.65, 0.77, -1.02, -1.53]
+        "setpoints": [1.65, 0.77, -1.02, 0]
     },
     {
         "name": "L4 Dunk",
-        "setpoints": [1.65 ,0.77,-0.37,-1.53]
+        "setpoints": [1.65 ,0.77,-0.37,0]
     },
     {
         "name":"L3 Intermediate",
-        "setpoints":[1.5, 0.05,-1.38,-1.53]
+        "setpoints":[1.5, 0.05,-1.38, 0]
     },
     {
         "name": "L3 Init",
-        "setpoints": [1.5, .05, -1.38, -1.53]
+        "setpoints": [1.5, .05, -1.38, 0]
     },
     {
         "name": "L3 Dunk",
-        "setpoints": [1.75, 0, -0.76, -1.53]
+        "setpoints": [1.75, 0, -0.76, 0]
     },
     {
         "name" : "Net Intermediate",
-        "setpoints" : [1.76, 0, -1.12, 3.14]
+        "setpoints" : [1.76, 0, -1.12, 3.14 / 2]
     },
     {
         "name": "Net Score", 
-        "setpoints": [1.76, 1, -1.12, 3.14]
+        "setpoints": [1.76, 1, -1.12, 3.14 / 2]
     },
     {
         "name": "L2 Algae Pickup",
-        "setpoints": [1.21, 0, -0.01, 3.14]
+        "setpoints": [1.21, 0, -0.01, 3.14 / 2]
     },
     {
         "name": "L3 Algae Pickup",
-        "setpoints": [1.43, 0.23, -0.27, 3.14]
+        "setpoints": [1.43, 0.23, -0.27, 3.14 / 2]
     },
     {
         "name": "Algae Ground Pickup",
-        "setpoints": [0,0,-1.43,-0.13]
+        "setpoints": [0,0,-1.43,-0, 0]
     },
     {
         "name": "Processor Score",
@@ -80,11 +80,11 @@ nodes = [
     },
     {
         "name": "Coral HP Pickup",
-        "setpoints": [0.99, 0, -1.44, -3.14]
+        "setpoints": [0.99, 0, -1.44, -3.14 / 2]
     },
     {
         "name": "L2 Align",
-        "setpoints": [1.37, 0, -0.2, -1.56]
+        "setpoints": [1.37, 0, -0.2, 0]
     },
     {
         "name": "L1 Score",
@@ -92,8 +92,12 @@ nodes = [
     },
     {
         "name": "Climb",
-        "setpoints": [0, 0, 0, 0]
+        "setpoints": [1.82, 0, -1.37, 0]
     },
+    {
+        "name": "Climb End",
+        "setpoints": [0, 0, -1.37, 0]
+    }
 ]
 
 # Define edges between nodes without descriptions.
@@ -288,6 +292,10 @@ edges = [
     },
     {
         "start": "Climb",
+        "end": "Climb End"
+    },
+    {
+        "start": "Climb End",
         "end": "Stow"
     }
 ]

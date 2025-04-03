@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
-    Logger.recordMetadata("myLogger", "this is just here for funzies"); // Set a metadata value
+    Logger.recordMetadata("ProjectName", "Coyneinator"); // Set a metadata value
 
     if (isReal()) {
         Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
@@ -64,7 +64,7 @@ public class Robot extends LoggedRobot {
         setUseTiming(false); // Run as fast as possible
         String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
         Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_actualLog"))); // Save outputs to a new log
     }
     
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.

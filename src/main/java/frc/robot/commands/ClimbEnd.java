@@ -11,7 +11,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.WristPitch;
 import frc.robot.subsystems.WristRoll;
 
-public class ClimbAssist extends Command {
+public class ClimbEnd extends Command {
     
     private SubsystemManager manager;
 
@@ -19,7 +19,7 @@ public class ClimbAssist extends Command {
     private Climber s_Climber;
     private WristPitch s_WristPitch;
 
-    public ClimbAssist(SubsystemManager manager, Climber s_Climber, Pivot s_Pivot, WristPitch s_WristPitch) {
+    public ClimbEnd(SubsystemManager manager, Climber s_Climber, Pivot s_Pivot, WristPitch s_WristPitch) {
 
         this.manager = manager;
 
@@ -32,7 +32,6 @@ public class ClimbAssist extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Climb"));
         s_Climber.setVoltage(10);
 
 
@@ -40,9 +39,16 @@ public class ClimbAssist extends Command {
 
     @Override
     public void execute() {
-        if (s_Climber.getMotorCurrent() > 15) {
-            s_Climber.setVoltage(6);
 
+        s_Pivot.setVoltageForClimb();
+
+        if (s_Climber.getMotorCurrent() > 15) {
+            s_Climber.setVoltage(8);
+
+        }
+
+        if (s_Pivot.velocityOfMotors() <= 0.05 && s_Pivot.getPivotPosition() < 0.05) {
+            s_Pivot.stopMotors();
         }
     }
 
