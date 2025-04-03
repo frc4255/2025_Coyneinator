@@ -274,6 +274,9 @@ public class FieldLayout {
 
     public static class Reef {
 
+    public static final char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
+    public static Map<Character, Integer> branchesToInt = new HashMap<>();
+
     public static final double reefdFacesWidth = Units.inchesToMeters(30.27);
     public static final double reefdFacesHeight = Units.inchesToMeters(37.27);
 
@@ -290,6 +293,21 @@ public class FieldLayout {
         new ArrayList<>(); // Starting at the right branch facing the driver station in clockwise
 
     static {
+
+        
+    branchesToInt.put('A', 1);
+    branchesToInt.put('B', 2);
+    branchesToInt.put('C', 3);
+    branchesToInt.put('D', 4);
+    branchesToInt.put('E', 5);
+    branchesToInt.put('F', 6);
+    branchesToInt.put('G', 7);
+    branchesToInt.put('H', 8);
+    branchesToInt.put('I', 9);
+    branchesToInt.put('J', 10);
+    branchesToInt.put('K', 11);
+    branchesToInt.put('L', 12);
+
       // Initialize faces
       centerFaces[0] =
           new Pose2d(
