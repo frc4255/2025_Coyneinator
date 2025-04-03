@@ -105,7 +105,7 @@ public class Elevator extends SubsystemBase {
         Logger.recordOutput("Elevator LEft motor Velocty: ", m_LeftMotor.getVelocity().getValueAsDouble());
         Logger.recordOutput("Elevator right Motor Velocty: ", m_RightMotor.getVelocity().getValueAsDouble());
 
-        if (m_RightMotor.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
+        if (m_RightMotor.getVelocity().getValueAsDouble() <= 0.05 ) {//TODO this is def wrong.
             m_LeftMotor.setPosition(0);   
             m_RightMotor.setPosition(0);
 

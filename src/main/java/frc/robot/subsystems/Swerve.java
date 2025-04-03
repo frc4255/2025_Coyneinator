@@ -47,7 +47,7 @@ public class Swerve extends SubsystemBase {
 
     private final PIDController xController = new PIDController(10.0, 0.0, 0.0);
     private final PIDController yController = new PIDController(10.0, 0.0, 0.0);
-    private final PIDController headingController = new PIDController(7.5, 0.0, 0.0);
+    private final PIDController headingController = new PIDController(5, 0.0, 0.0);
 
     public Swerve(VisionSubsystem vision) {
         this.vision = vision;
@@ -89,7 +89,7 @@ public class Swerve extends SubsystemBase {
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                     translation.getX() , 
                                     translation.getY(), 
-                                    rotation, 
+                                    -rotation, 
                                     getHeading().rotateBy(inverse)
                                 )
                                 : new ChassisSpeeds(

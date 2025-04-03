@@ -51,6 +51,7 @@ public class Stow extends Command {
     @Override
     public void execute() {
 
+        /*
         System.err.println("stop homing is: " + stopHoming);
         if (manager.canAutoHome() && !stopHoming) {
             System.err.println("AutoHoming");
@@ -59,8 +60,9 @@ public class Stow extends Command {
             s_WristPitch.autoHome();
         }
 
-        if (s_Elevator.isHomed() && s_Pivot.isHomed() && s_WristPitch.isHomed())
-                stopHoming = true;
+        if (s_Elevator.isHomed() && s_Pivot.isHomed() && s_WristPitch.isHomed()) {
+            stopHoming = true;
+        } */
     }
 
     @Override

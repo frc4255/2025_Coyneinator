@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.photonvision.PhotonCamera;
 
 import choreo.auto.AutoFactory;
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -120,8 +121,8 @@ public class RobotContainer {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
-                    () -> driver.getRawAxis(translationAxis), 
-                    () -> driver.getRawAxis(strafeAxis), 
+                    () -> -driver.getRawAxis(translationAxis), 
+                    () -> -driver.getRawAxis(strafeAxis), 
                     () -> driver.getRawAxis(rotationAxis), 
                     () -> false //For the love of god do not change this
                 )
@@ -187,7 +188,7 @@ public class RobotContainer {
 
             extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
 
-            scoreBarge.onTrue(new NetAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            scoreBarge.onTrue(new NetAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector));
 
             algaeL2Pickup.onTrue(new AlgaeL2Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
             algaeL3Pickup.onTrue(new AlgaeL3Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
@@ -202,7 +203,7 @@ public class RobotContainer {
 
             reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            climb.onTrue(new ClimbAssist(manager, s_Climber, s_Pivot, s_WristPitch));
+            climb.onTrue(new test(s_Swerve));
 
             zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
 

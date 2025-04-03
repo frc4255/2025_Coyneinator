@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.GraphParser.GraphData;
@@ -18,9 +19,9 @@ public class test extends Command {
     private PIDController rotPidController;
     private ProfiledPIDController translationPidController;
     private SubsystemManager manager;
-    private Elevator s_Swerve;
+    private Swerve s_Swerve;
 
-    public test(Elevator swerve) {
+    public test(Swerve swerve) {
         this.s_Swerve = swerve;
         
         addRequirements(s_Swerve);
@@ -28,6 +29,7 @@ public class test extends Command {
 
     @Override
     public void initialize() {
-        s_Swerve.setGoal(.5);
+        s_Swerve.drive(new Translation2d(0, 1
+        ), 0, false, false);
     }
 }

@@ -16,11 +16,11 @@ nodes = [
     },
     {
         "name" : "Intake Intermediate",
-        "setpoints": [0.275, 0, 0, 0]
+        "setpoints": [0.42, 0, 0, 3.14 / 2]
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": [0.35, 0.05, -1.98, 3.14 / 2]
+        "setpoints": [0.42, 0.2, -2.35, 3.14 / 2]
     },
     {
         "name": "Lollipop Coral Pickup",
@@ -28,7 +28,7 @@ nodes = [
     },
     {
         "name": "Reef Align",
-        "setpoints": [1.57, 0, -1.38, 0]
+        "setpoints": [1.57, 0, -0.37, 0]
     },
     {
         "name": "L4 Intermediate",
@@ -64,11 +64,11 @@ nodes = [
     },
     {
         "name": "L2 Algae Pickup",
-        "setpoints": [1.21, 0, -0.01, 3.14 / 2]
+        "setpoints": [1.6, 0, -0.27, 3.14 / 2]
     },
     {
         "name": "L3 Algae Pickup",
-        "setpoints": [1.43, 0.23, -0.27, 3.14 / 2]
+        "setpoints": [1.6, 0.23, -0.27, 3.14 / 2]
     },
     {
         "name": "Algae Ground Pickup",
@@ -88,7 +88,7 @@ nodes = [
     },
     {
         "name": "L1 Score",
-        "setpoints": [1.4, 0, 0, 0.04]
+        "setpoints": [1.4, 0, 0, 3.14 / 2]
     },
     {
         "name": "Climb",

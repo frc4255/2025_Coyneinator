@@ -39,9 +39,10 @@ public class NetAssist extends Command {
     private Elevator s_Elevator;
     private WristPitch s_WristPitch;
     private WristRoll s_WristRoll;
+    private EndEffector s_EndEffector;
 
     public NetAssist(SubsystemManager manager, Pivot s_Pivot, 
-        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
+        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll, EndEffector s_EndEffector) {
 
         this.manager = manager;
 
@@ -49,8 +50,9 @@ public class NetAssist extends Command {
         this.s_Elevator = s_Elevator;
         this.s_WristPitch = s_WristPitch;
         this.s_WristRoll = s_WristRoll;
+        this.s_EndEffector = s_EndEffector;
 
-        addRequirements( s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        addRequirements( s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector);
     }
 
     @Override
@@ -68,6 +70,8 @@ public class NetAssist extends Command {
         s_Swerve.followPathCommand(onTheFlyTrajectory.newOnTheFlyPath(whereToAlign));
          */
         manager.requestNode(GraphParser.getNodeByName("Net Score"));
+
+        s_EndEffector.setDutyCycle(12);
 
     }
 

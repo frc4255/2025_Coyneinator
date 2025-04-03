@@ -36,7 +36,7 @@ public class AlgaeGroundIntake extends Command {
     @Override
     public void initialize() {
         manager.requestNode(GraphParser.getNodeByName("Algae Ground Pickup"));
-        endEffector.setDutyCycle(10);
+        endEffector.setDutyCycle(12);
 
 
     }
@@ -44,8 +44,7 @@ public class AlgaeGroundIntake extends Command {
     @Override
     public void execute() {
         if (endEffector.getMotorCurrent() > 25) {
-            endEffector.setDutyCycle(0.4);
-
+            endEffector.setDutyCycle(10);
         }
     }
 

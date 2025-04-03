@@ -44,7 +44,7 @@ public class AlgaeL2Pickup extends Command {
     @Override
     public void execute() {
         if (endEffector.getMotorCurrent() > 30) {
-            endEffector.setDutyCycle(0.5);
+            endEffector.setDutyCycle(8);
 
         }
     }
