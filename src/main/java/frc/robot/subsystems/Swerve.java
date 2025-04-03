@@ -219,9 +219,14 @@ public class Swerve extends SubsystemBase {
             angle += 360;
         }
 
+        angle = (angle + 180) % 360;
+
         // Map angle to branch letters
         char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
         int sectorIndex = (int) (angle / 30.0);
+
+        Logger.recordOutput("Active Sector", branches[sectorIndex]);
+
         return branches[sectorIndex];
     }
 
