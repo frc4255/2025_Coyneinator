@@ -6,6 +6,9 @@ import org.photonvision.PhotonCamera;
 
 import choreo.auto.AutoFactory;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -46,13 +49,21 @@ public class RobotContainer {
     private final int operatorHorizontalAxis = XboxController.Axis.kLeftX.value;
 
     /* When viewed from behind the bot */ //OFFSETS NEED TO BE REDONE
-  /*  private final Camera RightCam = new Camera(new PhotonCamera("RightCam"), 
-        new Transform3d(new Translation3d(0.258, -0.291, 0.2), //TODO re-do offsets
-        new Rotation3d(0, -1.08, -0.523)));
+    private final Camera leftFrontCam = new Camera(new PhotonCamera("Left_Forward"), 
+        new Transform3d(new Translation3d(0.206, 0.265, 0.208), //TODO re-do offsets
+        new Rotation3d(0, -1.08, 0.524)));
         
-    private final Camera LeftCam = new Camera(new PhotonCamera("LeftCam"), 
-        new Transform3d(new Translation3d(0.258, 0.291, 0.2), //TODO re-do offsets
-        new Rotation3d(0, -1.08, 0.523))); 
+    private final Camera rightFrontCam = new Camera(new PhotonCamera("Right_Forward"), 
+        new Transform3d(new Translation3d(0.206, -0.265, 0.208), //TODO re-do offsets
+        new Rotation3d(0, -1.08, -0.524)));
+
+    private final Camera rightRearCam = new Camera(new PhotonCamera("Right_Rear"), 
+        new Transform3d(new Translation3d(-0.374, -0.262, 0.195), //TODO re-do offsets
+        new Rotation3d(0, 0, -2.313)));
+
+    private final Camera leftRearCam = new Camera(new PhotonCamera("Left_Rear"), 
+        new Transform3d(new Translation3d(-0.374, 0.262, 0.195), //TODO re-do offsets
+        new Rotation3d(0, 0, 2.313)));
     //private final Camera LLCam = new Camera(new PhotonCamera("LLCam"), new Transform3d(new Translation3d(0.135, 0, 0.204), new Rotation3d(0, -1.04, 0)));*/
     /* Operator Buttons */
 
@@ -92,7 +103,7 @@ public class RobotContainer {
     
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
-                new Camera[]{}/*new Camera[]{}/*new Camera[]{rightCam, leftCam}*/);
+            new Camera[]{rightFrontCam, leftFrontCam, rightRearCam, leftRearCam});
                 
         private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
     

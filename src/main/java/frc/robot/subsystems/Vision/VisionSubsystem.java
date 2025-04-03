@@ -55,11 +55,8 @@ public class VisionSubsystem extends SubsystemBase {
             Optional<PoseAndTimestampAndDev> camEst = cam.getEstimate();
             if (camEst != null) {
                 results.add(camEst.get());
+                Logger.recordOutput("Camera " + cam + " Pose", camEst.get().getPose());
             }
-        }
-
-        for (Camera cam : cameras) {
-            Logger.recordOutput("Camera " + cam + " Pose", cam.getEstimate().get().getPose());
         }
     }  
 
