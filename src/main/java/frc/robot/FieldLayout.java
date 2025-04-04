@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
 
@@ -276,6 +275,8 @@ public class FieldLayout {
 
     public static final char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
     public static Map<Character, Integer> branchesToInt = new HashMap<>();
+    public static Map<Character, Integer> branchesToAprilTagID = new HashMap<>();
+
 
     public static final double reefdFacesWidth = Units.inchesToMeters(30.27);
     public static final double reefdFacesHeight = Units.inchesToMeters(37.27);
@@ -307,6 +308,19 @@ public class FieldLayout {
     branchesToInt.put('J', 10);
     branchesToInt.put('K', 11);
     branchesToInt.put('L', 12);
+
+    branchesToAprilTagID.put('A', 18);
+    branchesToAprilTagID.put('B', 18);
+    branchesToAprilTagID.put('C', 17);
+    branchesToAprilTagID.put('D', 17);
+    branchesToAprilTagID.put('E', 22);
+    branchesToAprilTagID.put('F', 22);
+    branchesToAprilTagID.put('G', 21);
+    branchesToAprilTagID.put('H', 21);
+    branchesToAprilTagID.put('I', 20);
+    branchesToAprilTagID.put('J', 20);
+    branchesToAprilTagID.put('K', 19);
+    branchesToAprilTagID.put('L', 19);
   }
 }
 
