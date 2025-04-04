@@ -74,7 +74,7 @@ public class FourPieceNoHP extends SequentialCommandGroup{
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
-                    new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(3),
+                    new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector).withTimeout(3),
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
                 )
             ),
@@ -92,7 +92,7 @@ public class FourPieceNoHP extends SequentialCommandGroup{
             ),
             
             new SequentialCommandGroup(
-                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(2),
+                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector).withTimeout(2),
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
             ),  
@@ -109,7 +109,7 @@ public class FourPieceNoHP extends SequentialCommandGroup{
             ),
             
             new SequentialCommandGroup(
-                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(2),
+                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector).withTimeout(2),
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
             ), 
@@ -128,7 +128,7 @@ public class FourPieceNoHP extends SequentialCommandGroup{
             ),
             
             new SequentialCommandGroup(
-                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(2),  
+                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector).withTimeout(2),  
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),     
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
             ) 

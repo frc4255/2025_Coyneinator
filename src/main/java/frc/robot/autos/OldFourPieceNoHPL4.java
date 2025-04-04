@@ -30,8 +30,8 @@ import frc.robot.commands.L4Assist;
 import frc.robot.commands.ReefAlign;
 import frc.robot.commands.Stow;
 
-public class FourPieceNoHPL4 extends SequentialCommandGroup{
-    public FourPieceNoHPL4(Swerve s_Swerve, Pivot s_Pivot, AlignTool AlignTool, Elevator s_Elevator, WristPitch s_WristPitch, 
+public class OldFourPieceNoHPL4 extends SequentialCommandGroup{
+    public OldFourPieceNoHPL4(Swerve s_Swerve, Pivot s_Pivot, Pivot s_Pivot2, Elevator s_Elevator, WristPitch s_WristPitch, 
         WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager) {
 
         addCommands(

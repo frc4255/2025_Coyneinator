@@ -1,9 +1,12 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.security.Timestamp;
+import java.util.Map;
 
 import org.photonvision.PhotonCamera;
 
+import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -60,7 +63,7 @@ public class RobotContainer {
     private final Camera rightRearCam = new Camera(new PhotonCamera("Right_Rear"), 
         new Transform3d(new Translation3d(-0.374, -0.262, 0.195), //TODO re-do offsets
         new Rotation3d(0, 0, -3.88)));
-
+        
     private final Camera leftRearCam = new Camera(new PhotonCamera("Left_Rear"), 
         new Transform3d(new Translation3d(-0.374, 0.262, 0.195), //TODO re-do offsets
         new Rotation3d(0, 0, 3.88)));
@@ -208,7 +211,7 @@ public class RobotContainer {
 
             coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve));
+            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector));
 
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
@@ -225,8 +228,8 @@ public class RobotContainer {
     }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
-        autochooser.addOption("4 piece new testing one", new OldFourPieceNoHP(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
+        autochooser.addOption("4 piece new testing one", new OldFourPieceNoHPL4(s_Swerve, s_Pivot, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
 
         SmartDashboard.putData(autochooser);
     }
