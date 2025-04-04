@@ -109,7 +109,6 @@ public class Elevator extends SubsystemBase {
             m_LeftMotor.setPosition(0);   
             m_RightMotor.setPosition(0);
 
-            m_LeftMotor.set(0);
             m_RightMotor.set(0);
 
             setAutoHome(true);

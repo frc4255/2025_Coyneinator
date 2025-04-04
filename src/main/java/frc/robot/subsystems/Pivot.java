@@ -93,7 +93,6 @@ public class Pivot extends SubsystemBase {
     }
 
     public void autoHome() {
-        m_leftMotor.set(-0.2);
         m_rightMotor.set(-0.2);
 
         System.err.println("Pivot Motor Current: " + getMotorCurrent());
@@ -109,7 +108,6 @@ public class Pivot extends SubsystemBase {
             m_leftMotor.setPosition(0);   
             m_rightMotor.setPosition(0);
 
-            m_leftMotor.stopMotor();
             m_rightMotor.stopMotor();
 
             setAutoHome(true);

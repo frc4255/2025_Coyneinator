@@ -292,6 +292,7 @@ public class FieldLayout {
     public static final List<Map<ReefHeight, Pose3d>> branchPositions =
         new ArrayList<>(); // Starting at the right branch facing the driver station in clockwise
 
+        /*
     static {
 
         
@@ -383,7 +384,7 @@ public class FieldLayout {
         branchPositions.add((face * 2) + 1, fillRight);
         branchPositions.add((face * 2) + 2, fillLeft);
       }
-    }
+    }*/
   }
 
   public static class StagingPositions {

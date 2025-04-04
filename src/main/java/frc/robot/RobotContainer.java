@@ -59,11 +59,11 @@ public class RobotContainer {
 
     private final Camera rightRearCam = new Camera(new PhotonCamera("Right_Rear"), 
         new Transform3d(new Translation3d(-0.374, -0.262, 0.195), //TODO re-do offsets
-        new Rotation3d(0, 0, -2.313)));
+        new Rotation3d(0, 0, -3.88)));
 
     private final Camera leftRearCam = new Camera(new PhotonCamera("Left_Rear"), 
         new Transform3d(new Translation3d(-0.374, 0.262, 0.195), //TODO re-do offsets
-        new Rotation3d(0, 0, 2.313)));
+        new Rotation3d(0, 0, 3.88)));
     //private final Camera LLCam = new Camera(new PhotonCamera("LLCam"), new Transform3d(new Translation3d(0.135, 0, 0.204), new Rotation3d(0, -1.04, 0)));*/
     /* Operator Buttons */
 
@@ -134,8 +134,8 @@ public class RobotContainer {
                     s_Swerve, 
                     () -> -driver.getRawAxis(translationAxis), 
                     () -> -driver.getRawAxis(strafeAxis), 
-                    () -> driver.getRawAxis(rotationAxis), 
-                    () -> false //For the love of god do not change this
+                    () -> -driver.getRawAxis(rotationAxis), 
+                    () -> true //For the love of god do not change this
                 )
             );
 
@@ -225,7 +225,9 @@ public class RobotContainer {
     }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
+        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+        autochooser.addOption("4 piece new testing one", new NewFourPieceNoHPL4(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+
         SmartDashboard.putData(autochooser);
     }
     

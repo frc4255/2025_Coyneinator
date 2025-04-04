@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -36,5 +37,15 @@ public class SwerveFollower extends Command{
         if (sample.isPresent()) {
             s_Swerve.followTrajectory(sample.get());
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return timer.get() >= traj.getTotalTime();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        s_Swerve.drive(new Translation2d(), 0, true, false);    
     }
 }

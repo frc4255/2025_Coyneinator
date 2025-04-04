@@ -6,6 +6,7 @@ import frc.robot.Constants;
 import frc.robot.FieldLayout;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -45,8 +46,8 @@ public class Swerve extends SubsystemBase {
 
     private VisionSubsystem vision;
 
-    private final PIDController xController = new PIDController(10.0, 0.0, 0.0);
-    private final PIDController yController = new PIDController(10.0, 0.0, 0.0);
+    private final PIDController xController = new PIDController(5, 0.0, 0.0);
+    private final PIDController yController = new PIDController(5, 0.0, 0.0);
     private final PIDController headingController = new PIDController(5, 0.0, 0.0);
 
     public Swerve(VisionSubsystem vision) {
@@ -89,7 +90,7 @@ public class Swerve extends SubsystemBase {
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                     translation.getX() , 
                                     translation.getY(), 
-                                    -rotation, 
+                                    rotation, 
                                     getHeading().rotateBy(inverse)
                                 )
                                 : new ChassisSpeeds(
@@ -99,6 +100,8 @@ public class Swerve extends SubsystemBase {
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
+        Logger.recordOutput("Field Relative?", fieldRelative);
+        
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
@@ -108,7 +111,7 @@ public class Swerve extends SubsystemBase {
         drive(
             new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
             speeds.omegaRadiansPerSecond,
-            false,
+            true,
             false
         );
     }
@@ -220,21 +223,19 @@ public class Swerve extends SubsystemBase {
             angle += 360;
         }
 
-        angle = (angle + 180) % 360;
+        angle = (angle + 210) % 360;
 
         // Map angle to branch letters
         char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
         int sectorIndex = (int) (angle / 30.0);
 
-        Logger.recordOutput("Active Sector", branches[sectorIndex]);
+        Logger.recordOutput("Active Sector", Character.valueOf(branches[sectorIndex]).toString());
 
         return branches[sectorIndex];
     }
 
     @Override
     public void periodic(){
-
-        Pose2d currentPose = getPose();
 
         double[] array = {getPose().getX(), getPose().getY()};
 
@@ -255,6 +256,7 @@ public class Swerve extends SubsystemBase {
         
         //SmartDashboard.putNumberArray("Robot Pose", new Double[]{getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
         
+        findClosestBranch(false);
         Logger.recordOutput("Robot Pose2d", getPose());
         Logger.recordOutput("Gyro angle", getGyroYaw().getDegrees());
         
@@ -269,6 +271,15 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
+
+        for (SwerveModule mod : mSwerveMods) {
+            SmartDashboard.putNumberArray("Module " + mod.moduleNumber, 
+                    new double[] {mod.getCANcoder().getDegrees(), 
+                    mod.getPosition().angle.getDegrees(), 
+                    mod.getState().speedMetersPerSecond});
+        }
+
+        Logger.recordOutput("Tag 18 Reference Frame", getPose().relativeTo(FieldLayout.AprilTags.APRIL_TAG_POSE.stream().filter(tag -> tag.ID==18).findFirst().get().pose.toPose2d()));
         
         SmartDashboard.putNumber("Gyro angle", getGyroYaw().getDegrees());
     }

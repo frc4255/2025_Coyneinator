@@ -30,10 +30,12 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.SubsystemManager;
+import frc.robot.autos.autocommands.SwerveFollower;
 import frc.robot.commands.CoralHumanPlayerIntake;
 import frc.robot.commands.ExtakeCoral;
 import frc.robot.commands.L1Assist;
 import frc.robot.commands.L4Assist;
+import frc.robot.commands.LollipopIntakeManual;
 import frc.robot.commands.Stow;
 
 public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
@@ -46,29 +48,89 @@ public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
 
         ArrayList<Optional<Trajectory<SwerveSample>>> trajectories = new ArrayList<>();
 
-        for (int i = 0; i < 6; i++) {
-            trajectories.add(Choreo.loadTrajectory("path" + i));
-        }
+        trajectories.add(Choreo.loadTrajectory("4pc_0"));
+        trajectories.add(Choreo.loadTrajectory("4pc_1"));
+        trajectories.add(Choreo.loadTrajectory("4pc_2"));
+        trajectories.add(Choreo.loadTrajectory("4pc_3"));
 
-        Optional<Pose2d> initialPose = optionalTrajectory.get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red));
+        Optional<Pose2d> initialPose = trajectories.get(0).get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red));
 
+        //s_Swerve.followTrajectory(myTrajectory.sampleAt(
+        //new Timer().get(), DriverStation.getAlliance().orElse(Alliance.Blue)
+        //.equals(Alliance.Red)).get())),
 
         addCommands(
             new InstantCommand(() -> s_Swerve.setHeading(initialPose.get().getRotation())),
             new InstantCommand(() -> s_Swerve.setPose(initialPose.get())),
             new WaitCommand(0.1),
-            new InstantCommand(() -> s_Swerve.followTrajectory(myTrajectory.sampleAt(new Timer().get(), DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)).get())),
+            
+            new SwerveFollower(s_Swerve, trajectories.get(0).get()),
+
+            /*
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
-                    new WaitCommand(2.4), //TODO TUNE THIS
-                    new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
+                    new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5), //TODO TUNE THIS
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
                 )
+            ),
+             */
+
+            new ParallelCommandGroup(
+                new SwerveFollower(s_Swerve, trajectories.get(1).get())
+                /*
+                new WaitCommand(1),
+                new SequentialCommandGroup(
+                    new LollipopIntakeManual(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                    new ExtakeCoral(s_EndEffector).withTimeout(0.5),
+                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+                    */
+            ),
+            /*
+            new SequentialCommandGroup(
+                new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                new ExtakeCoral(s_EndEffector).withTimeout(0.5),
+                new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+            ),  */
+
+
+            new ParallelCommandGroup(
+                new SwerveFollower(s_Swerve, trajectories.get(2).get())
+
+                /*
+                new WaitCommand(0.75),
+                new SequentialCommandGroup(
+                    new LollipopIntakeManual(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                    new ExtakeCoral(s_EndEffector).withTimeout(0.5),
+                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+                ) */
+            ),
+            /*
+            new SequentialCommandGroup(
+                new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                new ExtakeCoral(s_EndEffector).withTimeout(0.5),
+                new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+            ), */
+            
+    
+            new ParallelCommandGroup(
+                new SwerveFollower(s_Swerve, trajectories.get(3).get())
+
+                /*
+                new WaitCommand(1.1),
+                new SequentialCommandGroup(
+                    new LollipopIntakeManual(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                    new ExtakeCoral(s_EndEffector).withTimeout(0.5),
+                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+                ) */
             )
-
-
+            /*
+            new SequentialCommandGroup(
+                new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),  
+                new ExtakeCoral(s_EndEffector).withTimeout(0.5),     
+                new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+            ) */
         );
 
 
