@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -64,8 +65,10 @@ public class Score extends Command {
     private Pose2d fieldTargetPose;
     private Pose2d activeTargetPose;
 
+    private BooleanSupplier confirmSupplier;
+
     public Score(int level, SubsystemManager manager, Pivot s_Pivot, 
-        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll, Swerve s_Swerve, EndEffector s_EndEffector) {
+        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll, Swerve s_Swerve, EndEffector s_EndEffector, BooleanSupplier confirmSupplier) {
 
         this.manager = manager;
 
@@ -77,6 +80,8 @@ public class Score extends Command {
         this.s_EndEffector = s_EndEffector;
 
         this.level = level;
+
+        this.confirmSupplier = confirmSupplier;
 
         leftScoringPose = new Pose2d(new Translation2d(0.447,-0.16), new Rotation2d());
         rightScoringPose = new Pose2d(new Translation2d(0.447, 0.16), new Rotation2d());
@@ -137,11 +142,11 @@ public class Score extends Command {
         s_Swerve.drive(new Translation2d(xCommand, yCommand), headingCommand, true, false);
 
         if (xController.atSetpoint() && yController.atSetpoint() && headingController.atSetpoint()) {
-            manager.requestNode(GraphParser.getNodeByName("L" + level + " Dunk"));
+            manager.requestNode(GraphParser.getNodeByName("L" + level + " Init"));
             s_Swerve.drive(new Translation2d(0,0), 0, false, false);
         }
 
-        if (manager.hasReachedGoal("L" + String.valueOf(level) + " Dunk")) {
+        if (manager.hasReachedGoal("L" + String.valueOf(level) + " Init") && confirmSupplier.getAsBoolean()) {
             manager.requestNode(GraphParser.getNodeByName("Stow"));
             s_EndEffector.setDutyCycle(2);
             canEnd = true;

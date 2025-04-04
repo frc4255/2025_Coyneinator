@@ -211,8 +211,7 @@ public class RobotContainer {
 
             coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector));
-
+            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector)); //TODO: Bind confirm button
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
             reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
