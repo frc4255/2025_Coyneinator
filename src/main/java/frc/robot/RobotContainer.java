@@ -226,7 +226,7 @@ public class RobotContainer {
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
         autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
-        autochooser.addOption("4 piece new testing one", new NewFourPieceNoHPL4(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+        autochooser.addOption("4 piece new testing one", new OldFourPieceNoHP(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
 
         SmartDashboard.putData(autochooser);
     }

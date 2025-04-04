@@ -36,22 +36,26 @@ import frc.robot.commands.ExtakeCoral;
 import frc.robot.commands.L1Assist;
 import frc.robot.commands.L4Assist;
 import frc.robot.commands.LollipopIntakeManual;
+import frc.robot.commands.Score;
 import frc.robot.commands.Stow;
 
-public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
-    public NewFourPieceNoHPL4(Swerve s_Swerve, AlignTool alignTool,
+public class FourPieceNoHP extends SequentialCommandGroup{
+    public FourPieceNoHP(Swerve s_Swerve, AlignTool alignTool,
         Pivot s_Pivot, Elevator s_Elevator, WristPitch s_WristPitch, 
-        WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager) {
+        WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager, String[] paths, int[] scoringLevels) {
         
-        Optional<Trajectory<SwerveSample>> optionalTrajectory = Choreo.loadTrajectory("test");
-        Trajectory<SwerveSample> myTrajectory = optionalTrajectory.get();
-
         ArrayList<Optional<Trajectory<SwerveSample>>> trajectories = new ArrayList<>();
 
-        trajectories.add(Choreo.loadTrajectory("4pc_0"));
-        trajectories.add(Choreo.loadTrajectory("4pc_1"));
-        trajectories.add(Choreo.loadTrajectory("4pc_2"));
-        trajectories.add(Choreo.loadTrajectory("4pc_3"));
+        //trajectories.add(Choreo.loadTrajectory("4pc_0 (Start-I)"));
+        //trajectories.add(Choreo.loadTrajectory("4pc_1 (I-A)"));
+        //trajectories.add(Choreo.loadTrajectory("4pc_2 (A-B)"));
+        //trajectories.add(Choreo.loadTrajectory("4pc_3 (B-C)"));
+
+        trajectories.add(Choreo.loadTrajectory(paths[0]));
+        trajectories.add(Choreo.loadTrajectory(paths[1]));
+        trajectories.add(Choreo.loadTrajectory(paths[2]));
+        trajectories.add(Choreo.loadTrajectory(paths[3]));
+
 
         Optional<Pose2d> initialPose = trajectories.get(0).get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red));
 
@@ -70,7 +74,7 @@ public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
-                    new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
+                    new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(3),
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
                 )
             ),
@@ -88,7 +92,7 @@ public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
             ),
             
             new SequentialCommandGroup(
-                new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(2),
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
             ),  
@@ -105,7 +109,7 @@ public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
             ),
             
             new SequentialCommandGroup(
-                new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
+                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(2),
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
             ), 
@@ -124,7 +128,7 @@ public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
             ),
             
             new SequentialCommandGroup(
-                new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),  
+                new Score(scoringLevels[0], manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve).withTimeout(2),  
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),     
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
             ) 
