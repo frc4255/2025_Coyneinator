@@ -131,6 +131,14 @@ public class SubsystemManager {
                sWristPitch.atGoal() && sWristRoll.atGoal();
     }
 
+    public boolean hasReachedGoal(String x) {
+        if (currentNode.getName().equals(x) && hasReachedTarget() && currentNode != lastNode) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean canAutoHome() {
         if (currentNode.getName().equals("Stow") && hasReachedTarget() && currentNode != lastNode) {
             System.err.println("can Auto Home");
