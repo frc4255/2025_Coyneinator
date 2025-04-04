@@ -120,6 +120,11 @@ public class RobotContainer {
         
         /* auto stuff */
         private SendableChooser<Command> autochooser;
+        private SendableChooser<int[]> autoScoring;
+        private SendableChooser<String> autoTrajectories0;
+        private SendableChooser<String> autoTrajectories1;
+        private SendableChooser<String> autoTrajectories2;
+        private SendableChooser<String> autoTrajectories3;
         //private final AutoChooser autoChooser;
 
         private final AutoFactory autoFactory;
@@ -223,10 +228,75 @@ public class RobotContainer {
             
 
     }
+    private int[] configureAutoScoring() {
+        autoScoring = new SendableChooser<>();
+
+        autoScoring.addOption("L1", new int[] {1, 1, 1, 1});
+        autoScoring.addOption("L2", new int[] {2, 2, 2, 2});
+        autoScoring.addOption("L3", new int[] {3, 3, 3, 3});
+        autoScoring.addOption("L4", new int[] {4, 4, 4, 4});
+
+        SmartDashboard.putData(autoScoring);
+
+        return autoScoring.getSelected();
+    }
+
+    public void configureAutoTrajectories() {
+        autoTrajectories0 = new SendableChooser<>();
+        autoTrajectories1= new SendableChooser<>();
+        autoTrajectories2 = new SendableChooser<>();
+        autoTrajectories3 = new SendableChooser<>();
+
+        autoTrajectories0.addOption("", null);
+    }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
-        autochooser.addOption("4 piece new testing one", new OldFourPieceNoHP(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+        autochooser.addOption("One Piece", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+        autochooser.addOption("(Old) 4 piece Processor side", new FourPieceNoHP(s_Swerve, null, s_Pivot, 
+                s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, 
+                new String[] {
+                    "4pc_0 (Start-I)",
+                    "4pc_1 (I-A)",
+                    "4pc_2 (A-B)",
+                    "4pc_3 (B-C)"},
+                configureAutoScoring(),
+                new double[] {
+                    0.1,
+                    1,
+                    0.75,
+                    1.1
+                }));     
+
+            autochooser.addOption("4 piece Processor side", new FourPieceNoHP(s_Swerve, null, s_Pivot, 
+                s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, 
+                new String[] {
+                    "4pc_0 (Start-J)",
+                    "4pc_1 (J-K)",
+                    "4pc_2 (K-A)",
+                    "4pc_3 (A-L)"},
+                configureAutoScoring(),
+                    new double[] {
+                        0.1,
+                        1,
+                        0.75,
+                        1.1
+                    }));  
+            
+            autochooser.addOption("4 piece Not Processor side", new FourPieceNoHP(s_Swerve, null, s_Pivot, 
+            s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, 
+            new String[] {
+                "4pc_0 (Start-F)",
+                "4pc_1 (F-D)",
+                "4pc_2 (D-C)",
+                "4pc_3 (C-B)"},
+            configureAutoScoring(),
+            new double[] {
+                0.,
+                1.7,
+
+            }));
+                
+        
 
         SmartDashboard.putData(autochooser);
     }

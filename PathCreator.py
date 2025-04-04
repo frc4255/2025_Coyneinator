@@ -28,7 +28,11 @@ nodes = [
     },
     {
         "name": "Reef Align",
-        "setpoints": [1.57, 0, -0.37, 0]
+        "setpoints": [1.57, 0, -1.38, 0]
+    },
+    {
+        "name": "L4 Dunk2",
+        "setpoints": [1.57, 0.55, -0.37, 0]
     },
     {
         "name": "L4 Intermediate",
@@ -232,6 +236,10 @@ edges = [
     },
     {
         "start": "L4 Dunk",
+        "end": "L4 Dunk2"
+    },
+    {
+        "start": "L4 Dunk2",
         "end": "Reef Align"
     },
     {

@@ -26,7 +26,9 @@ import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
@@ -240,6 +242,30 @@ public class Swerve extends SubsystemBase {
         double[] array = {getPose().getX(), getPose().getY()};
 
         SmartDashboard.putNumberArray("Swerve Pose Estimation", array);
+        
+        Pose2d leftScoringPose = new Pose2d(new Translation2d(0.447,-0.16), new Rotation2d());
+        Pose2d rightScoringPose = new Pose2d(new Translation2d(0.447, 0.16), new Rotation2d());
+
+        char sector = findClosestBranch(DriverStation.getAlliance().get() == Alliance.Red ? true : false);
+        int branchNumber = frc.robot.FieldLayout.Reef.branchesToInt.get(sector);
+        Pose2d activeTargetPose = (branchNumber % 2 == 1) ? leftScoringPose : rightScoringPose;
+
+        int tagID = FieldLayout.Reef.branchesToAprilTagID.get(sector);
+
+        Logger.recordOutput("Target Tag ID", tagID);
+        Pose3d tagPose3d = FieldLayout.AprilTags.APRIL_TAG_POSE.stream()
+            .filter(tag -> tag.ID == tagID)
+            .findFirst()
+            .orElseThrow()
+            .pose;
+
+        Pose2d tagPose2d = new Pose2d(tagPose3d.getX(), tagPose3d.getY(), new Rotation2d(tagPose3d.getRotation().getZ()));
+        Pose2d fieldTargetPose = tagPose2d.transformBy(new Transform2d(new Translation2d(activeTargetPose.getX(), activeTargetPose.getY()), activeTargetPose.getRotation()));
+
+        Logger.recordOutput("target pose", fieldTargetPose);
+
+        Logger.recordOutput("Current active Sector", findClosestBranch(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red ? true : false));
+
 
         m_SwervePoseEstimator.update(getGyroYaw(), getModulePositions());
         for (PoseAndTimestampAndDev poseAndTimestamp : vision.getResults()) {
