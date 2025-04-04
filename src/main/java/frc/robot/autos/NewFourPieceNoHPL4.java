@@ -66,74 +66,70 @@ public class NewFourPieceNoHPL4 extends SequentialCommandGroup{
             
             new SwerveFollower(s_Swerve, trajectories.get(0).get()),
 
-            /*
+            
             new ParallelCommandGroup(
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
-                    new ExtakeCoral(s_EndEffector).withTimeout(0.5), //TODO TUNE THIS
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
                 )
             ),
-             */
+             
 
             new ParallelCommandGroup(
-                new SwerveFollower(s_Swerve, trajectories.get(1).get())
-                /*
+                new SwerveFollower(s_Swerve, trajectories.get(1).get()),
+                
                 new WaitCommand(1),
                 new SequentialCommandGroup(
                     new LollipopIntakeManual(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-                    */
+                )
             ),
-            /*
+            
             new SequentialCommandGroup(
                 new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-            ),  */
+            ),  
 
 
             new ParallelCommandGroup(
-                new SwerveFollower(s_Swerve, trajectories.get(2).get())
-
-                /*
+                new SwerveFollower(s_Swerve, trajectories.get(2).get()),
                 new WaitCommand(0.75),
                 new SequentialCommandGroup(
                     new LollipopIntakeManual(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-                ) */
+                ) 
             ),
-            /*
+            
             new SequentialCommandGroup(
                 new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-            ), */
+            ), 
             
     
             new ParallelCommandGroup(
-                new SwerveFollower(s_Swerve, trajectories.get(3).get())
+                new SwerveFollower(s_Swerve, trajectories.get(3).get()),
 
-                /*
+                
                 new WaitCommand(1.1),
                 new SequentialCommandGroup(
                     new LollipopIntakeManual(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5),
                     new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-                ) */
-            )
-            /*
+                ) 
+            ),
+            
             new SequentialCommandGroup(
                 new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(2),  
                 new ExtakeCoral(s_EndEffector).withTimeout(0.5),     
                 new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
-            ) */
+            ) 
+            
         );
-
-
 
 
     }
