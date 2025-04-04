@@ -279,7 +279,7 @@ public class Swerve extends SubsystemBase {
                     mod.getState().speedMetersPerSecond});
         }
 
-        Logger.recordOutput("Tag 18 Reference Frame", getPose().relativeTo(FieldLayout.AprilTags.APRIL_TAG_POSE.stream().filter(tag -> tag.ID==18).findFirst().get().pose.toPose2d()));
+        Logger.recordOutput("Tag 21 Reference Frame", getPose().relativeTo(FieldLayout.AprilTags.APRIL_TAG_POSE.stream().filter(tag -> tag.ID==21).findFirst().get().pose.toPose2d()));
         
         SmartDashboard.putNumber("Gyro angle", getGyroYaw().getDegrees());
     }

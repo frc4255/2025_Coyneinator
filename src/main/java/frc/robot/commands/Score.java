@@ -2,12 +2,15 @@ package frc.robot.commands;
 
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -60,7 +63,7 @@ public class Score extends Command {
     private Pose2d activeTargetPose;
 
     public Score(int level, SubsystemManager manager, Pivot s_Pivot, 
-        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
+        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll, Swerve s_Swerve) {
 
         this.manager = manager;
 
@@ -68,61 +71,68 @@ public class Score extends Command {
         this.s_Elevator = s_Elevator;
         this.s_WristPitch = s_WristPitch;
         this.s_WristRoll = s_WristRoll;
+        this.s_Swerve = s_Swerve;
 
         this.level = level;
 
-        leftScoringPose = new Pose2d(new Translation2d(-0.2,0.6), new Rotation2d());
-        rightScoringPose = new Pose2d(new Translation2d(0.2,0.6), new Rotation2d());
+        leftScoringPose = new Pose2d(new Translation2d(0.447,-0.16), new Rotation2d());
+        rightScoringPose = new Pose2d(new Translation2d(0.447, 0.16), new Rotation2d());
 
-        xController = new PIDController(5.0, 0.0, 0.0);
-        yController = new PIDController(5.0, 0.0, 0.0);
-        headingController = new PIDController(2.5, 0.0, 0.0);
+        xController = new PIDController(2.0, 0.0, 0.0);
+        yController = new PIDController(2.0, 0.0, 0.0);
+        headingController = new PIDController(1, 0.0, 0.0);
 
-        xController.setTolerance(0.05);
-        yController.setTolerance(0.05);
-        headingController.setTolerance(0.1);
+        xController.setTolerance(0.08);
+        yController.setTolerance(0.08);
+        headingController.setTolerance(3);
 
 
-        addRequirements(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        addRequirements(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve);
     }
 
     @Override
     public void initialize() {
         manager.requestNode(GraphParser.getNodeByName("Reef Align"));
 
-        char branch = s_Swerve.findClosestBranch(DriverStation.getAlliance().get() == Alliance.Red ? true : false);
-        int branchNumber = frc.robot.FieldLayout.Reef.branchesToInt.get(branch);
+        sector = s_Swerve.findClosestBranch(DriverStation.getAlliance().get() == Alliance.Red ? true : false);
+        int branchNumber = frc.robot.FieldLayout.Reef.branchesToInt.get(sector);
         activeTargetPose = (branchNumber % 2 == 1) ? leftScoringPose : rightScoringPose;
     }
 
     @Override
     public void execute() {
+
         // Get the current robot pose from s_Swerve
         Pose2d currentPose = s_Swerve.getPose();
         
         // Transform activeTargetPose from apriltag-relative coordinates to field coordinates
         int tagID = FieldLayout.Reef.branchesToAprilTagID.get(sector);
+
+        Logger.recordOutput("Target Tag ID", tagID);
         Pose3d tagPose3d = FieldLayout.AprilTags.APRIL_TAG_POSE.stream()
             .filter(tag -> tag.ID == tagID)
             .findFirst()
             .orElseThrow()
             .pose;
         Pose2d tagPose2d = new Pose2d(tagPose3d.getX(), tagPose3d.getY(), new Rotation2d(tagPose3d.getRotation().getZ()));
-        Pose2d fieldTargetPose = tagPose2d.relativeTo(activeTargetPose);
+        Pose2d fieldTargetPose = tagPose2d.transformBy(new Transform2d(new Translation2d(activeTargetPose.getX(), activeTargetPose.getY()), activeTargetPose.getRotation()));
         
+        Logger.recordOutput("target pose", fieldTargetPose);
+
         // Calculate PID outputs for x, y, and heading to move towards the field target pose
         double xCommand = xController.calculate(currentPose.getTranslation().getX(), fieldTargetPose.getTranslation().getX());
         double yCommand = yController.calculate(currentPose.getTranslation().getY(), fieldTargetPose.getTranslation().getY());
         double headingCommand = headingController.calculate(currentPose.getRotation().getRadians(), fieldTargetPose.getRotation().getRadians());
         
         // Command the swerve drive to move towards the target
-        s_Swerve.drive(new Translation2d(xCommand, yCommand), headingCommand, false, false);
+        s_Swerve.drive(new Translation2d(xCommand, yCommand), headingCommand, true, false);
 
         if (xController.atSetpoint() && yController.atSetpoint() && headingController.atSetpoint()) {
-            manager.requestNode(GraphParser.getNodeByName("L" + level + " Score"));
+            manager.requestNode(GraphParser.getNodeByName("L" + level + " Init"));
+            s_Swerve.drive(new Translation2d(0,0), 0, false, false);
         }
 
-        if (manager.hasReachedGoal("L" + level + " Score")) {
+        if (manager.hasReachedGoal("L" + String.valueOf(level) + " Init")) {
             manager.requestNode(GraphParser.getNodeByName("Stow"));
             canEnd = true;
         }
@@ -136,7 +146,8 @@ public class Score extends Command {
 
     @Override
     public boolean isFinished() { 
-        return manager.hasReachedGoal("Stow") && canEnd;
+        return false;
+        //return manager.hasReachedGoal("Stow") && canEnd;
     }
 
 }

@@ -208,7 +208,7 @@ public class RobotContainer {
 
             coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            processorScore.onTrue(new ClimbEnd(manager, s_Climber, s_Pivot, s_WristPitch));
+            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve));
 
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
