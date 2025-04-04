@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -62,6 +65,8 @@ public class Score extends Command {
 
     private Pose2d activeTargetPose;
 
+    private Map<Character, Integer> branchesToAprilTagID;
+
     public Score(int level, SubsystemManager manager, Pivot s_Pivot, 
         Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll, Swerve s_Swerve) {
 
@@ -106,7 +111,14 @@ public class Score extends Command {
         Pose2d currentPose = s_Swerve.getPose();
         
         // Transform activeTargetPose from apriltag-relative coordinates to field coordinates
-        int tagID = FieldLayout.Reef.branchesToAprilTagID.get(sector);
+
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            branchesToAprilTagID = FieldLayout.Reef.branchesToAprilTagIDRed;
+        } else {
+            branchesToAprilTagID = FieldLayout.Reef.branchesToAprilTagIDBlue;
+        }
+
+        int tagID = branchesToAprilTagID.get(sector);
 
         Logger.recordOutput("Target Tag ID", tagID);
         Pose3d tagPose3d = FieldLayout.AprilTags.APRIL_TAG_POSE.stream()

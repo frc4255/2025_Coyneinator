@@ -275,7 +275,8 @@ public class FieldLayout {
 
     public static final char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
     public static Map<Character, Integer> branchesToInt = new HashMap<>();
-    public static Map<Character, Integer> branchesToAprilTagID = new HashMap<>();
+    public static Map<Character, Integer> branchesToAprilTagIDBlue = new HashMap<>();
+    public static Map<Character, Integer> branchesToAprilTagIDRed = new HashMap<>();
 
 
     public static final double reefdFacesWidth = Units.inchesToMeters(30.27);
@@ -309,18 +310,31 @@ public class FieldLayout {
     branchesToInt.put('K', 11);
     branchesToInt.put('L', 12);
 
-    branchesToAprilTagID.put('A', 18);
-    branchesToAprilTagID.put('B', 18);
-    branchesToAprilTagID.put('C', 17);
-    branchesToAprilTagID.put('D', 17);
-    branchesToAprilTagID.put('E', 22);
-    branchesToAprilTagID.put('F', 22);
-    branchesToAprilTagID.put('G', 21);
-    branchesToAprilTagID.put('H', 21);
-    branchesToAprilTagID.put('I', 20);
-    branchesToAprilTagID.put('J', 20);
-    branchesToAprilTagID.put('K', 19);
-    branchesToAprilTagID.put('L', 19);
+    branchesToAprilTagIDBlue.put('A', 18);
+    branchesToAprilTagIDBlue.put('B', 18);
+    branchesToAprilTagIDBlue.put('C', 17);
+    branchesToAprilTagIDBlue.put('D', 17);
+    branchesToAprilTagIDBlue.put('E', 22);
+    branchesToAprilTagIDBlue.put('F', 22);
+    branchesToAprilTagIDBlue.put('G', 21);
+    branchesToAprilTagIDBlue.put('H', 21);
+    branchesToAprilTagIDBlue.put('I', 20);
+    branchesToAprilTagIDBlue.put('J', 20);
+    branchesToAprilTagIDBlue.put('K', 19);
+    branchesToAprilTagIDBlue.put('L', 19);
+
+    branchesToAprilTagIDRed.put('A', 7);
+    branchesToAprilTagIDRed.put('B', 7);
+    branchesToAprilTagIDRed.put('C', 8);
+    branchesToAprilTagIDRed.put('D', 8);
+    branchesToAprilTagIDRed.put('E', 9);
+    branchesToAprilTagIDRed.put('F', 9);
+    branchesToAprilTagIDRed.put('G', 10);
+    branchesToAprilTagIDRed.put('H', 10);
+    branchesToAprilTagIDRed.put('I', 11);
+    branchesToAprilTagIDRed.put('J', 11);
+    branchesToAprilTagIDRed.put('K', 6);
+    branchesToAprilTagIDRed.put('L', 6);
   }
 }
 

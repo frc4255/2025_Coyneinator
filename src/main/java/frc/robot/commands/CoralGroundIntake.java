@@ -43,7 +43,7 @@ public class CoralGroundIntake extends Command {
 
     @Override
     public void execute() {
-        if (endEffector.getMotorCurrent() > 30) {
+        if (endEffector.getMotorCurrent() > 10) {
             endEffector.setDutyCycle(0.5);
 
         }

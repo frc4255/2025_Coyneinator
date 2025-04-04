@@ -13,6 +13,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import java.lang.annotation.Target;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.littletonrobotics.junction.Logger;
@@ -250,7 +251,15 @@ public class Swerve extends SubsystemBase {
         int branchNumber = frc.robot.FieldLayout.Reef.branchesToInt.get(sector);
         Pose2d activeTargetPose = (branchNumber % 2 == 1) ? leftScoringPose : rightScoringPose;
 
-        int tagID = FieldLayout.Reef.branchesToAprilTagID.get(sector);
+        Map<Character, Integer> branchesToAprilTagID;
+        
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            branchesToAprilTagID = FieldLayout.Reef.branchesToAprilTagIDRed;
+        } else {
+            branchesToAprilTagID = FieldLayout.Reef.branchesToAprilTagIDBlue;
+        }
+
+        int tagID = branchesToAprilTagID.get(sector);
 
         Logger.recordOutput("Target Tag ID", tagID);
         Pose3d tagPose3d = FieldLayout.AprilTags.APRIL_TAG_POSE.stream()
@@ -261,6 +270,14 @@ public class Swerve extends SubsystemBase {
 
         Pose2d tagPose2d = new Pose2d(tagPose3d.getX(), tagPose3d.getY(), new Rotation2d(tagPose3d.getRotation().getZ()));
         Pose2d fieldTargetPose = tagPose2d.transformBy(new Transform2d(new Translation2d(activeTargetPose.getX(), activeTargetPose.getY()), activeTargetPose.getRotation()));
+
+        /*
+        Pose2d finalTargetPose;
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            finalTargetPose = FlippingUtil.flipJustX(fieldTargetPose);
+        } else {
+            finalTargetPose = fieldTargetPose;
+        } */
 
         Logger.recordOutput("target pose", fieldTargetPose);
 

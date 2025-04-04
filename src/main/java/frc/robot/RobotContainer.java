@@ -253,48 +253,13 @@ public class RobotContainer {
         autochooser = new SendableChooser<>();
         autochooser.addOption("One Piece", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
         autochooser.addOption("(Old) 4 piece Processor side", new FourPieceNoHP(s_Swerve, null, s_Pivot, 
-                s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, 
-                new String[] {
-                    "4pc_0 (Start-I)",
-                    "4pc_1 (I-A)",
-                    "4pc_2 (A-B)",
-                    "4pc_3 (B-C)"},
-                configureAutoScoring(),
-                new double[] {
-                    0.1,
-                    1,
-                    0.75,
-                    1.1
-                }));     
+                s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));     
 
             autochooser.addOption("4 piece Processor side", new FourPieceNoHP(s_Swerve, null, s_Pivot, 
-                s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, 
-                new String[] {
-                    "4pc_0 (Start-J)",
-                    "4pc_1 (J-K)",
-                    "4pc_2 (K-A)",
-                    "4pc_3 (A-L)"},
-                configureAutoScoring(),
-                    new double[] {
-                        0.1,
-                        1,
-                        0.75,
-                        1.1
-                    }));  
+                s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));  
             
             autochooser.addOption("4 piece Not Processor side", new FourPieceNoHP(s_Swerve, null, s_Pivot, 
-            s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, 
-            new String[] {
-                "4pc_0 (Start-F)",
-                "4pc_1 (F-D)",
-                "4pc_2 (D-C)",
-                "4pc_3 (C-B)"},
-            configureAutoScoring(),
-            new double[] {
-                0.,
-                1.7,
-
-            }));
+            s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));
                 
         
 
