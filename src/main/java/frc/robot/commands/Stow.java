@@ -42,16 +42,18 @@ public class Stow extends Command {
     public void initialize() {
         manager.requestNode(GraphParser.getNodeByName("Stow"));
 
+        /*
         s_Elevator.setAutoHome(false);
         s_Pivot.setAutoHome(false);
         s_WristPitch.setAutoHome(false);
+        */
 
     }
 
     @Override
     public void execute() {
 
-        
+        /*
         System.err.println("stop homing is: " + stopHoming);
         if (manager.canAutoHome() && !stopHoming) {
             System.err.println("AutoHoming");
@@ -64,6 +66,7 @@ public class Stow extends Command {
             stopHoming = true;
         } 
              
+        */
     }
 
     @Override

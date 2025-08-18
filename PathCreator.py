@@ -20,7 +20,7 @@ nodes = [
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": [0.42, 0.2, -2.35, 3.14 / 2]
+        "setpoints": [0.44, 0.2, -2.35, 3.14 / 2]
     },
     {
         "name": "Lollipop Coral Pickup",
