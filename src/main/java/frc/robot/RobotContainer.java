@@ -6,11 +6,12 @@ import org.photonvision.PhotonCamera;
 
 import choreo.auto.AutoFactory;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -104,19 +105,18 @@ public class RobotContainer {
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
             new Camera[]{rightFrontCam, leftFrontCam, rightRearCam, leftRearCam});
-                
-        private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
-    
-        private final Pivot s_Pivot = new Pivot();
-        private final Elevator s_Elevator = new Elevator(s_Pivot::getPivotPosition);
-        private final WristPitch s_WristPitch = new WristPitch();
-        private final WristRoll s_WristRoll = new WristRoll();
-        private final EndEffector s_EndEffector = new EndEffector();
-        private final Climber s_Climber = new Climber();
+
+        private final Swerve s_Swerve;
+        private final Pivot s_Pivot;
+        private final Elevator s_Elevator;
+        private final WristPitch s_WristPitch;
+        private final WristRoll s_WristRoll;
+        private final EndEffector s_EndEffector;
+        private final Climber s_Climber;
         //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
         //private final AlignTool alignTool = new AlignTool();
 
-        private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        private final SubsystemManager manager;
         
         /* auto stuff */
         private SendableChooser<Command> autochooser;
@@ -124,36 +124,70 @@ public class RobotContainer {
 
         private final AutoFactory autoFactory;
     
-        /** The container for the robot. Contains subsystems, OI devices, and commands. 
-                 * @throws ParseException 
-                 * @throws IOException 
-                 * @throws FileVersionException */
+        /** The container for the robot. Contains subsystems, OI devices, and commands. */
         public RobotContainer() {
+            SwerveIO swerveIO;
+            PivotIO pivotIO;
+            ElevatorIO elevatorIO;
+            WristPitchIO wristPitchIO;
+            WristRollIO wristRollIO;
+            EndEffectorIO endEffectorIO;
+            ClimberIO climberIO;
+
+            if (RobotBase.isReal()) {
+                swerveIO = new SwerveIOReal();
+                pivotIO = new PivotIOReal();
+                elevatorIO = new ElevatorIOReal();
+                wristPitchIO = new WristPitchIOReal();
+                wristRollIO = new WristRollIOReal();
+                endEffectorIO = new EndEffectorIOReal();
+                climberIO = new ClimberIOReal();
+            } else {
+                swerveIO = new SwerveIOSim();
+                pivotIO = new PivotIOSim();
+                elevatorIO = new ElevatorIOSim();
+                wristPitchIO = new WristPitchIOSim();
+                wristRollIO = new WristRollIOSim();
+                endEffectorIO = new EndEffectorIOSim();
+                climberIO = new ClimberIOSim();
+            }
+
+            s_Swerve = new Swerve(swerveIO, s_VisionSubystem);
+            s_Pivot = new Pivot(pivotIO);
+            s_Elevator = new Elevator(elevatorIO, s_Pivot::getPivotPosition);
+            s_WristPitch = new WristPitch(wristPitchIO);
+            s_WristRoll = new WristRoll(wristRollIO);
+            s_EndEffector = new EndEffector(endEffectorIO);
+            s_Climber = new Climber(climberIO);
+
+            manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
-                    s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
-                    () -> driver.getRawAxis(rotationAxis), 
+                    s_Swerve,
+                    () -> -driver.getRawAxis(translationAxis),
+                    () -> -driver.getRawAxis(strafeAxis),
+                    () -> driver.getRawAxis(rotationAxis),
                     () -> false //For the love of god do not change this
                 )
             );
 
-            s_WristRoll.setDefaultCommand(new WristRollManual(s_WristRoll, () -> operator.getRawAxis(operatorHorizontalAxis)));
-            // Configure the button bindings
-            configureButtonBindings();
+            s_WristRoll.setDefaultCommand(
+                new WristRollManual(s_WristRoll, () -> operator.getRawAxis(operatorHorizontalAxis))
+            );
 
+            configureButtonBindings();
             addTuningSliders();
 
             autoFactory = new AutoFactory(
-            s_Swerve::getPose, // A function that returns the current robot pose
-            s_Swerve::setPose, // A function that resets the current robot pose to the provided Pose2d
-            s_Swerve::followTrajectory, // The drive subsystem trajectory follower 
-            true, // If alliance flipping should be enabled 
-            s_Swerve // The drive subsystem
-        );
+                s_Swerve::getPose,
+                s_Swerve::setPose,
+                s_Swerve::followTrajectory,
+                true,
+                s_Swerve
+            );
 
-        configureAutoChooser();
+            configureAutoChooser();
 
             /*
         autoChooser = new AutoChooser();

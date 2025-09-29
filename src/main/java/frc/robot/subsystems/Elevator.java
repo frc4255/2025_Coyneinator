@@ -1,87 +1,45 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.PivotingElevatorFeedforward;
 import frc.robot.Constants;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.subsystems.ElevatorIOInputsAutoLogged;
 
 public class Elevator extends SubsystemBase {
-    
-    private TalonFX m_LeftMotor = new TalonFX(Constants.Elevator.LEFT_MOTOR_ID, "rio");
-    private TalonFX m_RightMotor = new TalonFX(Constants.Elevator.RIGHT_MOTOR_ID, "rio");
+    private final ElevatorIO io;
+    private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
-    private VoltageOut m_LeftMotorRequest = new VoltageOut(0.0);
-    private VoltageOut m_rightMotorRequest = new VoltageOut(0.0);
-
-    private PivotingElevatorFeedforward m_Feedforward;
-    private ProfiledPIDController m_PIDController;
+    private final PivotingElevatorFeedforward feedforward;
+    private final ProfiledPIDController controller;
 
     private boolean isHomed = false;
-
-    private boolean isPosePossible = true;
-
     private boolean active = false;
 
-    private DoubleSupplier pivotAngleSupplier;
+    private final DoubleSupplier pivotAngleSupplier;
 
-    public Elevator(DoubleSupplier pivotAngleSupplier) {
+    public Elevator(ElevatorIO io, DoubleSupplier pivotAngleSupplier) {
+        this.io = io;
+        this.pivotAngleSupplier = pivotAngleSupplier;
 
-        m_Feedforward = new PivotingElevatorFeedforward(
-            0.35,
-            3.5,
-            0.01
-        );
-
-        m_PIDController = new ProfiledPIDController(
-            12, 
-            0, 
-            0, 
+        feedforward = new PivotingElevatorFeedforward(0.35, 3.5, 0.01);
+        controller = new ProfiledPIDController(
+            12,
+            0,
+            0,
             new TrapezoidProfile.Constraints(
-                2, //TODO tune this
-                2 // TODO tune this
+                2,
+                2
             )
         );
 
-        this.pivotAngleSupplier = pivotAngleSupplier;
-
-        
-        m_LeftMotor.setNeutralMode(NeutralModeValue.Coast);
-        m_RightMotor.setNeutralMode(NeutralModeValue.Coast);
-
-        m_RightMotor.setInverted(true);
-        m_LeftMotor.setControl(new Follower(m_RightMotor.getDeviceID(), true));
-
-        m_RightMotor.setPosition(0);
-        setGoal(0);
-
-        m_PIDController.setTolerance(0.3);
-    }
-
-    protected double getMeasurement() {
-        return getElevatorPosition();
-    }
-
-    protected void useOutput(double output, TrapezoidProfile.State setpoint) {
-
-        SmartDashboard.putNumber("elevator setpoint velocity", setpoint.velocity);
-        SmartDashboard.putNumber("elevator Setpoint position", setpoint.position);
-
-        m_RightMotor.setControl(m_rightMotorRequest.withOutput(output));
+        controller.setTolerance(0.3);
+        setGoal(0.0);
     }
 
     public void setActive() {
@@ -93,29 +51,16 @@ public class Elevator extends SubsystemBase {
     }
 
     public void autoHome() {
-        
-        System.err.println("Im being ran");
-        m_RightMotor.set(-0.3);
+        io.runOpenLoop(-0.3);
 
-        System.err.println("Elevaotor Motor Current: " + getMotorCurrent());
-        System.err.println("Elevator LEft motor Velocty: " + m_LeftMotor.getVelocity().getValueAsDouble());
-        System.err.println("Elevator right Motor Velocty: " + m_RightMotor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Elevator/HomingVelocity", inputs.velocityMetersPerSecond);
+        Logger.recordOutput("Elevator/HomingCurrent", inputs.currentAmps);
 
-        Logger.recordOutput("Elevaotor Motor Current: ", getMotorCurrent());
-        Logger.recordOutput("Elevator LEft motor Velocty: ", m_LeftMotor.getVelocity().getValueAsDouble());
-        Logger.recordOutput("Elevator right Motor Velocty: ", m_RightMotor.getVelocity().getValueAsDouble());
-
-        if (m_RightMotor.getVelocity().getValueAsDouble() <= 0.05 ) {//TODO this is def wrong.
-            m_LeftMotor.setPosition(0);   
-            m_RightMotor.setPosition(0);
-
-            m_LeftMotor.set(0);
-            m_RightMotor.set(0);
-
+        if (Math.abs(inputs.velocityMetersPerSecond) <= 0.05) {
+            io.resetPosition(0.0);
+            io.stop();
             setAutoHome(true);
-
-            System.err.println("Elevator Homed");
-            }
+        }
     }
 
     public boolean isHomed() {
@@ -123,59 +68,56 @@ public class Elevator extends SubsystemBase {
     }
 
     public double getMotorCurrent() {
-        return m_RightMotor.getStatorCurrent().getValueAsDouble();
+        return inputs.currentAmps;
     }
 
-
-    //Returns in meters
-    // Math is pitch diameter (32T HTD 5mm = 2.005 smthn in, divided by 1000, all over 4 (gear reduction))
     public double getElevatorPosition() {
-        return (m_RightMotor.getPosition().getValueAsDouble()*0.0375); 
+        return inputs.positionMeters;
     }
 
     public void setElevatorAsHomed() {
-        m_LeftMotor.setPosition(0.0);
-        m_RightMotor.setPosition(0.0);
+        io.resetPosition(0.0);
     }
 
     public void setGoal(double pos) {
-       m_PIDController.setGoal(pos);
+        controller.setGoal(pos);
     }
 
     public boolean atGoal() {
-        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.1) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
-        System.out.println(x+"Elevator");
-        return x;
+        return Math.abs(controller.getPositionError()) < 0.1
+            && controller.getSetpoint().position == controller.getGoal().position;
     }
 
     public void stopMotors() {
-        m_RightMotor.stopMotor();
+        io.stop();
+    }
+
+    private void useOutput(double output, TrapezoidProfile.State setpoint) {
+        double totalOutput =
+            output
+                + feedforward.calculate(
+                    setpoint.velocity,
+                    setpoint.position,
+                    pivotAngleSupplier.getAsDouble()
+                );
+        io.setVoltage(totalOutput);
+        Logger.recordOutput("Elevator/AppliedVoltage", totalOutput);
     }
 
     @Override
     public void periodic() {
-        super.periodic();
+        io.updateInputs(inputs);
+        Logger.processInputs("Elevator", inputs);
 
         if (active) {
-            double totalOutput = m_PIDController.calculate(getElevatorPosition()) +
-                m_Feedforward.calculate(
-                    m_PIDController.getSetpoint().velocity,
-                    m_PIDController.getSetpoint().position,
-                    pivotAngleSupplier.getAsDouble()
-                ); 
-            
-            useOutput(totalOutput, m_PIDController.getSetpoint());
+            double measurement = getElevatorPosition();
+            double pidOutput = controller.calculate(measurement);
+            useOutput(pidOutput, controller.getSetpoint());
         }
-        SmartDashboard.putNumber("Elevator Goal", m_PIDController.getVelocityError());
-        SmartDashboard.putNumber("ElevatorPosition", getElevatorPosition());
-        SmartDashboard.putNumber("Elevator velocity", (m_RightMotor.getVelocity().getValueAsDouble()*0.04));
-        SmartDashboard.putNumber("Elevator Acceleration", (m_RightMotor.getAcceleration().getValueAsDouble()*0.04));
-        SmartDashboard.putNumber("Elevator Motors Applied Voltage", m_RightMotor.getMotorVoltage().getValueAsDouble());
 
-        Logger.recordOutput("Elevator Goal", m_PIDController.getVelocityError());
-        Logger.recordOutput("ElevatorPosition", getElevatorPosition());
-        Logger.recordOutput("Elevator velocity", (m_RightMotor.getVelocity().getValueAsDouble()*0.04));
-        Logger.recordOutput("Elevator Acceleration", (m_RightMotor.getAcceleration().getValueAsDouble()*0.04));
-        Logger.recordOutput("Elevator Motors Applied Voltage", m_RightMotor.getMotorVoltage().getValueAsDouble());
+        Logger.recordOutput("Elevator/GoalPosition", controller.getGoal().position);
+        Logger.recordOutput("Elevator/PositionMeters", getElevatorPosition());
+        Logger.recordOutput("Elevator/VelocityMetersPerSecond", inputs.velocityMetersPerSecond);
+        Logger.recordOutput("Elevator/AccelerationMetersPerSecondSq", inputs.accelerationMetersPerSecondSq);
     }
 }

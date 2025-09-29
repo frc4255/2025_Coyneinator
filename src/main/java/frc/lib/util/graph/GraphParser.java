@@ -54,7 +54,6 @@ public class GraphParser {
             graphData = new GraphData();
             graphData.nodes = raw.nodes;
             graphData.edges = raw.edges;
-
             // Build the node lookup map for O(1) access.
             for (Node node : graphData.nodes) {
                 nodeLookup.put(node.getName(), node);
