@@ -61,10 +61,11 @@ public class Robot extends LoggedRobot {
         Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
         Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
     } else {
-        setUseTiming(false); // Run as fast as possible
-        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_actualLog"))); // Save outputs to a new log
+        // Desktop sim: publish live data over NT4 for AdvantageScope
+        setUseTiming(true);
+        Logger.addDataReceiver(new NT4Publisher());
+        // Optional: also write a desktop wpilog during sim
+        // Logger.addDataReceiver(new WPILOGWriter("./logs"));
     }
     
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.

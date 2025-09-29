@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.FlippingUtil;
 import frc.robot.Constants;
@@ -33,6 +34,21 @@ public class Swerve extends SubsystemBase {
     private final PIDController xController = new PIDController(10.0, 0.0, 0.0);
     private final PIDController yController = new PIDController(10.0, 0.0, 0.0);
     private final PIDController headingController = new PIDController(5, 0.0, 0.0);
+
+    // Telemetry helpers
+    private SwerveModuleState[] lastCommandedModuleStates = new SwerveModuleState[] {
+        new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()
+    };
+    private ChassisSpeeds lastCommandedChassisSpeeds = new ChassisSpeeds();
+
+    private double[][] statesToArray(SwerveModuleState[] states) {
+        double[][] array = new double[states.length][2];
+        for (int i = 0; i < states.length; i++) {
+            array[i][0] = states[i].speedMetersPerSecond;
+            array[i][1] = states[i].angle.getRadians();
+        }
+        return array;
+    }
 
     public Swerve(SwerveIO io, VisionSubsystem vision) {
         this.io = io;
@@ -78,6 +94,13 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
         io.setModuleStates(swerveModuleStates, isOpenLoop);
+
+        // Cache commanded values for logging
+        lastCommandedModuleStates = swerveModuleStates;
+        lastCommandedChassisSpeeds = fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getHeading().rotateBy(allianceRotation))
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
     }
 
     private void follow(ChassisSpeeds speeds) {
@@ -106,6 +129,10 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
         io.setModuleStates(desiredStates, false);
+
+        // Cache commanded for logging when used by auto controllers
+        lastCommandedModuleStates = desiredStates;
+        lastCommandedChassisSpeeds = Constants.Swerve.swerveKinematics.toChassisSpeeds(desiredStates);
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -194,9 +221,18 @@ public class Swerve extends SubsystemBase {
             );
         }
 
+        double[] array = {getPose().getX(), getPose().getY()};
+        SmartDashboard.putNumberArray("Swerve Pose Estimation", array);
+
+        // AdvantageScope sources
         Logger.recordOutput("Swerve/Pose", getPose());
+        Logger.recordOutput("Swerve/Rotation", getHeading());
         Logger.recordOutput("Swerve/GyroYawDegrees", getGyroYaw().getDegrees());
-        Logger.recordOutput("Swerve/ChassisSpeeds", getChassisSpeeds());
-        Logger.recordOutput("Swerve/ModuleStates", getModuleStates());
+
+        Logger.recordOutput("Swerve/MeasuredChassisSpeeds", getChassisSpeeds());
+        Logger.recordOutput("Swerve/CommandedChassisSpeeds", lastCommandedChassisSpeeds);
+
+        Logger.recordOutput("Swerve/MeasuredModuleStates", statesToArray(getModuleStates()));
+        Logger.recordOutput("Swerve/CommandedModuleStates", statesToArray(lastCommandedModuleStates));
     }
 }

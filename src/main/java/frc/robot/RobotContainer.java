@@ -24,8 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.Vision.Camera;
+import frc.robot.telemetry.MechanismVisualizer;
 import frc.robot.superstructure.PieceSensors;
 import frc.robot.superstructure.RobotSupervisor;
 
@@ -119,6 +120,7 @@ public class RobotContainer {
         //private final AlignTool alignTool = new AlignTool();
 
         private final SubsystemManager manager;
+        private final MechanismVisualizer mechVisualizer;
         private final PieceSensors pieceSensors;
         private final RobotSupervisor supervisor;
         
@@ -165,6 +167,16 @@ public class RobotContainer {
             s_Climber = new Climber(climberIO);
 
             manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+
+            // Mechanism2d visualizations via AdvantageKit
+            mechVisualizer = new MechanismVisualizer(
+                s_Pivot::getPivotPosition,
+                s_Elevator::getElevatorPosition,
+                s_WristPitch::getCurrentPos,
+                s_WristRoll::getCurrentPos,
+                s_Swerve::getModuleStates,
+                s_Swerve::getHeading
+            );
             pieceSensors = new PieceSensors();
             supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, pieceSensors);
 
@@ -176,10 +188,6 @@ public class RobotContainer {
                     () -> driver.getRawAxis(rotationAxis),
                     () -> false //For the love of god do not change this
                 )
-            );
-
-            s_WristRoll.setDefaultCommand(
-                new WristRollManual(s_WristRoll, () -> operator.getRawAxis(operatorHorizontalAxis))
             );
 
             configureButtonBindings();
