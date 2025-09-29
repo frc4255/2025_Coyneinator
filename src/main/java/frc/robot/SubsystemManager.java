@@ -1,47 +1,96 @@
 package frc.robot;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.CoordinatedSubsystem;
 
 public class SubsystemManager {
 
-    private final Pivot sPivot;
-    private final Elevator sElevator;
-    private final WristPitch sWristPitch;
-    private final WristRoll sWristRoll;
-    
-    private List<Node> path;
+    public static final String PIVOT_KEY = "pivot";
+    public static final String ELEVATOR_KEY = "elevator";
+    public static final String WRIST_PITCH_KEY = "wristPitch";
+    public static final String WRIST_ROLL_KEY = "wristRoll";
+
+    private final Map<String, CoordinatedSubsystem> subsystemMap = new HashMap<>();
+    private final Set<String> activeSubsystemKeys = new HashSet<>();
+
+    private List<Node> path = List.of();
     private int currentIndex;
     private boolean active;
 
     private Node currentNode;
     private Node requestedNode;
 
-    public SubsystemManager(
-            Pivot sPivot, Elevator sElevator, WristPitch sWristPitch, WristRoll sWristRoll
-        ) {
+    public SubsystemManager(CoordinatedSubsystem... subsystems) {
+        registerSubsystems(List.of(subsystems));
+    }
 
-        this.sPivot = sPivot;
-        this.sElevator = sElevator;
-        this.sWristPitch = sWristPitch;
-        this.sWristRoll = sWristRoll;
-        
-        this.active = false;
-        this.currentIndex = 0;
+    public SubsystemManager(Collection<CoordinatedSubsystem> subsystems) {
+        registerSubsystems(subsystems);
+    }
+
+    public void registerSubsystem(CoordinatedSubsystem subsystem) {
+        if (subsystem != null) {
+            subsystemMap.put(subsystem.key(), subsystem);
+        }
+    }
+
+    public void registerSubsystems(Collection<CoordinatedSubsystem> subsystems) {
+        if (subsystems != null) {
+            subsystems.forEach(this::registerSubsystem);
+        }
+    }
+
+    public void setCurrentNode(Node node) {
+        this.currentNode = node;
+    }
+
+    public void setCurrentNode(String nodeName) {
+        GraphParser.getNodeByName(nodeName).ifPresent(this::setCurrentNode);
+    }
+
+    public Optional<Node> getCurrentNode() {
+        return Optional.ofNullable(currentNode);
+    }
+
+    public Optional<Node> getRequestedNode() {
+        return Optional.ofNullable(requestedNode);
+    }
+
+    public void requestNode(String nodeName) {
+        GraphParser.getNodeByName(nodeName).ifPresent(this::requestNode);
     }
 
     public void requestNode(Node requestedNode) {
+        if (requestedNode == null) {
+            return;
+        }
+
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
 
-        this.path = GraphParser.getFastestPath(currentNode, requestedNode);
-        this.active = (path != null && !path.isEmpty());
+        Node startNode = currentNode != null ? currentNode : requestedNode;
+        List<Node> computedPath = GraphParser.getFastestPath(startNode, requestedNode);
+        if (computedPath == null || computedPath.isEmpty()) {
+            this.path = List.of();
+            this.active = false;
+            if (startNode == requestedNode) {
+                this.currentNode = requestedNode;
+            }
+            return;
+        }
+
+        this.path = computedPath;
+        this.active = true;
     }
 
     /**
@@ -49,56 +98,66 @@ public class SubsystemManager {
      * It processes the current node in the path and commands each subsystem accordingly.
      */
     public void update() {
-        
-        if (!active || path == null || currentIndex >= path.size()) {
+
+        if (!active || path.isEmpty() || currentIndex >= path.size()) {
             return;
         }
 
-        Node currentNode = path.get(currentIndex);
-        double[] setpoints = currentNode.getSetpoints();
+        Node node = path.get(currentIndex);
 
-        /*  Code to automatically go to reef align, can be added back based on driver feedback
-
-        Not completed, isWithinReefZone() likely requires Swerve subsystem.
-        if (currentNode.getName().equalsIgnoreCase("Stow")) {
-            if (isWithinReefZone()) {
-                setpoints = REEF_ALIGN_SETPOINTS;
-            } else {
-                setpoints = STOW_SETPOINTS;
-            }
+        if (currentIndex == 0 && currentNode != null && node.getName().equals(currentNode.getName())) {
+            advanceToNext(node);
+            return;
         }
-       */
-        sPivot.setGoal(setpoints[0]);
-        sElevator.setGoal(setpoints[1]);
-        sWristPitch.setGoal(setpoints[2]);
-        sWristRoll.setGoal(setpoints[3]);
 
-        // If all subsystems have reached their targets, move to the next node.
-        if (hasReachedTarget()) {
-            currentIndex++;
-            if (currentIndex >= path.size()) {
-                active = false;
+        activeSubsystemKeys.clear();
+        node.getSetpoints().forEach((key, value) -> {
+            CoordinatedSubsystem subsystem = subsystemMap.get(key);
+            if (subsystem != null) {
+                subsystem.setGoal(value);
+                activeSubsystemKeys.add(key);
             }
+        });
+
+        if (activeSubsystemKeys.isEmpty() || hasReachedTarget()) {
+            advanceToNext(node);
+        }
+    }
+
+    private void advanceToNext(Node processedNode) {
+        currentNode = processedNode;
+        currentIndex++;
+        if (currentIndex >= path.size()) {
+            active = false;
+            currentNode = requestedNode;
         }
     }
 
     /**
      * Checks if all subsystems have reached their target.
-     * Assumes each subsystem has an atGoal() method that returns true when the target is reached.
-     *
-     * @return true if all subsystems are at their target, false otherwise.
      */
     private boolean hasReachedTarget() {
-        return sPivot.atGoal() && sElevator.atGoal() &&
-               sWristPitch.atGoal() && sWristRoll.atGoal();
+        for (String key : activeSubsystemKeys) {
+            CoordinatedSubsystem subsystem = subsystemMap.get(key);
+            if (subsystem != null && !subsystem.atGoal()) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    /**
-     * Returns whether the manager is actively processing a path.
-     *
-     * @return true if active, false otherwise.
-     */
+    public void cancel() {
+        active = false;
+        path = List.of();
+        currentIndex = 0;
+        activeSubsystemKeys.clear();
+    }
+
+    public Set<String> getRegisteredSubsystemKeys() {
+        return Collections.unmodifiableSet(subsystemMap.keySet());
+    }
+
     public boolean isActive() {
         return active;
-    } 
+    }
 }

@@ -25,6 +25,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    public static final class OperatorConstants {
+        public static final int AUTO_ALIGN_JOYSTICK_PORT = 1;
+    }
+
     public final class Wrist {
         public static final double kS = 0.0; //TODO tune this 
         public static final double kG = 0.0; //TODO tune this 

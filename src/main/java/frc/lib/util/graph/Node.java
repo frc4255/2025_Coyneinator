@@ -1,26 +1,30 @@
 package frc.lib.util.graph;
 
-public class Node {
-    private String name;
-    private double[] setpoints; // length 4
-    
-    /* Order or setpoints is based on progression of DOFs 
-     * Index 0 = Pivot
-     * Index 1 = Elevator Length
-     * Index 2 = Wrist Pitch
-     * Index 3 = Wrist Roll
-    */
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.OptionalDouble;
 
-    public Node(String name, double[] setpoints) {
-        this.name = name;
-        this.setpoints = setpoints;
+public class Node {
+    private final String name;
+    private final Map<String, Double> setpoints;
+
+    public Node(String name, Map<String, Double> setpoints) {
+        this.name = Objects.requireNonNull(name, "name");
+        this.setpoints = Collections.unmodifiableMap(new LinkedHashMap<>(Objects.requireNonNull(setpoints, "setpoints")));
     }
 
     public String getName() {
         return name;
     }
 
-    public double[] getSetpoints() {
+    public Map<String, Double> getSetpoints() {
         return setpoints;
+    }
+
+    public OptionalDouble getSetpoint(String key) {
+        Double value = setpoints.get(key);
+        return value != null ? OptionalDouble.of(value) : OptionalDouble.empty();
     }
 }

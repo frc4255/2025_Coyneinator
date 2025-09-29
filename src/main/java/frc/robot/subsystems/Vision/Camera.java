@@ -27,14 +27,13 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.FieldLayout;
-import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
+import frc.robot.subsystems.Vision.VisionObservation;
 
 public class Camera {
     private PhotonCamera cam;
     private PhotonPoseEstimator poseEstimator;
     public List<PhotonTrackedTarget> targets = new ArrayList<>();
-    private Optional<PoseAndTimestampAndDev> estimate = null;
-    private Optional<Double> poseStdDevs;
+    private Optional<VisionObservation> estimate = Optional.empty();
     private Supplier<Pose2d> robotPoseSupplier;
 
     public DoubleArrayLogEntry cameraPoseEntry;
@@ -60,20 +59,17 @@ public class Camera {
     }
   
     public void updateCameraPoseEntry() {
-        // Check if there is an estimate available
-        if (estimate != null) {
-            Pose2d pose = estimate.get().getPose();
-            
-            // Flatten the Pose2d data into individual components
-            double[] poseData = { pose.getTranslation().getX(), 
-                                  pose.getTranslation().getY(),
-                                  pose.getRotation().getDegrees()};
-    
-            // Append the pose data to the DoubleArrayLogEntry
+        estimate.ifPresent(poseAndTimestamp -> {
+            Pose2d pose = poseAndTimestamp.pose();
+            double[] poseData = {
+                pose.getTranslation().getX(),
+                pose.getTranslation().getY(),
+                pose.getRotation().getDegrees()
+            };
+
             SmartDashboard.putNumberArray(cam.getName() + "Pose Estimate", poseData);
             cameraPoseEntry.append(poseData);
-        } else {
-        }
+        });
     }
     
     
@@ -81,7 +77,7 @@ public class Camera {
 
     public void updateEstimate() {
         /* Clear last estimate */
-        estimate = null;
+        estimate = Optional.empty();
 
         var opt = poseEstimator.update(cam.getLatestResult());
         EstimatedRobotPose result = opt.isPresent() ? opt.get() : null;
@@ -114,23 +110,17 @@ public class Camera {
                 }
             }
 
-            double sum = 0.0;
-
-            for (double distance : tagDistances) {
-                sum += distance;
+            double stdDev = 0.0;
+            if (!tagDistances.isEmpty()) {
+                double meanDist = tagDistances.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+                double sumOfSquares = tagDistances.stream()
+                    .mapToDouble(dist -> Math.pow(dist - meanDist, 2))
+                    .sum();
+                stdDev = Math.sqrt(sumOfSquares / tagDistances.size());
             }
 
-            double meanDist = sum/tagDistances.size();
-
-            double sumOfSquares = 0.0;
-            
-            for (double dist : tagDistances) {
-                sumOfSquares+= Math.pow(dist - meanDist, 2);
-            }
-            
             if (!shouldRejectPose) {
-                poseStdDevs = Optional.ofNullable(Math.sqrt(sumOfSquares/tagDistances.size()));
-                estimate = Optional.ofNullable(new PoseAndTimestampAndDev(result.estimatedPose.toPose2d(), result.timestampSeconds, poseStdDevs.get()));
+                estimate = Optional.of(new VisionObservation(result.estimatedPose.toPose2d(), result.timestampSeconds, stdDev));
             }
         }
     }
@@ -149,8 +139,12 @@ public class Camera {
         }
     }
 
-    public Optional<PoseAndTimestampAndDev> getEstimate() {
+    public Optional<VisionObservation> getEstimate() {
         return estimate;
+    }
+
+    public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
+        this.robotPoseSupplier = robotPoseSupplier;
     }
 
     /*

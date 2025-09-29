@@ -1,89 +1,105 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
 public class Pivot extends SubsystemBase {
-    
-    private TalonFX m_Motor0 = new TalonFX(Constants.Elevator.PIVOT_LEFT_MOTOR_ID);
-    private TalonFX m_Motor1 = new TalonFX(Constants.Elevator.PIVOT_RIGHT_MOTOR_ID);
 
-    private VoltageOut m_Motor0Request = new VoltageOut(0.0);
-    private VoltageOut m_Motor1Request = new VoltageOut(0.0);
+    private static final double HOMING_VELOCITY_THRESHOLD_RAD_PER_SEC = 0.05;
+    private static final double HOMING_VOLTAGE = -0.2 * 12.0;
+    private static final double CLIMB_VOLTAGE = -9.0;
 
-    private ArmFeedforward elevatorPivotFeedforward;
+    private final PivotIO io;
+    private final PivotIO.PivotIOInputs inputs = new PivotIO.PivotIOInputs();
 
-    private ProfiledPIDController m_PIDController;
+    private final ArmFeedforward elevatorPivotFeedforward;
+
+    private final ProfiledPIDController m_PIDController;
 
     private boolean isHomed = false;
     private boolean needsHoming = false;
-
     private boolean isPosePossible = true;
+    private boolean isStowed = false;
 
-    private DataLog log;
-
-    public Pivot() {
+    public Pivot(PivotIO io) {
+        this.io = io;
         m_PIDController = new ProfiledPIDController(
-            Constants.Elevator.kP, 
-            0, 
-            0, 
+            Constants.Elevator.kP,
+            0,
+            0,
             new TrapezoidProfile.Constraints(
-                4, //TODO tune this
-                5 // TODO tune this
+                4,
+                5
             )
         );
+        m_PIDController.setTolerance(0.25);
 
-        m_Motor0.setNeutralMode(NeutralModeValue.Brake);
-        m_Motor1.setNeutralMode(NeutralModeValue.Brake);
-
-        elevatorPivotFeedforward = new ArmFeedforward(Constants.Elevator.Pivot.kS, 
-                                            Constants.Elevator.Pivot.kG, Constants.Elevator.Pivot.kV, 
-                                            Constants.Elevator.Pivot.kA);
-
+        elevatorPivotFeedforward = new ArmFeedforward(
+            Constants.Elevator.Pivot.kS,
+            Constants.Elevator.Pivot.kG,
+            Constants.Elevator.Pivot.kV,
+            Constants.Elevator.Pivot.kA
+        );
     }
 
-    protected double getMeasurement() {
-        return getPivotPosition();
+    public void setVoltageForClimb() {
+        io.setVoltage(CLIMB_VOLTAGE);
     }
 
-    protected void useOutput(double output, TrapezoidProfile.State setpoint) {
-    
-        double finalOut = output + elevatorPivotFeedforward.calculate(setpoint.position, setpoint.velocity);
-
-        m_Motor0.setControl(m_Motor0Request.withOutput(finalOut));
-        m_Motor1.setControl(m_Motor1Request.withOutput(finalOut));
-
+    public double velocityOfMotors() {
+        return inputs.velocityRadsPerSec;
     }
 
-    /* 
-    public double getArmPosition() {
-        return ((m_Motor0.getPosition().getValueAsDouble()) / 161.290322581)* (2 * Math.PI); //TODO get GEAR RATIO PLEASE
-    } */
+    public void isStowed(boolean currentState) {
+        isStowed = currentState;
+    }
+
+    public boolean isStowed() {
+        return isStowed;
+    }
+
+    public void setAutoHome(boolean request) {
+        isHomed = request;
+        needsHoming = !request;
+    }
+
+    public void autoHome() {
+        io.updateInputs(inputs);
+        io.setVoltage(HOMING_VOLTAGE);
+
+        Logger.recordOutput("Pivot/HomingCurrent", getMotorCurrent());
+        Logger.recordOutput("Pivot/HomingVelocity", inputs.velocityRadsPerSec);
+
+        if (Math.abs(inputs.velocityRadsPerSec) <= HOMING_VELOCITY_THRESHOLD_RAD_PER_SEC) {
+            io.resetPosition(0.0);
+            io.stop();
+            setAutoHome(true);
+        }
+    }
+
+    public double getMotorCurrent() {
+        return inputs.statorCurrentAmps;
+    }
 
     public double getPivotPosition() {
-        return m_Motor0.getPosition().getValueAsDouble();
+        return inputs.positionRads;
     }
 
     public void setPivotAsHomed() {
-        m_Motor0.setPosition(0.0);
-        m_Motor1.setPosition(0.0);
+        io.resetPosition(0.0);
         isHomed = true;
+        needsHoming = false;
+    }
+
+    public boolean needsHoming() {
+        return needsHoming;
     }
 
     public boolean isHomed() {
@@ -99,30 +115,48 @@ public class Pivot extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return atGoal();
+        boolean atGoal = Math.abs(m_PIDController.getPositionError()) < 0.05
+            && m_PIDController.getSetpoint().position == m_PIDController.getGoal().position;
+        Logger.recordOutput("Pivot/AtGoal", atGoal);
+        return atGoal;
     }
 
     public void stopMotors() {
-        m_Motor0.stopMotor();
-        m_Motor1.stopMotor();
+        io.stop();
     }
 
     @Override
     public void periodic() {
         super.periodic();
 
-        double currentPosition = getMeasurement(); 
-        double pidOutput = m_PIDController.calculate(currentPosition); 
+        io.updateInputs(inputs);
 
-        useOutput(pidOutput, m_PIDController.getSetpoint());
+        double currentPosition = getPivotPosition();
+        double pidOutput = m_PIDController.calculate(currentPosition);
 
-        SmartDashboard.putNumber("PivotPosition", getPivotPosition());
-        
-        if (getPivotPosition() > Constants.Elevator.PivotMaxLimit ||
-            getPivotPosition() < Constants.Elevator.PivotMinLimit) {
-                isPosePossible = false;
-            } else {
-                isPosePossible = true;
-            }
+        double finalOut = pidOutput + elevatorPivotFeedforward.calculate(
+            m_PIDController.getSetpoint().position,
+            m_PIDController.getSetpoint().velocity
+        );
+
+        io.setVoltage(finalOut);
+
+        SmartDashboard.putNumber("PivotPosition", inputs.positionRads);
+        SmartDashboard.putNumber("Pivot velocity", inputs.velocityRadsPerSec);
+        SmartDashboard.putNumber("Pivot Acceleration", inputs.accelerationRadsPerSecSq);
+        SmartDashboard.putNumber("Pivot Motors Applied Voltage", inputs.appliedVolts);
+
+        Logger.recordOutput("Pivot/Position", inputs.positionRads);
+        Logger.recordOutput("Pivot/Velocity", inputs.velocityRadsPerSec);
+        Logger.recordOutput("Pivot/Acceleration", inputs.accelerationRadsPerSecSq);
+        Logger.recordOutput("Pivot/AppliedVolts", inputs.appliedVolts);
+        Logger.recordOutput("Pivot/StatorCurrent", inputs.statorCurrentAmps);
+
+        if (inputs.positionRads > Constants.Elevator.PivotMaxLimit ||
+            inputs.positionRads < Constants.Elevator.PivotMinLimit) {
+            isPosePossible = false;
+        } else {
+            isPosePossible = true;
+        }
     }
 }

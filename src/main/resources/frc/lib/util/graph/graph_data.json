@@ -1,139 +1,145 @@
 {
+  "subsystems": [
+    "pivot",
+    "elevator",
+    "wristPitch",
+    "wristRoll"
+  ],
   "nodes": [
     {
       "name": "Stow",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "Coral Ground Pickup",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "Lollipop Coral Pickup",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "Reef Align",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L4 Init",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L4 Dunk",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L3 Init",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L3 Dunk",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L3 Algae Pickup",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L3 Algae Pickup",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "Algae Ground Pickup",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "Processor Score",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "Coral HP Pickup",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L2 Align",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     },
     {
       "name": "L1 Score",
-      "setpoints": [
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
+      "setpoints": {
+        "pivot": 0.0,
+        "elevator": 0.0,
+        "wristPitch": 0.0,
+        "wristRoll": 0.0
+      }
     }
   ],
   "edges": [
@@ -159,7 +165,7 @@
     },
     {
       "start": "Stow",
-      "end": "Coral HP Pickup "
+      "end": "Coral HP Pickup"
     },
     {
       "start": "Stow",
@@ -338,7 +344,10 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "Stow",
         "L2 Align"
@@ -407,7 +416,11 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "Coral Ground Pickup",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "Coral Ground Pickup",
         "Stow",
@@ -478,7 +491,11 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "Lollipop Coral Pickup",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "Lollipop Coral Pickup",
         "Stow",
@@ -543,7 +560,11 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "Reef Align",
         "Stow",
@@ -612,7 +633,12 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L4 Init",
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L4 Init",
         "Reef Align",
@@ -687,7 +713,12 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L4 Dunk",
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L4 Dunk",
         "Reef Align",
@@ -758,7 +789,12 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L3 Init",
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L3 Init",
         "Reef Align",
@@ -833,7 +869,12 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L3 Dunk",
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L3 Dunk",
         "Reef Align",
@@ -909,7 +950,12 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L3 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L3 Algae Pickup",
         "Reef Align",
@@ -987,7 +1033,11 @@
         "Algae Ground Pickup",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "Algae Ground Pickup",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "Algae Ground Pickup",
         "Stow",
@@ -1065,7 +1115,11 @@
       "Processor Score": [
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "Processor Score",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "Processor Score",
         "Stow",
@@ -1227,7 +1281,11 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L2 Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L2 Align"
       ],
@@ -1305,7 +1363,11 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L1 Score",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L1 Score",
         "Stow",
@@ -1380,7 +1442,12 @@
         "Stow",
         "Processor Score"
       ],
-      "Coral HP Pickup": [],
+      "Coral HP Pickup": [
+        "L2 Algae Pickup",
+        "Reef Align",
+        "Stow",
+        "Coral HP Pickup"
+      ],
       "L2 Align": [
         "L2 Algae Pickup",
         "Reef Align",
