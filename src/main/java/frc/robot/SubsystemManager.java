@@ -1,15 +1,19 @@
 package frc.robot;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.littletonrobotics.junction.Logger;
 
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
+import frc.robot.superstructure.Constraints;
+import frc.robot.superstructure.ManipulatorProfile;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.WristPitch;
 import frc.robot.subsystems.WristRoll;
+import edu.wpi.first.wpilibj.Timer;
 
 public class SubsystemManager {
 
@@ -29,6 +33,15 @@ public class SubsystemManager {
 
     private boolean reactivation = false;
 
+    private ManipulatorProfile currentProfile = ManipulatorProfile.TRANSIT;
+    private double[] currentTolerance = currentProfile.toleranceCopy();
+    private double minHoldTimeSeconds = currentProfile.defaultHoldTimeSeconds();
+    private double holdStartTime = -1.0;
+    private boolean holdSatisfied = true;
+    private Node targetNode;
+    private double[] targetSetpoints = new double[] {0, 0, 0, 0};
+    private final double[] commandedSetpoints = new double[] {0, 0, 0, 0};
+
     public SubsystemManager(
             Pivot sPivot, Elevator sElevator, WristPitch sWristPitch, WristRoll sWristRoll
         ) {
@@ -41,7 +54,7 @@ public class SubsystemManager {
         this.active = false;
         this.currentIndex = 0;
 
-        lastNode = new Node("Empty", new double[]{0,0,0,0});
+        lastNode = new Node("Empty", new double[] {0, 0, 0, 0});
 
     }
 
@@ -49,18 +62,36 @@ public class SubsystemManager {
         active = false;
     }
     public void requestNode(Node requestedNode) {
+        requestNode(requestedNode, ManipulatorProfile.TRANSIT, null, ManipulatorProfile.TRANSIT.defaultHoldTimeSeconds());
+    }
+
+    public void requestNode(Node requestedNode, ManipulatorProfile profile, double[] tolerance, double minHoldTime) {
+
+        if (requestedNode == null) {
+            return;
+        }
 
         if (currentNode == null) {
             currentNode = GraphParser.getNodeByName("Stow");
         }
         reactivation = true;
-        lastNode = new Node("Empty", new double[]{0,0,0,0});
+        lastNode = new Node("Empty", new double[] {0, 0, 0, 0});
 
         this.requestedNode = requestedNode;
+        this.targetNode = requestedNode;
+        this.targetSetpoints = requestedNode.getSetpoints();
+        this.currentProfile = profile != null ? profile : ManipulatorProfile.TRANSIT;
+        double[] fallbackTolerance = this.currentProfile.toleranceCopy();
+        if (tolerance != null && tolerance.length == 4) {
+            this.currentTolerance = Arrays.copyOf(tolerance, tolerance.length);
+        } else {
+            this.currentTolerance = fallbackTolerance;
+        }
+        this.minHoldTimeSeconds = minHoldTime >= 0.0 ? minHoldTime : this.currentProfile.defaultHoldTimeSeconds();
+        this.holdStartTime = -1.0;
+        this.holdSatisfied = this.minHoldTimeSeconds <= 0.0;
+
         this.currentIndex = 0;
-
-        System.out.println(GraphParser.getFastestPath(currentNode, requestedNode));
-
         this.path = GraphParser.getFastestPath(currentNode, requestedNode);
         this.active = (path != null && !path.isEmpty());
     }
@@ -71,12 +102,28 @@ public class SubsystemManager {
      */
     public void update() {
         
-        if (!active || path == null || currentIndex >= path.size()) {
+        if (path == null) {
+            return;
+        }
+
+        double pivotPosition = sPivot.getPivotPosition();
+        double elevatorPosition = sElevator.getElevatorPosition();
+        double wristPitchPosition = sWristPitch.getCurrentPos();
+        double wristRollPosition = sWristRoll.getCurrentPos();
+
+        double[] measurements = new double[] {pivotPosition, elevatorPosition, wristPitchPosition, wristRollPosition};
+
+        if (!active || currentIndex >= path.size()) {
+            evaluateHold(measurements);
             return;
         }
 
         currentNode = path.get(currentIndex);
         double[] setpoints = currentNode.getSetpoints();
+
+        if (setpoints.length != 4) {
+            setpoints = Arrays.copyOf(setpoints, 4);
+        }
 
         /*  Code to automatically go to reef align, can be added back based on driver feedback
 
@@ -90,34 +137,43 @@ public class SubsystemManager {
         }
        */
 
-       if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
-        reactivation = false;
-        sWristPitch.setActive();
-        sWristRoll.setActive();
-        sElevator.setActive();
+        double pivotGoal = Constraints.clampPivot(setpoints[0], pivotPosition, elevatorPosition);
+        double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, currentProfile);
+        double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, currentProfile);
+        double wristRollGoal = Constraints.clampRoll(setpoints[3]);
 
+        commandedSetpoints[0] = pivotGoal;
+        commandedSetpoints[1] = elevatorGoal;
+        commandedSetpoints[2] = wristPitchGoal;
+        commandedSetpoints[3] = wristRollGoal;
 
-        sPivot.setGoal(setpoints[0]);
-        sElevator.setGoal(setpoints[1]);
-        sWristPitch.setGoal(setpoints[2]);
-        sWristRoll.setGoal(setpoints[3]);
+        if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
+            reactivation = false;
+            sWristPitch.setActive();
+            sWristRoll.setActive();
+            sElevator.setActive();
+        }
 
-       }
-        // If all subsystems have reached their targets, move to the next node.
-        if (hasReachedTarget()) {
+        sPivot.setGoal(pivotGoal);
+        sElevator.setGoal(elevatorGoal);
+        sWristPitch.setGoal(wristPitchGoal);
+        sWristRoll.setGoal(wristRollGoal);
+
+        if (hasReachedTarget(setpoints, measurements)) {
             lastNode = currentNode;
             currentIndex++;
             if (currentIndex >= path.size()) {
                 active = false;
+                holdStartTime = -1.0;
+                holdSatisfied = minHoldTimeSeconds <= 0.0;
             }
-            System.out.println("Hello" + currentNode.getName());
         }
 
         canAutoHome();
 
         Logger.recordOutput("CurrentNode", currentNode.getName());
-        Logger.recordOutput("hasReachedTarget", hasReachedTarget());
-        Logger.recordOutput("canAutoHome", canAutoHome());
+        Logger.recordOutput("Manager/Active", active);
+        Logger.recordOutput("Manager/HoldSatisfied", holdSatisfied);
     }
 
     /**
@@ -126,9 +182,17 @@ public class SubsystemManager {
      *
      * @return true if all subsystems are at their target, false otherwise.
      */
-    public boolean hasReachedTarget() {
-        return sPivot.atGoal() && sElevator.atGoal() &&
-               sWristPitch.atGoal() && sWristRoll.atGoal();
+    public boolean hasReachedTarget(double[] setpoints, double[] measurements) {
+        if (setpoints.length != 4 || measurements.length != 4) {
+            return false;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (Math.abs(setpoints[i] - measurements[i]) > currentTolerance[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean canAutoHome() {
@@ -138,6 +202,52 @@ public class SubsystemManager {
         } else {
             return false;
         }
+    }
+
+    private boolean hasReachedTarget() {
+        return !active && holdSatisfied;
+    }
+
+    public boolean isTargetSettled() {
+        return !active && holdSatisfied;
+    }
+
+    private void evaluateHold(double[] measurements) {
+        if (targetNode == null) {
+            return;
+        }
+
+        if (!withinTolerance(targetSetpoints, measurements, currentTolerance)) {
+            holdStartTime = -1.0;
+            holdSatisfied = minHoldTimeSeconds <= 0.0;
+            return;
+        }
+
+        if (holdSatisfied) {
+            return;
+        }
+
+        if (holdStartTime < 0.0) {
+            holdStartTime = Timer.getFPGATimestamp();
+        }
+
+        double elapsed = Timer.getFPGATimestamp() - holdStartTime;
+        if (elapsed >= minHoldTimeSeconds) {
+            holdSatisfied = true;
+        }
+    }
+
+    private boolean withinTolerance(double[] setpoints, double[] measurements, double[] tolerance) {
+        if (setpoints.length != 4 || measurements.length != 4) {
+            return false;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (Math.abs(setpoints[i] - measurements[i]) > tolerance[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

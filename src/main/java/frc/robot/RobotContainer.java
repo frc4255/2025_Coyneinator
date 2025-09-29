@@ -26,6 +26,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.superstructure.PieceSensors;
+import frc.robot.superstructure.RobotSupervisor;
 
 
 /**
@@ -117,6 +119,8 @@ public class RobotContainer {
         //private final AlignTool alignTool = new AlignTool();
 
         private final SubsystemManager manager;
+        private final PieceSensors pieceSensors;
+        private final RobotSupervisor supervisor;
         
         /* auto stuff */
         private SendableChooser<Command> autochooser;
@@ -161,6 +165,8 @@ public class RobotContainer {
             s_Climber = new Climber(climberIO);
 
             manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+            pieceSensors = new PieceSensors();
+            supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, pieceSensors);
 
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -210,53 +216,41 @@ public class RobotContainer {
          */
 
         public void setManagerAsInactive () {
+            supervisor.clear();
             manager.setInactive();
         }
 
         public void updateManager() {
             manager.update();
+            supervisor.periodic();
         }
         
         private void configureButtonBindings() {
-            /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-            groundIntake.onTrue(new CoralGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            L1.onTrue(new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L2.onTrue(new L2Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L3.onTrue(new L3Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L4.onTrue(new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            stow.onTrue(new InstantCommand(() -> supervisor.requestStow(true)));
+            groundIntake.onTrue(new InstantCommand(supervisor::requestGroundIntakeHandoff));
+            runElevatorTesting.onTrue(new InstantCommand(supervisor::requestGroundIntakeHold));
 
-            stow.onTrue(new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            L1.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L1)));
+            L2.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L2)));
+            L3.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L3)));
+            L4.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L4)));
 
-            runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
+            algaeL2Pickup.onTrue(new InstantCommand(supervisor::requestAlgaeGroundIntake));
+            processorScore.onTrue(new InstantCommand(supervisor::requestProcessorScore));
+            scoreBarge.onTrue(new InstantCommand(supervisor::requestBargeScore));
+            reefAlign.onTrue(new InstantCommand(supervisor::requestAutoAlgae));
+
+            climb.onTrue(new InstantCommand(supervisor::toggleClimbMode));
+            algaeL3Pickup.onTrue(new InstantCommand(supervisor::executeClimb));
 
             extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
-
-            scoreBarge.onTrue(new NetAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector));
-
-            algaeL2Pickup.onTrue(new AlgaeL2Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            algaeL3Pickup.onTrue(new AlgaeL3Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            algaeGroundIntake.onTrue(new AlgaeGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            processorScore.onTrue(new ClimbEnd(manager, s_Climber, s_Pivot, s_WristPitch));
-
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
-            reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            climb.onTrue(new test(s_Swerve));
-
             zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
-
             manualWristRoll.whileTrue(new InstantCommand(() -> s_WristRoll.controlManually(operatorHorizontalAxis)));
-
-            
-
-    }
+        }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
         autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            

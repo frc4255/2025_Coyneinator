@@ -62,6 +62,20 @@ public final class Constants {
         }
     }
 
+    public static final class PieceSensors {
+        public static final int CORAL_INTAKE_CHANNEL = -1;
+        public static final boolean CORAL_INTAKE_INVERTED = true;
+
+        public static final int CORAL_WRIST_CHANNEL = -1;
+        public static final boolean CORAL_WRIST_INVERTED = true;
+
+        public static final int ALGAE_INTAKE_CHANNEL = -1;
+        public static final boolean ALGAE_INTAKE_INVERTED = true;
+
+        public static final int ALGAE_END_EFFECTOR_CHANNEL = -1;
+        public static final boolean ALGAE_END_EFFECTOR_INVERTED = true;
+    }
+
     public static final Map<Character, Pose2d> BLUE_REEF_SCORINGS_POSITIONS = new HashMap<>();
 
     static {
@@ -143,6 +157,23 @@ public final class Constants {
         public static final double ElevatorMaxExtensionLimit = 0; //TODO tune this in inches
         public static final double ElevatorMinExtensionLimit = 0; //This is actually 0
 
+    }
+
+    public static final class EndEffector {
+        public static final double INTAKE_CORAL_VOLTS = 7.0;
+        public static final double INTAKE_CORAL_HOLD_VOLTS = 2.0;
+        public static final double HANDOFF_CORAL_VOLTS = 5.0;
+        public static final double HOLD_CORAL_VOLTS = 1.0;
+        public static final double OUTTAKE_CORAL_VOLTS = -4.5;
+        public static final double OUTTAKE_CORAL_FAST_VOLTS = -7.0;
+
+        public static final double INTAKE_ALGAE_VOLTS = 5.5;
+        public static final double HOLD_ALGAE_VOLTS = 2.0;
+        public static final double OUTTAKE_ALGAE_VOLTS = -6.0;
+
+        public static final double CORAL_INTAKE_CURRENT_TRIGGER = 28.0;
+        public static final double CORAL_INTAKE_CURRENT_LIMIT = 40.0;
+        public static final double ALGAE_INTAKE_CURRENT_TRIGGER = 20.0;
     }
 
     public static final class Grabber2D {

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.EndEffector;
 
 public class ExtakeCoral extends Command{
@@ -15,7 +16,7 @@ public class ExtakeCoral extends Command{
 
     @Override
     public void initialize() {
-        s_EndEffector.setDutyCycle(2);
+        s_EndEffector.setDutyCycle(Constants.EndEffector.OUTTAKE_CORAL_FAST_VOLTS);
     }
 
     @Override
