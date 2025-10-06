@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
 
@@ -274,6 +273,11 @@ public class FieldLayout {
 
     public static class Reef {
 
+    public static final char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
+    public static Map<Character, Integer> branchesToInt = new HashMap<>();
+    public static Map<Character, Integer> branchesToAprilTagID = new HashMap<>();
+
+
     public static final double reefdFacesWidth = Units.inchesToMeters(30.27);
     public static final double reefdFacesHeight = Units.inchesToMeters(37.27);
 
@@ -290,83 +294,35 @@ public class FieldLayout {
         new ArrayList<>(); // Starting at the right branch facing the driver station in clockwise
 
     static {
-      // Initialize faces
-      centerFaces[0] =
-          new Pose2d(
-              Units.inchesToMeters(144.003),
-              Units.inchesToMeters(158.500),
-              Rotation2d.fromDegrees(180));
-      centerFaces[1] =
-          new Pose2d(
-              Units.inchesToMeters(160.373),
-              Units.inchesToMeters(186.857),
-              Rotation2d.fromDegrees(120));
-      centerFaces[2] =
-          new Pose2d(
-              Units.inchesToMeters(193.116),
-              Units.inchesToMeters(186.858),
-              Rotation2d.fromDegrees(60));
-      centerFaces[3] =
-          new Pose2d(
-              Units.inchesToMeters(209.489),
-              Units.inchesToMeters(158.502),
-              Rotation2d.fromDegrees(0));
-      centerFaces[4] =
-          new Pose2d(
-              Units.inchesToMeters(193.118),
-              Units.inchesToMeters(130.145),
-              Rotation2d.fromDegrees(-60));
-      centerFaces[5] =
-          new Pose2d(
-              Units.inchesToMeters(160.375),
-              Units.inchesToMeters(130.144),
-              Rotation2d.fromDegrees(-120));
 
-      // Initialize branch positions
-      for (int face = 0; face < 6; face++) {
-        Map<ReefHeight, Pose3d> fillRight = new HashMap<>();
-        Map<ReefHeight, Pose3d> fillLeft = new HashMap<>();
-        for (var level : ReefHeight.values()) {
-          Pose2d poseDirection = new Pose2d(center, Rotation2d.fromDegrees(180 - (60 * face)));
-          double adjustX = Units.inchesToMeters(30.738);
-          double adjustY = Units.inchesToMeters(6.469);
+        
+    branchesToInt.put('A', 1);
+    branchesToInt.put('B', 2);
+    branchesToInt.put('C', 3);
+    branchesToInt.put('D', 4);
+    branchesToInt.put('E', 5);
+    branchesToInt.put('F', 6);
+    branchesToInt.put('G', 7);
+    branchesToInt.put('H', 8);
+    branchesToInt.put('I', 9);
+    branchesToInt.put('J', 10);
+    branchesToInt.put('K', 11);
+    branchesToInt.put('L', 12);
 
-          fillRight.put(
-              level,
-              new Pose3d(
-                  new Translation3d(
-                      poseDirection
-                          .transformBy(new Transform2d(adjustX, adjustY, new Rotation2d()))
-                          .getX(),
-                      poseDirection
-                          .transformBy(new Transform2d(adjustX, adjustY, new Rotation2d()))
-                          .getY(),
-                      level.height),
-                  new Rotation3d(
-                      0,
-                      Units.degreesToRadians(level.pitch),
-                      poseDirection.getRotation().getRadians())));
-          fillLeft.put(
-              level,
-              new Pose3d(
-                  new Translation3d(
-                      poseDirection
-                          .transformBy(new Transform2d(adjustX, -adjustY, new Rotation2d()))
-                          .getX(),
-                      poseDirection
-                          .transformBy(new Transform2d(adjustX, -adjustY, new Rotation2d()))
-                          .getY(),
-                      level.height),
-                  new Rotation3d(
-                      0,
-                      Units.degreesToRadians(level.pitch),
-                      poseDirection.getRotation().getRadians())));
-        }
-        branchPositions.add((face * 2) + 1, fillRight);
-        branchPositions.add((face * 2) + 2, fillLeft);
-      }
-    }
+    branchesToAprilTagID.put('A', 18);
+    branchesToAprilTagID.put('B', 18);
+    branchesToAprilTagID.put('C', 17);
+    branchesToAprilTagID.put('D', 17);
+    branchesToAprilTagID.put('E', 22);
+    branchesToAprilTagID.put('F', 22);
+    branchesToAprilTagID.put('G', 21);
+    branchesToAprilTagID.put('H', 21);
+    branchesToAprilTagID.put('I', 20);
+    branchesToAprilTagID.put('J', 20);
+    branchesToAprilTagID.put('K', 19);
+    branchesToAprilTagID.put('L', 19);
   }
+}
 
   public static class StagingPositions {
     // Measured from the center of the ice cream

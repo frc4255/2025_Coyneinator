@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
 import frc.robot.subsystems.Elevator;
@@ -23,6 +25,10 @@ public class SubsystemManager {
     private Node currentNode;
     private Node requestedNode;
 
+    private Node lastNode;
+
+    private boolean reactivation = false;
+
     public SubsystemManager(
             Pivot sPivot, Elevator sElevator, WristPitch sWristPitch, WristRoll sWristRoll
         ) {
@@ -34,11 +40,26 @@ public class SubsystemManager {
         
         this.active = false;
         this.currentIndex = 0;
+
+        lastNode = new Node("Empty", new double[]{0,0,0,0});
+
     }
 
+    public void setInactive() {
+        active = false;
+    }
     public void requestNode(Node requestedNode) {
+
+        if (currentNode == null) {
+            currentNode = GraphParser.getNodeByName("Stow");
+        }
+        reactivation = true;
+        lastNode = new Node("Empty", new double[]{0,0,0,0});
+
         this.requestedNode = requestedNode;
         this.currentIndex = 0;
+
+        System.out.println(GraphParser.getFastestPath(currentNode, requestedNode));
 
         this.path = GraphParser.getFastestPath(currentNode, requestedNode);
         this.active = (path != null && !path.isEmpty());
@@ -54,7 +75,7 @@ public class SubsystemManager {
             return;
         }
 
-        Node currentNode = path.get(currentIndex);
+        currentNode = path.get(currentIndex);
         double[] setpoints = currentNode.getSetpoints();
 
         /*  Code to automatically go to reef align, can be added back based on driver feedback
@@ -68,18 +89,35 @@ public class SubsystemManager {
             }
         }
        */
+
+       if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
+        reactivation = false;
+        sWristPitch.setActive();
+        sWristRoll.setActive();
+        sElevator.setActive();
+
+
         sPivot.setGoal(setpoints[0]);
         sElevator.setGoal(setpoints[1]);
         sWristPitch.setGoal(setpoints[2]);
         sWristRoll.setGoal(setpoints[3]);
 
+       }
         // If all subsystems have reached their targets, move to the next node.
         if (hasReachedTarget()) {
+            lastNode = currentNode;
             currentIndex++;
             if (currentIndex >= path.size()) {
                 active = false;
             }
+            System.out.println("Hello" + currentNode.getName());
         }
+
+        canAutoHome();
+
+        Logger.recordOutput("CurrentNode", currentNode.getName());
+        Logger.recordOutput("hasReachedTarget", hasReachedTarget());
+        Logger.recordOutput("canAutoHome", canAutoHome());
     }
 
     /**
@@ -88,9 +126,26 @@ public class SubsystemManager {
      *
      * @return true if all subsystems are at their target, false otherwise.
      */
-    private boolean hasReachedTarget() {
+    public boolean hasReachedTarget() {
         return sPivot.atGoal() && sElevator.atGoal() &&
                sWristPitch.atGoal() && sWristRoll.atGoal();
+    }
+
+    public boolean hasReachedGoal(String x) {
+        if (currentNode.getName().equals(x) && hasReachedTarget() && currentNode != lastNode) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean canAutoHome() {
+        if (currentNode.getName().equals("Stow") && hasReachedTarget() && currentNode != lastNode) {
+            System.err.println("can Auto Home");
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

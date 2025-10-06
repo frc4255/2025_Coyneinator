@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -83,6 +85,7 @@ public class Camera {
         /* Clear last estimate */
         estimate = null;
 
+        //TODO: Fix use of deprecated function
         var opt = poseEstimator.update(cam.getLatestResult());
         EstimatedRobotPose result = opt.isPresent() ? opt.get() : null;
 

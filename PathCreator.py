@@ -12,71 +12,99 @@ def placeholder_setpoints():
 nodes = [
     {
         "name": "Stow",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0,0,0,0]
+    },
+    {
+        "name" : "Intake Intermediate",
+        "setpoints": [0.42, 0, 0, 3.14 / 2]
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.44, 0.2, -2.35, 3.14 / 2]
     },
     {
         "name": "Lollipop Coral Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0,0,-1.46, 3.14 / 2]
     },
     {
         "name": "Reef Align",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.57, 0, -0.37, 0]
+    },
+    {
+        "name": "L4 Intermediate",
+        "setpoints": [1.65, 0.77, -1.38, 0]
     },
     {
         "name": "L4 Init",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.65, 0.77, -1.02, 0]
     },
     {
         "name": "L4 Dunk",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.65 ,0.77,-0.37,0]
+    },
+    {
+        "name":"L3 Intermediate",
+        "setpoints":[1.5, 0.05,-1.38, 0]
     },
     {
         "name": "L3 Init",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.5, .05, -1.38, 0]
     },
     {
         "name": "L3 Dunk",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.75, 0, -0.76, 0]
+    },
+    {
+        "name" : "Net Intermediate",
+        "setpoints" : [1.76, 0, -1.12, 3.14 / 2]
+    },
+    {
+        "name": "Net Score", 
+        "setpoints": [1.76, 1, -1.12, 3.14 / 2]
+    },
+    {
+        "name": "L2 Algae Pickup",
+        "setpoints": [1.6, 0, -0.27, 3.14 / 2]
     },
     {
         "name": "L3 Algae Pickup",
-        "setpoints": placeholder_setpoints()
-    },
-    {
-        "name": "L3 Algae Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.6, 0.23, -0.27, 3.14 / 2]
     },
     {
         "name": "Algae Ground Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0,0,-1.43,-0, 0]
     },
     {
         "name": "Processor Score",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.01, 0, -1.14, 0]
     },
     {
         "name": "Coral HP Pickup",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [0.99, 0, -1.44, -3.14 / 2]
     },
     {
         "name": "L2 Align",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.37, 0, -0.2, 0]
     },
     {
         "name": "L1 Score",
-        "setpoints": placeholder_setpoints()
+        "setpoints": [1.4, 0, 0, 3.14 / 2]
     },
+    {
+        "name": "Climb",
+        "setpoints": [1.82, 0, -1.37, 0]
+    },
+    {
+        "name": "Climb End",
+        "setpoints": [0, 0, -1.37, 0]
+    }
 ]
 
 # Define edges between nodes without descriptions.
 edges = [
     {
         "start": "Stow",
-        "end": "Coral Ground Pickup"
+        "end": "Intake Intermediate"
     },
     {
         "start": "Stow",
@@ -107,8 +135,24 @@ edges = [
         "end": "Processor Score"
     },
     {
-        "start": "Coral Ground Pickup",
+        "start":"Stow",
+        "end":"Net Intermediate"
+    },
+    {
+        "start": "Stow",
+        "end": "Climb"
+    },
+    {
+        "start": "Intake Intermediate",
         "end": "Stow"
+    },
+    {
+        "start": "Intake Intermediate",
+        "end": "Coral Ground Pickup"
+    },
+    {
+        "start": "Coral Ground Pickup",
+        "end": "Intake Intermediate"
     },
     {
         "start": "Coral Ground Pickup",
@@ -136,10 +180,14 @@ edges = [
     },
     {
         "start": "Reef Align",
-        "end": "L4 Init"
+        "end": "L3 Intermediate"
     },
     {
         "start": "Reef Align",
+        "end": "L4 Intermediate"
+    },
+    {
+        "start": "L3 Intermediate",
         "end": "L3 Init"
     },
     {
@@ -151,16 +199,24 @@ edges = [
         "end": "L2 Algae Pickup"
     },
     {
+        "start": "L3 Intermediate",
+        "end": "Reef Align"
+    },
+    {
+        "start": "L4 Intermediate",
+        "end": "L4 Init"
+    },
+    {
+        "start": "L4 Intermediate",
+        "end": "Reef Align"
+    },
+    {
         "start": "L4 Init",
         "end": "L4 Dunk"
     },
     {
         "start": "L4 Init",
         "end": "L3 Init"
-    },
-    {
-        "start": "L4 Init",
-        "end": "Reef Align"
     },
     {
         "start": "L3 Init",
@@ -222,8 +278,26 @@ edges = [
         "start": "L1 Score",
         "end": "Stow"
     },
-    
-
+    {
+        "start":"Net Intermediate",
+        "end" : "Stow"
+    },
+    {
+        "start":"Net Intermediate",
+        "end" : "Net Score"
+    },
+    {
+        "start":"Net Score",
+        "end": "Net Intermediate"
+    },
+    {
+        "start": "Climb",
+        "end": "Climb End"
+    },
+    {
+        "start": "Climb End",
+        "end": "Stow"
+    }
 ]
 
 # Build an adjacency list representation.
@@ -288,7 +362,7 @@ graph_data = {
 }
 
 # Write the JSON file.
-with open("./src/main/java/frc/lib/util/graph/graph_data.json", "w") as f:
+with open("./src/main/deploy/graph_data.json", "w") as f:
     json.dump(graph_data, f, indent=2)
 
 print("graph_data.json generated successfully with setpoints and precomputed shortest paths!")

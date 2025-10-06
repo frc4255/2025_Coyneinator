@@ -8,15 +8,15 @@ import java.util.Map;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -25,8 +25,65 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    public static class LEDs {
+
+        public static HashMap<String, int[]> colorDatabase = new HashMap<String, int[]>();
+
+        static {
+            colorDatabase.put("Red", new int[] {255, 0, 0});
+            colorDatabase.put("Green", new int[] {0, 255, 0});
+            colorDatabase.put("Blue", new int[] {0, 0, 255});
+            colorDatabase.put("Yellow", new int[] {255, 255, 0});
+            colorDatabase.put("Purple", new int[] {255, 0, 255});
+            colorDatabase.put("Cyan", new int[] {0, 255, 255});
+            colorDatabase.put("White", new int[] {255, 255, 255});
+            colorDatabase.put("noColor", new int[] {0, 0, 0});
+        }
+        
+        public static enum LEDStates {
+            OFF(10, colorDatabase.get("noColor"));
+
+
+            
+            private final int[] color;
+            private final int priority;
+    
+            LEDStates(int priority, int[] color) {
+                            this.priority = priority;
+                            this.color = color;
+            }
+    
+            public int getPriority() {
+                return priority;
+            }
+            public int[] getColor() {
+                return color;
+            }
+        }
+    }
+
+    public static final Map<Character, Pose2d> BLUE_REEF_SCORINGS_POSITIONS = new HashMap<>();
+
+    static {
+        BLUE_REEF_SCORINGS_POSITIONS.put('A', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('B', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('C', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('D', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('E', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('F', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('G', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('H', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('I', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('J', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('K', new Pose2d());
+        BLUE_REEF_SCORINGS_POSITIONS.put('L', new Pose2d());
+    }
+
+    public final class Climber {
+        public static final int MOTOR_ID = 7; //TODO change this maybe
+    }
     public final class Wrist {
-        public static final double kS = 0.0; //TODO tune this 
+        public static final double kS = 0.0; //TODO tune this
         public static final double kG = 0.0; //TODO tune this 
         public static final double kV = 0.0; //TODO tune this  
         public static final double kA = 0.0; //TODO tune this 
@@ -41,21 +98,16 @@ public final class Constants {
         public static final double RollMaxLimit = 0; //TODO tune this for RAD
         public static final double RollMinLimit = 0; //TODO tune this for RAD
 
-        public static final int PITCH_MOTOR_ID = 40;
-        public static final int ROLL_MOTOR_ID = 41;
+        public static final int PITCH_MOTOR_ID = 4;
+        public static final int ROLL_MOTOR_ID = 5;
 
-        public static final int END_EFFECTOR_MOTOR_ID = 42;
+        public static final int END_EFFECTOR_MOTOR_ID = 6;
     }
 
     public final class PoseFilter {
         public static final double POSE_HEIGHT_TOLERANCE = 0.05;
 
         public static final double MAX_DIST_BETWEEN_POSE = 0.2;
-    }
-
-    public static final class Grabber {
-
-        public static final int MOTOR_ID_0 = 30; 
     }
 
     public static final class Elevator {
@@ -77,11 +129,11 @@ public final class Constants {
             public static final double kA = 0; //TODO tune this
         }
 
-        public static final int LEFT_MOTOR_ID = 10;
-        public static final int RIGHT_MOTOR_ID = 11;
+        public static final int LEFT_MOTOR_ID = 2;
+        public static final int RIGHT_MOTOR_ID = 3;
 
-        public static final int PIVOT_LEFT_MOTOR_ID = 12;
-        public static final int PIVOT_RIGHT_MOTOR_ID = 13;
+        public static final int PIVOT_LEFT_MOTOR_ID = 1;
+        public static final int PIVOT_RIGHT_MOTOR_ID = 0;
 
         /*Pivot Max and Min limit */
 
@@ -103,57 +155,37 @@ public final class Constants {
         public static final double floor = 0.0;
         public static final double maxVerticalRobotExtension = 90.389937; //TODO get real value approx whatever I put there (I didn't account for end effector height yet)
         public static final double maxHorizontalRobotExtension = 33.75; //Robot length / 2 + extension limit from frame perimeter.
-
-
     }
 
 
     public static final class Swerve {
 
-        public static final double ROBOT_MASS_KG = 0.0; //TODO get real value with bumpers and battery
-        public static final double MAX_TORQUE_FRICTION = 0.0; //TODO get real value (max torque a drive module can apply without slipping the wheels)
+        public static final double ROBOT_MASS_KG = 64; //TODO get real value with bumpers and battery
 
-        public static final double MAX_DRIVE_VELOCITY_MPS = 0.0; //TODO get real value
-        public static final double WHEEL_COF = 1.542; //I got this one chief delphi so this might just be straight up wrong
-        public static final double WHEEL_RADIUS_METERS = 0.0; //TODO get real value
-        public static final double DRIVE_MOTOR_CURRENT_LIMIT = 35.0; //TODO make sure this is right
+        public static final double MAX_DRIVE_VELOCITY_MPS = 6.75; //TODO get real value
+        public static final double WHEEL_COF = 1; //I got this one chief delphi so this might just be straight up wrong
+        public static final double WHEEL_RADIUS_METERS = 0.0508; //TODO get real value
+        public static final double DRIVE_MOTOR_CURRENT_LIMIT = 60; //TODO make sure this is right
 
-        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = 
-                {new Translation2d(Units.inchesToMeters(-12.105518), Units.inchesToMeters(12.105518)),
-                new Translation2d(Units.inchesToMeters(12.105518), Units.inchesToMeters(12.105518)),
-                new Translation2d(Units.inchesToMeters(-12.105518), Units.inchesToMeters(-12.105518)),
-                new Translation2d(Units.inchesToMeters(12.105518), Units.inchesToMeters(-12.105518))};
+        public static final Translation2d[] SWERVE_MODULE_LOCATIONS = {
+                new Translation2d(Units.inchesToMeters(12.875), Units.inchesToMeters(10.375)),
+                new Translation2d(Units.inchesToMeters(12.875), Units.inchesToMeters(-10.375)),
+                new Translation2d(Units.inchesToMeters(-12.875), Units.inchesToMeters(10.375)),
+                new Translation2d(Units.inchesToMeters(-12.875), Units.inchesToMeters(-10.375))
+            };
         
-        public static final double[] MODULE_PIVOT_DISTANCE = {
-            Units.inchesToMeters(16.779097),
-            Units.inchesToMeters(16.779097),
-            Units.inchesToMeters(16.779097),    
-            Units.inchesToMeters(16.779097)}; //TODO find each Modules distance form the center of the robot in METERS
-
-        public static final double ROBOT_MOMENT_OF_INERTIA = 0.0; //TODO get real value in KG * M^2
+        public static final double ROBOT_MOMENT_OF_INERTIA = 11; //TODO get real value in KG * M^2
         public static final int NUMBER_OF_MODULES = 4; 
-        public static final double WHEEL_FRICTION_FORCE = 0.0; //TODO get the force of static friction between the wheels and ground in newtons (on carpet)
-    
-        public static final ModuleConfig swerveModuleConfig = new ModuleConfig(
-                                        WHEEL_RADIUS_METERS,
-                                        MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, 
-                                        DCMotor.getKrakenX60(1), 
-                                        DRIVE_MOTOR_CURRENT_LIMIT, 
-                                        1); //TODO figure out if I am actually insane or this is what im supposed to be doing
 
-        public static final RobotConfig robotConfig = new RobotConfig(ROBOT_MASS_KG, 
-                                                    ROBOT_MOMENT_OF_INERTIA, 
-                                                    swerveModuleConfig, 
-                                                    SWERVE_MODULE_LOCATIONS);
+        public static final double MAX_VELOCITY = 5; //TODO get real value
+        public static final int pigeonID = 0;
 
-        public static final int pigeonID = 1;
-
-        public static final COTSTalonFXSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
+        public static final COTSTalonFXSwerveConstants chosenModule =
         COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(23.75); //TODO: This must be tuned to specific robot
-        public static final double wheelBase = Units.inchesToMeters(23.75); //TODO: This must be tuned to specific robot
+        public static final double trackWidth = Units.inchesToMeters(20.75);
+        public static final double wheelBase = Units.inchesToMeters(25.75);
         public static final double wheelCircumference = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -220,58 +252,42 @@ public final class Constants {
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         public static final class Mod0 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 1;
-            public static final int angleMotorID = 2;
+            public static final int driveMotorID = 3;
+            public static final int angleMotorID = 4;
             public static final int canCoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-134.12);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
         public static final class Mod1 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 3;
-            public static final int angleMotorID = 4;
+            public static final int driveMotorID = 1;
+            public static final int angleMotorID = 2;
             public static final int canCoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-17.31);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
-        
+
         /* Back Left Module - Module 2 */
         public static final class Mod2 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
-            public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final int canCoderID = 4;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(119.26);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
-        /* Back Right Module - Module 3 */
+         /* Back Right Module - Module 3 */
         public static final class Mod3 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
-            public static final int canCoderID = 4;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final int canCoderID = 3;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-34.27);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
-    }
-
-    public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-    
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
-    
-        /* Constraint for the motion profilied robot angle controller */
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-            new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 }
