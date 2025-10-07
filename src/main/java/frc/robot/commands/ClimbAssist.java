@@ -8,8 +8,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 
 public class ClimbAssist extends Command {
     
@@ -17,17 +16,17 @@ public class ClimbAssist extends Command {
 
     private Pivot s_Pivot;
     private Climber s_Climber;
-    private WristPitch s_WristPitch;
+    private DifferentialWrist s_Wrist;
 
-    public ClimbAssist(SubsystemManager manager, Climber s_Climber, Pivot s_Pivot, WristPitch s_WristPitch) {
+    public ClimbAssist(SubsystemManager manager, Climber s_Climber, Pivot s_Pivot, DifferentialWrist s_Wrist) {
 
         this.manager = manager;
 
         this.s_Climber = s_Climber;
-        this.s_WristPitch = s_WristPitch;
+        this.s_Wrist = s_Wrist;
         this.s_Pivot = s_Pivot;
 
-        addRequirements(s_Pivot, s_Climber, s_WristPitch);
+        addRequirements(s_Pivot, s_Climber, s_Wrist);
     }
 
     @Override

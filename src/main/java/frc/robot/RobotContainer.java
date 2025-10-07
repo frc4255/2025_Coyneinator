@@ -1,19 +1,17 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.security.Timestamp;
-import java.util.Map;
 
 import org.photonvision.PhotonCamera;
 
-import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,8 +24,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Vision.Camera;
 import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.Vision.Camera;
+import frc.robot.telemetry.MechanismVisualizer;
+import frc.robot.superstructure.PieceSensors;
+import frc.robot.superstructure.RobotSupervisor;
 
 
 /**
@@ -62,11 +63,11 @@ public class RobotContainer {
 
     private final Camera rightRearCam = new Camera(new PhotonCamera("Right_Rear"), 
         new Transform3d(new Translation3d(-0.374, -0.262, 0.195), //TODO re-do offsets
-        new Rotation3d(0, 0, -3.88)));
-        
+        new Rotation3d(0, 0, -2.313)));
+
     private final Camera leftRearCam = new Camera(new PhotonCamera("Left_Rear"), 
         new Transform3d(new Translation3d(-0.374, 0.262, 0.195), //TODO re-do offsets
-        new Rotation3d(0, 0, 3.88)));
+        new Rotation3d(0, 0, 2.313)));
     //private final Camera LLCam = new Camera(new PhotonCamera("LLCam"), new Transform3d(new Translation3d(0.135, 0, 0.204), new Rotation3d(0, -1.04, 0)));*/
     /* Operator Buttons */
 
@@ -107,19 +108,21 @@ public class RobotContainer {
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
             new Camera[]{rightFrontCam, leftFrontCam, rightRearCam, leftRearCam});
-                
-        private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
-    
-        private final Pivot s_Pivot = new Pivot();
-        private final Elevator s_Elevator = new Elevator(s_Pivot::getPivotPosition);
-        private final WristPitch s_WristPitch = new WristPitch();
-        private final WristRoll s_WristRoll = new WristRoll();
-        private final EndEffector s_EndEffector = new EndEffector();
-        private final Climber s_Climber = new Climber();
+
+        private final Swerve s_Swerve;
+        private final Pivot s_Pivot;
+        private final Elevator s_Elevator;
+        private final DifferentialWrist s_DifferentialWrist;
+        private final GroundIntake s_GroundIntake;
+        private final EndEffector s_EndEffector;
+        private final Climber s_Climber;
         //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
         //private final AlignTool alignTool = new AlignTool();
 
-        private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        private final SubsystemManager manager;
+        private final MechanismVisualizer mechVisualizer;
+        private final PieceSensors pieceSensors;
+        private final RobotSupervisor supervisor;
         
         /* auto stuff */
         private SendableChooser<Command> autochooser;
@@ -127,42 +130,84 @@ public class RobotContainer {
 
         private final AutoFactory autoFactory;
     
-        /** The container for the robot. Contains subsystems, OI devices, and commands. 
-                 * @throws ParseException 
-                 * @throws IOException 
-                 * @throws FileVersionException */
+        /** The container for the robot. Contains subsystems, OI devices, and commands. */
         public RobotContainer() {
+            SwerveIO swerveIO;
+            PivotIO pivotIO;
+            ElevatorIO elevatorIO;
+            DifferentialWristIO differentialWristIO;
+            GroundIntakeIO groundIntakeIO;
+            EndEffectorIO endEffectorIO;
+            ClimberIO climberIO;
+
+            if (RobotBase.isReal()) {
+                swerveIO = new SwerveIOReal();
+                pivotIO = new PivotIOReal();
+                elevatorIO = new ElevatorIOReal();
+                differentialWristIO = new DifferentialWristIOReal();
+                groundIntakeIO = new GroundIntakeIOReal();
+                endEffectorIO = new EndEffectorIOReal();
+                climberIO = new ClimberIOReal();
+            } else {
+                swerveIO = new SwerveIOSim();
+                pivotIO = new PivotIOSim();
+                elevatorIO = new ElevatorIOSim();
+                differentialWristIO = new DifferentialWristIOSim();
+                groundIntakeIO = new GroundIntakeIOSim();
+                endEffectorIO = new EndEffectorIOSim();
+                climberIO = new ClimberIOSim();
+            }
+
+            s_Swerve = new Swerve(swerveIO, s_VisionSubystem);
+            s_Pivot = new Pivot(pivotIO);
+            s_Elevator = new Elevator(elevatorIO, s_Pivot::getPivotPosition);
+            s_DifferentialWrist = new DifferentialWrist(differentialWristIO);
+            s_GroundIntake = new GroundIntake(groundIntakeIO);
+            s_EndEffector = new EndEffector(endEffectorIO);
+            s_Climber = new Climber(climberIO);
+
+            manager = new SubsystemManager(s_Pivot, s_Elevator, s_DifferentialWrist);
+
+            // Mechanism2d visualizations via AdvantageKit
+            mechVisualizer = new MechanismVisualizer(
+                s_Pivot::getPivotPosition,
+                s_Elevator::getElevatorPosition,
+                s_DifferentialWrist::getPitchPosition,
+                s_DifferentialWrist::getRollPosition,
+                s_Swerve::getModuleStates,
+                s_Swerve::getHeading
+            );
+            pieceSensors = new PieceSensors();
+            supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake, s_EndEffector, pieceSensors);
+
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
-                    s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
-                    () -> -driver.getRawAxis(rotationAxis), 
-                    () -> true //For the love of god do not change this
+                    s_Swerve,
+                    () -> -driver.getRawAxis(translationAxis),
+                    () -> -driver.getRawAxis(strafeAxis),
+                    () -> driver.getRawAxis(rotationAxis),
+                    () -> false //For the love of god do not change this
                 )
             );
 
-            s_WristRoll.setDefaultCommand(new WristRollManual(s_WristRoll, () -> operator.getRawAxis(operatorHorizontalAxis)));
-            // Configure the button bindings
             configureButtonBindings();
-
             addTuningSliders();
 
             autoFactory = new AutoFactory(
-            s_Swerve::getPose, // A function that returns the current robot pose
-            s_Swerve::setPose, // A function that resets the current robot pose to the provided Pose2d
-            s_Swerve::followTrajectory, // The drive subsystem trajectory follower 
-            true, // If alliance flipping should be enabled 
-            s_Swerve // The drive subsystem
-        );
+                s_Swerve::getPose,
+                s_Swerve::setPose,
+                s_Swerve::followTrajectory,
+                true,
+                s_Swerve
+            );
 
-        configureAutoChooser();
+            configureAutoChooser();
 
             /*
         autoChooser = new AutoChooser();
 
         // Add options to the chooser
-        autoChooser.addCmd("Example Routine", () -> new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));
+        autoChooser.addCmd("Example Routine", () -> new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_DifferentialWrist, s_EndEffector, manager, autoFactory));
 
         // Put the auto chooser on the dashboard
         SmartDashboard.putData(autoChooser);
@@ -179,57 +224,43 @@ public class RobotContainer {
          */
 
         public void setManagerAsInactive () {
+            supervisor.clear();
             manager.setInactive();
         }
 
         public void updateManager() {
             manager.update();
+            supervisor.periodic();
         }
         
         private void configureButtonBindings() {
-            /* Driver Buttons */
             zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-            groundIntake.onTrue(new CoralGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
 
-            L1.onTrue(new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L2.onTrue(new L2Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L3.onTrue(new L3Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L4.onTrue(new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            stow.onTrue(new InstantCommand(() -> supervisor.requestStow(true)));
+            groundIntake.onTrue(new InstantCommand(supervisor::requestGroundIntakeHandoff));
+            runElevatorTesting.onTrue(new InstantCommand(supervisor::requestGroundIntakeHold));
 
-            stow.onTrue(new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+            L1.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L1)));
+            L2.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L2)));
+            L3.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L3)));
+            L4.onTrue(new InstantCommand(() -> supervisor.requestScoreLevel(RobotSupervisor.ScoreLevel.L4)));
 
-            runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
+            algaeL2Pickup.onTrue(new InstantCommand(supervisor::requestAlgaeGroundIntake));
+            processorScore.onTrue(new InstantCommand(supervisor::requestProcessorScore));
+            scoreBarge.onTrue(new InstantCommand(supervisor::requestBargeScore));
+            reefAlign.onTrue(new InstantCommand(supervisor::requestAutoAlgae));
+
+            climb.onTrue(new InstantCommand(supervisor::toggleClimbMode));
+            algaeL3Pickup.onTrue(new InstantCommand(supervisor::executeClimb));
 
             extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
-
-            scoreBarge.onTrue(new NetAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector));
-
-            algaeL2Pickup.onTrue(new AlgaeL2Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            algaeL3Pickup.onTrue(new AlgaeL3Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            algaeGroundIntake.onTrue(new AlgaeGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector)); //TODO: Bind confirm button
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
-            reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            climb.onTrue(new test(s_Swerve));
-
-            zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
-
-            manualWristRoll.whileTrue(new InstantCommand(() -> s_WristRoll.controlManually(operatorHorizontalAxis)));
-
-            
-
-    }
+            zeroWristRoll.onTrue(new InstantCommand(s_DifferentialWrist::setHomed));
+        }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
-        autochooser.addOption("4 piece new testing one", new OldFourPieceNoHPL4(s_Swerve, s_Pivot, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
-
+        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_DifferentialWrist, s_EndEffector, manager));
         SmartDashboard.putData(autochooser);
     }
     

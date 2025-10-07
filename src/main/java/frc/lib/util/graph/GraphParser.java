@@ -11,7 +11,7 @@ import java.util.*;
 public class GraphParser {
 
     // A lookup table for Node objects (for O(1) access)
-    private static Map<String, Node> nodeLookup = new HashMap<>();
+    private static final Map<String, Node> nodeLookup = new HashMap<>();
 
     // This is the class we use in our code.
     public static class GraphData {
@@ -47,6 +47,7 @@ public class GraphParser {
         ObjectMapper mapper = new ObjectMapper();
         File deployFile = new File(Filesystem.getDeployDirectory(), "graph_data.json");
         try {
+            nodeLookup.clear();
             // First, deserialize the raw JSON data.
             GraphDataRaw raw = mapper.readValue(deployFile, GraphDataRaw.class);
 
@@ -54,7 +55,6 @@ public class GraphParser {
             graphData = new GraphData();
             graphData.nodes = raw.nodes;
             graphData.edges = raw.edges;
-
             // Build the node lookup map for O(1) access.
             for (Node node : graphData.nodes) {
                 nodeLookup.put(node.getName(), node);
@@ -62,6 +62,7 @@ public class GraphParser {
 
             // Convert the raw shortestPaths (List<String>) into List<Node>
             graphData.shortestPaths = convertShortestPaths(raw.shortestPaths);
+            validateGraph();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,6 +80,10 @@ public class GraphParser {
     private static Map<String, Map<String, List<Node>>> convertShortestPaths(
             Map<String, Map<String, List<String>>> stringPaths) {
         Map<String, Map<String, List<Node>>> convertedPaths = new HashMap<>();
+
+        if (stringPaths == null) {
+            return convertedPaths;
+        }
 
         for (Map.Entry<String, Map<String, List<String>>> entry : stringPaths.entrySet()) {
             String startNode = entry.getKey();
@@ -121,7 +126,10 @@ public class GraphParser {
     }
 
     public static Node getNodeByName(String nodeName) {
-        return nodeLookup.get(nodeName);
+        if (nodeName == null) {
+            return null;
+        }
+        return nodeLookup.get(nodeName.trim());
     }
     /**
      * Allows manual reloading of the graph if necessary.
@@ -130,5 +138,33 @@ public class GraphParser {
      */
     public static void reloadGraph(String filePath) {
         loadGraph(filePath);
+    }
+
+    private static void validateGraph() {
+        if (graphData == null) {
+            return;
+        }
+
+        for (Edge edge : graphData.edges) {
+            if (!nodeLookup.containsKey(edge.getStart())) {
+                System.err.println("Graph edge start missing node: " + edge.getStart());
+            }
+            if (!nodeLookup.containsKey(edge.getEnd())) {
+                System.err.println("Graph edge end missing node: " + edge.getEnd());
+            }
+        }
+
+        if (graphData.shortestPaths != null) {
+            for (Map.Entry<String, Map<String, List<Node>>> entry : graphData.shortestPaths.entrySet()) {
+                if (!nodeLookup.containsKey(entry.getKey())) {
+                    System.err.println("Shortest path source missing node: " + entry.getKey());
+                }
+                for (Map.Entry<String, List<Node>> targetEntry : entry.getValue().entrySet()) {
+                    if (!nodeLookup.containsKey(targetEntry.getKey())) {
+                        System.err.println("Shortest path destination missing node: " + targetEntry.getKey());
+                    }
+                }
+            }
+        }
     }
 }

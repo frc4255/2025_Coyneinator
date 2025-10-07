@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,6 +15,12 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
+    @AutoLog
+    public static class VisionSubsystemInputs {
+        public Pose2d[] estimatedPoses = new Pose2d[0];
+        public double[] timestamps = new double[0];
+        public double[] stdDeviations = new double[0];
+    }
     
     /* Might need to create a custom class if I need more features. */
     private Camera[] cameras;
@@ -22,6 +29,8 @@ public class VisionSubsystem extends SubsystemBase {
     public List<PoseAndTimestampAndDev> results = new ArrayList<>();
 
     public DoubleArrayLogEntry cameraPoseEntry;
+
+    private final VisionSubsystemInputsAutoLogged inputs = new VisionSubsystemInputsAutoLogged();
 
     public VisionSubsystem(Camera[] cameras) {
         this.cameras = cameras;      
@@ -58,6 +67,19 @@ public class VisionSubsystem extends SubsystemBase {
                 Logger.recordOutput("Camera " + cam + " Pose", camEst.get().getPose());
             }
         }
+
+        inputs.estimatedPoses = new Pose2d[results.size()];
+        inputs.timestamps = new double[results.size()];
+        inputs.stdDeviations = new double[results.size()];
+
+        for (int i = 0; i < results.size(); i++) {
+            PoseAndTimestampAndDev entry = results.get(i);
+            inputs.estimatedPoses[i] = entry.getPose();
+            inputs.timestamps[i] = entry.getTimestamp();
+            inputs.stdDeviations[i] = entry.getStdDev();
+        }
+
+        Logger.processInputs("Vision", inputs);
     }  
 
     public List<PoseAndTimestampAndDev> getResults() {

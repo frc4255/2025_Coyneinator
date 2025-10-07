@@ -62,6 +62,20 @@ public final class Constants {
         }
     }
 
+    public static final class PieceSensors {
+        public static final int CORAL_INTAKE_CHANNEL = -1;
+        public static final boolean CORAL_INTAKE_INVERTED = true;
+
+        public static final int CORAL_WRIST_CHANNEL = -1;
+        public static final boolean CORAL_WRIST_INVERTED = true;
+
+        public static final int ALGAE_INTAKE_CHANNEL = -1;
+        public static final boolean ALGAE_INTAKE_INVERTED = true;
+
+        public static final int ALGAE_END_EFFECTOR_CHANNEL = -1;
+        public static final boolean ALGAE_END_EFFECTOR_INVERTED = true;
+    }
+
     public static final Map<Character, Pose2d> BLUE_REEF_SCORINGS_POSITIONS = new HashMap<>();
 
     static {
@@ -98,8 +112,13 @@ public final class Constants {
         public static final double RollMaxLimit = 0; //TODO tune this for RAD
         public static final double RollMinLimit = 0; //TODO tune this for RAD
 
-        public static final int PITCH_MOTOR_ID = 4;
-        public static final int ROLL_MOTOR_ID = 5;
+        public static final int DIFFERENTIAL_LEFT_MOTOR_ID = 4;
+        public static final int DIFFERENTIAL_RIGHT_MOTOR_ID = 5;
+        public static final int DIFFERENTIAL_LEFT_ENCODER_ID = 14; // TODO configure actual ID
+        public static final int DIFFERENTIAL_RIGHT_ENCODER_ID = 15; // TODO configure actual ID
+        public static final double DIFFERENTIAL_MOTOR_TO_DIFF_GEAR_RATIO = 1.0; // TODO update: motor rotations per differential bevel rotation
+        public static final double DIFFERENTIAL_PITCH_GEAR_RATIO = 51.0; // TODO update: differential rotations per wrist pitch rotation
+        public static final double DIFFERENTIAL_ROLL_GEAR_RATIO = 60.0; // TODO update: differential rotations per wrist roll rotation
 
         public static final int END_EFFECTOR_MOTOR_ID = 6;
     }
@@ -145,6 +164,23 @@ public final class Constants {
 
     }
 
+    public static final class EndEffector {
+        public static final double INTAKE_CORAL_VOLTS = 7.0;
+        public static final double INTAKE_CORAL_HOLD_VOLTS = 2.0;
+        public static final double HANDOFF_CORAL_VOLTS = 5.0;
+        public static final double HOLD_CORAL_VOLTS = 1.0;
+        public static final double OUTTAKE_CORAL_VOLTS = -4.5;
+        public static final double OUTTAKE_CORAL_FAST_VOLTS = -7.0;
+
+        public static final double INTAKE_ALGAE_VOLTS = 5.5;
+        public static final double HOLD_ALGAE_VOLTS = 2.0;
+        public static final double OUTTAKE_ALGAE_VOLTS = -6.0;
+
+        public static final double CORAL_INTAKE_CURRENT_TRIGGER = 28.0;
+        public static final double CORAL_INTAKE_CURRENT_LIMIT = 40.0;
+        public static final double ALGAE_INTAKE_CURRENT_TRIGGER = 20.0;
+    }
+
     public static final class Grabber2D {
         public static final double armLength = 0.0; //Todo get real value
         public static final double ElevatorminHeight = 0.0; //Todo get real value
@@ -158,6 +194,13 @@ public final class Constants {
     }
 
 
+    public static final class GroundIntake {
+        public static final int PITCH_LEADER_MOTOR_ID = -1;
+        public static final int PITCH_FOLLOWER_MOTOR_ID = -1;
+        public static final int ROLLER_MOTOR_ID = -1;
+        public static final double PITCH_GEAR_RATIO = 1.0; // TODO: Update with the real ground intake gear ratio.
+    }
+    
     public static final class Swerve {
 
         public static final double ROBOT_MASS_KG = 64; //TODO get real value with bumpers and battery

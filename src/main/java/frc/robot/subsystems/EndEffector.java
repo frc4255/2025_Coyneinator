@@ -1,35 +1,33 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.EndEffectorIOInputsAutoLogged;
 
 public class EndEffector extends SubsystemBase {
-    
-    private TalonFX motor;
+    private final EndEffectorIO io;
+    private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
-    private VoltageOut motorRequest;
-
-    public EndEffector() {
-        motor = new TalonFX(6);
-        motorRequest = new VoltageOut(0);
-
-        motor.getConfigurator().apply(
-            new TalonFXConfiguration().OpenLoopRamps.withVoltageOpenLoopRampPeriod(0.25)
-        );
+    public EndEffector(EndEffectorIO io) {
+        this.io = io;
     }
 
     public double getMotorCurrent() {
-        return motor.getStatorCurrent().getValueAsDouble();
+        return inputs.currentAmps;
     }
 
-    public void setDutyCycle(double Voltage) {
-        motor.setControl(motorRequest.withOutput(Voltage));
+    public void setDutyCycle(double volts) {
+        io.setVoltage(volts);
     }
 
     public void stop() {
-        motor.stopMotor();
+        io.stop();
+    }
+
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("EndEffector", inputs);
     }
 }
