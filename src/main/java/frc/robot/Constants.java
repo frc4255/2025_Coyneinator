@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -191,6 +192,17 @@ public final class Constants {
         public static final double floor = 0.0;
         public static final double maxVerticalRobotExtension = 90.389937; //TODO get real value approx whatever I put there (I didn't account for end effector height yet)
         public static final double maxHorizontalRobotExtension = 33.75; //Robot length / 2 + extension limit from frame perimeter.
+    }
+
+
+    public static final class SuperstructureVisualization {
+        private SuperstructureVisualization() {}
+
+        public static final Translation3d PIVOT_MOUNT = new Translation3d(-0.2667, 0.0, 0.3048);
+        public static final Translation3d PIVOT_TO_ELEVATOR = new Translation3d(0.0, 0.0, 0.0);
+        public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.35, 0.0, 0.0);
+        public static final Translation3d PITCH_TO_ROLL = new Translation3d(0.0, 0.0, 0.0);
+        public static final Translation3d ROLL_TO_END_EFFECTOR = new Translation3d(0.20, 0.0, 0.0);
     }
 
 

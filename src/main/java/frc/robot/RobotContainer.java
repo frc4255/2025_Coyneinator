@@ -28,6 +28,7 @@ import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.Camera;
 import frc.robot.superstructure.PieceSensors;
 import frc.robot.superstructure.RobotSupervisor;
+import frc.robot.visualization.SuperstructureVisualizer;
 
 
 /**
@@ -121,6 +122,7 @@ public class RobotContainer {
         private final SubsystemManager manager;
         private final PieceSensors pieceSensors;
         private final RobotSupervisor supervisor;
+        private final SuperstructureVisualizer superstructureVisualizer;
         
         /* auto stuff */
         private SendableChooser<Command> autochooser;
@@ -168,6 +170,7 @@ public class RobotContainer {
 
             pieceSensors = new PieceSensors();
             supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake, s_EndEffector, pieceSensors);
+            superstructureVisualizer = new SuperstructureVisualizer(s_Pivot, s_Elevator, s_DifferentialWrist);
 
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -220,6 +223,10 @@ public class RobotContainer {
         public void updateManager() {
             manager.update();
             supervisor.periodic();
+        }
+
+        public void updateVisualizer() {
+            superstructureVisualizer.update();
         }
         
         private void configureButtonBindings() {

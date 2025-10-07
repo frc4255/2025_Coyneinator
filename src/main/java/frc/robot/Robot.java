@@ -19,13 +19,9 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -97,33 +93,7 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     m_robotContainer.updateManager();
-
-    Logger.recordOutput("zeroed pose", new Pose2d());
-    Logger.recordOutput("ZereodComponentPoses", new Pose3d[]{new Pose3d(), new Pose3d(), new Pose3d(), new Pose3d(), new Pose3d()});
-    Logger.recordOutput(
-      "FinalComponentPoses",
-      new Pose3d[]{
-        new Pose3d(
-          0.333,0,0.220, new Rotation3d(0, Math.sin(Timer.getTimestamp())-1,0.0
-        )
-        ),
-        new Pose3d(
-          -0.266700,0,0.304800, new Rotation3d(0, Math.sin(Timer.getTimestamp())-1,0.0
-        )
-        ),
-        new Pose3d(
-          0.1,0.1,0.1, new Rotation3d(0, Math.sin(Timer.getTimestamp())-1,0.0
-        )
-        ),
-        new Pose3d(
-          0.1,0.1,0.1, new Rotation3d(0, Math.sin(Timer.getTimestamp())-1,0.0
-        )
-        ),
-        new Pose3d(
-          0.1,0.1,0.1, new Rotation3d(0, Math.sin(Timer.getTimestamp())-1,0.0
-        )
-        ),
-      });
+    m_robotContainer.updateVisualizer();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
