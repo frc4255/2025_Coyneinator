@@ -10,8 +10,7 @@ import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 
 public class autoHome extends Command {
 
@@ -21,19 +20,15 @@ public class autoHome extends Command {
 
     private Pivot s_Pivot;
     private Elevator s_Elevator;
-    private WristPitch s_WristPitch;
-    private WristRoll s_WristRoll;
-
+    private DifferentialWrist s_Wrist;
     public autoHome(SubsystemManager manager, Pivot s_Pivot, 
-        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
+        Elevator s_Elevator, DifferentialWrist s_Wrist) {
         this.manager = manager;
 
         this.s_Pivot = s_Pivot;
         this.s_Elevator = s_Elevator;
-        this.s_WristPitch = s_WristPitch;
-        this.s_WristRoll = s_WristRoll;
-        
-        addRequirements(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        this.s_Wrist = s_Wrist;
+        addRequirements(s_Pivot, s_Elevator, s_Wrist);
     }
 
     @Override
@@ -46,7 +41,7 @@ public class autoHome extends Command {
         if (manager.canAutoHome()) {
             s_Pivot.autoHome();
             s_Elevator.autoHome();
-            s_WristPitch.autoHome();
+            s_Wrist.autoHome();
             System.err.println("AutoHoming");
         }
     }

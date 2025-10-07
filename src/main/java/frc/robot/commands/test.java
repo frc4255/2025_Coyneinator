@@ -11,8 +11,7 @@ import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 
 public class test extends Command {
 

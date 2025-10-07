@@ -16,9 +16,6 @@ public final class GamePieceState {
         if (sensors.hasCoralWristSensor()) {
             coralInWrist = sensors.coralDetectedAtWrist();
         }
-        if (sensors.hasAlgaeIntakeSensor()) {
-            algaeInIntake = sensors.algaeDetectedInIntake();
-        }
         if (sensors.hasAlgaeEndEffectorSensor()) {
             algaeInEndEffector = sensors.algaeDetectedAtEndEffector();
         }

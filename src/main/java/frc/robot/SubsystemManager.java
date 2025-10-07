@@ -11,16 +11,14 @@ import frc.robot.superstructure.Constraints;
 import frc.robot.superstructure.ManipulatorProfile;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SubsystemManager {
 
     private final Pivot sPivot;
     private final Elevator sElevator;
-    private final WristPitch sWristPitch;
-    private final WristRoll sWristRoll;
+    private final DifferentialWrist sWrist;
     
     private List<Node> path;
     private int currentIndex;
@@ -43,13 +41,12 @@ public class SubsystemManager {
     private final double[] commandedSetpoints = new double[] {0, 0, 0, 0};
 
     public SubsystemManager(
-            Pivot sPivot, Elevator sElevator, WristPitch sWristPitch, WristRoll sWristRoll
+            Pivot sPivot, Elevator sElevator, DifferentialWrist sWrist
         ) {
 
         this.sPivot = sPivot;
         this.sElevator = sElevator;
-        this.sWristPitch = sWristPitch;
-        this.sWristRoll = sWristRoll;
+        this.sWrist = sWrist;
         
         this.active = false;
         this.currentIndex = 0;
@@ -108,8 +105,8 @@ public class SubsystemManager {
 
         double pivotPosition = sPivot.getPivotPosition();
         double elevatorPosition = sElevator.getElevatorPosition();
-        double wristPitchPosition = sWristPitch.getCurrentPos();
-        double wristRollPosition = sWristRoll.getCurrentPos();
+        double wristPitchPosition = sWrist.getPitchPosition();
+        double wristRollPosition = sWrist.getRollPosition();
 
         double[] measurements = new double[] {pivotPosition, elevatorPosition, wristPitchPosition, wristRollPosition};
 
@@ -149,15 +146,13 @@ public class SubsystemManager {
 
         if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
             reactivation = false;
-            sWristPitch.setActive();
-            sWristRoll.setActive();
+            sWrist.setActive();
             sElevator.setActive();
         }
 
         sPivot.setGoal(pivotGoal);
         sElevator.setGoal(elevatorGoal);
-        sWristPitch.setGoal(wristPitchGoal);
-        sWristRoll.setGoal(wristRollGoal);
+        sWrist.setGoals(wristPitchGoal, wristRollGoal);
 
         if (hasReachedTarget(setpoints, measurements)) {
             lastNode = currentNode;

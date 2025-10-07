@@ -13,11 +13,11 @@ import frc.robot.superstructure.ManipulatorPlan.Step;
 import frc.robot.superstructure.ManipulatorPlan.StepAction;
 import frc.robot.superstructure.ManipulatorPlan.AdvanceCondition;
 import frc.robot.superstructure.ManipulatorProfile;
+import frc.robot.subsystems.DifferentialWrist;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.GroundIntake;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
 
 /**
  * Coordinates high-level intents and the manipulator plan execution.
@@ -38,6 +38,7 @@ public final class RobotSupervisor {
 
     private final SubsystemManager manager;
     private final EndEffector endEffector;
+    private final GroundIntake groundIntake;
     private final GamePieceState pieceState = new GamePieceState();
     private final PieceSensors sensors;
     private final ManipulatorContext context;
@@ -57,15 +58,16 @@ public final class RobotSupervisor {
             SubsystemManager manager,
             Pivot pivot,
             Elevator elevator,
-            WristPitch wristPitch,
-            WristRoll wristRoll,
+            DifferentialWrist wrist,
+            GroundIntake groundIntake,
             EndEffector endEffector,
             PieceSensors sensors
     ) {
         this.manager = Objects.requireNonNull(manager);
         this.endEffector = Objects.requireNonNull(endEffector);
+        this.groundIntake = Objects.requireNonNull(groundIntake);
         this.sensors = Objects.requireNonNull(sensors);
-        this.context = new ManipulatorContext(manager, pivot, elevator, wristPitch, wristRoll, endEffector, pieceState, sensors);
+        this.context = new ManipulatorContext(manager, pivot, elevator, wrist, groundIntake, endEffector, pieceState, sensors);
     }
 
     public void periodic() {

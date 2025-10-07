@@ -112,8 +112,13 @@ public final class Constants {
         public static final double RollMaxLimit = 0; //TODO tune this for RAD
         public static final double RollMinLimit = 0; //TODO tune this for RAD
 
-        public static final int PITCH_MOTOR_ID = 4;
-        public static final int ROLL_MOTOR_ID = 5;
+        public static final int DIFFERENTIAL_LEFT_MOTOR_ID = 4;
+        public static final int DIFFERENTIAL_RIGHT_MOTOR_ID = 5;
+        public static final int DIFFERENTIAL_LEFT_ENCODER_ID = 14; // TODO configure actual ID
+        public static final int DIFFERENTIAL_RIGHT_ENCODER_ID = 15; // TODO configure actual ID
+        public static final double DIFFERENTIAL_MOTOR_TO_DIFF_GEAR_RATIO = 1.0; // TODO update: motor rotations per differential bevel rotation
+        public static final double DIFFERENTIAL_PITCH_GEAR_RATIO = 51.0; // TODO update: differential rotations per wrist pitch rotation
+        public static final double DIFFERENTIAL_ROLL_GEAR_RATIO = 60.0; // TODO update: differential rotations per wrist roll rotation
 
         public static final int END_EFFECTOR_MOTOR_ID = 6;
     }
@@ -189,6 +194,13 @@ public final class Constants {
     }
 
 
+    public static final class GroundIntake {
+        public static final int PITCH_LEADER_MOTOR_ID = -1;
+        public static final int PITCH_FOLLOWER_MOTOR_ID = -1;
+        public static final int ROLLER_MOTOR_ID = -1;
+        public static final double PITCH_GEAR_RATIO = 1.0; // TODO: Update with the real ground intake gear ratio.
+    }
+    
     public static final class Swerve {
 
         public static final double ROBOT_MASS_KG = 64; //TODO get real value with bumpers and battery

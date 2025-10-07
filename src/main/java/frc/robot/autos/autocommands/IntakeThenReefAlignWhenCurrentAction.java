@@ -6,8 +6,7 @@ import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 
 public class IntakeThenReefAlignWhenCurrentAction extends Command {
 
@@ -16,21 +15,19 @@ public class IntakeThenReefAlignWhenCurrentAction extends Command {
 
     private Pivot s_Pivot;
     private Elevator s_Elevator;
-    private WristPitch s_WristPitch;
-    private WristRoll s_WristRoll;
-    
-    public IntakeThenReefAlignWhenCurrentAction(SubsystemManager manager, EndEffector endEffector, Pivot s_Pivot, 
-        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
+    private DifferentialWrist s_Wrist;
+
+    public IntakeThenReefAlignWhenCurrentAction(SubsystemManager manager, EndEffector endEffector, Pivot s_Pivot,
+        Elevator s_Elevator, DifferentialWrist s_Wrist) {
 
         this.manager = manager;
         this.endEffector = endEffector;
 
         this.s_Pivot = s_Pivot;
         this.s_Elevator = s_Elevator;
-        this.s_WristPitch = s_WristPitch;
-        this.s_WristRoll = s_WristRoll;
+        this.s_Wrist = s_Wrist;
 
-        addRequirements(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        addRequirements(s_Pivot, s_Elevator, s_Wrist);
     }
 
     @Override

@@ -11,13 +11,11 @@ import frc.robot.Constants;
 public class PieceSensors implements AutoCloseable {
     private final Optional<DigitalInput> coralIntake;
     private final Optional<DigitalInput> coralWrist;
-    private final Optional<DigitalInput> algaeIntake;
     private final Optional<DigitalInput> algaeEndEffector;
 
     public PieceSensors() {
         coralIntake = createInput(Constants.PieceSensors.CORAL_INTAKE_CHANNEL);
         coralWrist = createInput(Constants.PieceSensors.CORAL_WRIST_CHANNEL);
-        algaeIntake = createInput(Constants.PieceSensors.ALGAE_INTAKE_CHANNEL);
         algaeEndEffector = createInput(Constants.PieceSensors.ALGAE_END_EFFECTOR_CHANNEL);
     }
 
@@ -36,10 +34,6 @@ public class PieceSensors implements AutoCloseable {
         return coralWrist.isPresent();
     }
 
-    public boolean hasAlgaeIntakeSensor() {
-        return algaeIntake.isPresent();
-    }
-
     public boolean hasAlgaeEndEffectorSensor() {
         return algaeEndEffector.isPresent();
     }
@@ -50,10 +44,6 @@ public class PieceSensors implements AutoCloseable {
 
     public boolean coralDetectedAtWrist() {
         return coralWrist.map(input -> read(input, Constants.PieceSensors.CORAL_WRIST_INVERTED)).orElse(false);
-    }
-
-    public boolean algaeDetectedInIntake() {
-        return algaeIntake.map(input -> read(input, Constants.PieceSensors.ALGAE_INTAKE_INVERTED)).orElse(false);
     }
 
     public boolean algaeDetectedAtEndEffector() {
@@ -69,7 +59,6 @@ public class PieceSensors implements AutoCloseable {
     public void close() {
         coralIntake.ifPresent(DigitalInput::close);
         coralWrist.ifPresent(DigitalInput::close);
-        algaeIntake.ifPresent(DigitalInput::close);
         algaeEndEffector.ifPresent(DigitalInput::close);
     }
 }

@@ -277,9 +277,7 @@ public final class PlanLibrary {
                         Step.builder("Algae Ground Pickup")
                                 .profile(ManipulatorProfile.TRANSIT)
                                 .onEnter(ctx -> ctx.endEffector().setDutyCycle(Constants.EndEffector.INTAKE_ALGAE_VOLTS))
-                                .advanceCondition(ctx -> ctx.sensors().hasAlgaeIntakeSensor()
-                                        ? ctx.sensors().algaeDetectedInIntake()
-                                        : ctx.endEffector().getMotorCurrent() > Constants.EndEffector.ALGAE_INTAKE_CURRENT_TRIGGER)
+                                .advanceCondition(ctx -> ctx.endEffector().getMotorCurrent() > Constants.EndEffector.ALGAE_INTAKE_CURRENT_TRIGGER)
                                 .onExit(ctx -> {
                                     ctx.endEffector().setDutyCycle(Constants.EndEffector.HOLD_ALGAE_VOLTS);
                                     ctx.pieceState().setAlgaeInIntake(true);

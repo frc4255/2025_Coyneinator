@@ -112,8 +112,8 @@ public class RobotContainer {
         private final Swerve s_Swerve;
         private final Pivot s_Pivot;
         private final Elevator s_Elevator;
-        private final WristPitch s_WristPitch;
-        private final WristRoll s_WristRoll;
+        private final DifferentialWrist s_DifferentialWrist;
+        private final GroundIntake s_GroundIntake;
         private final EndEffector s_EndEffector;
         private final Climber s_Climber;
         //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
@@ -135,8 +135,8 @@ public class RobotContainer {
             SwerveIO swerveIO;
             PivotIO pivotIO;
             ElevatorIO elevatorIO;
-            WristPitchIO wristPitchIO;
-            WristRollIO wristRollIO;
+            DifferentialWristIO differentialWristIO;
+            GroundIntakeIO groundIntakeIO;
             EndEffectorIO endEffectorIO;
             ClimberIO climberIO;
 
@@ -144,16 +144,16 @@ public class RobotContainer {
                 swerveIO = new SwerveIOReal();
                 pivotIO = new PivotIOReal();
                 elevatorIO = new ElevatorIOReal();
-                wristPitchIO = new WristPitchIOReal();
-                wristRollIO = new WristRollIOReal();
+                differentialWristIO = new DifferentialWristIOReal();
+                groundIntakeIO = new GroundIntakeIOReal();
                 endEffectorIO = new EndEffectorIOReal();
                 climberIO = new ClimberIOReal();
             } else {
                 swerveIO = new SwerveIOSim();
                 pivotIO = new PivotIOSim();
                 elevatorIO = new ElevatorIOSim();
-                wristPitchIO = new WristPitchIOSim();
-                wristRollIO = new WristRollIOSim();
+                differentialWristIO = new DifferentialWristIOSim();
+                groundIntakeIO = new GroundIntakeIOSim();
                 endEffectorIO = new EndEffectorIOSim();
                 climberIO = new ClimberIOSim();
             }
@@ -161,24 +161,24 @@ public class RobotContainer {
             s_Swerve = new Swerve(swerveIO, s_VisionSubystem);
             s_Pivot = new Pivot(pivotIO);
             s_Elevator = new Elevator(elevatorIO, s_Pivot::getPivotPosition);
-            s_WristPitch = new WristPitch(wristPitchIO);
-            s_WristRoll = new WristRoll(wristRollIO);
+            s_DifferentialWrist = new DifferentialWrist(differentialWristIO);
+            s_GroundIntake = new GroundIntake(groundIntakeIO);
             s_EndEffector = new EndEffector(endEffectorIO);
             s_Climber = new Climber(climberIO);
 
-            manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+            manager = new SubsystemManager(s_Pivot, s_Elevator, s_DifferentialWrist);
 
             // Mechanism2d visualizations via AdvantageKit
             mechVisualizer = new MechanismVisualizer(
                 s_Pivot::getPivotPosition,
                 s_Elevator::getElevatorPosition,
-                s_WristPitch::getCurrentPos,
-                s_WristRoll::getCurrentPos,
+                s_DifferentialWrist::getPitchPosition,
+                s_DifferentialWrist::getRollPosition,
                 s_Swerve::getModuleStates,
                 s_Swerve::getHeading
             );
             pieceSensors = new PieceSensors();
-            supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, pieceSensors);
+            supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake, s_EndEffector, pieceSensors);
 
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -207,7 +207,7 @@ public class RobotContainer {
         autoChooser = new AutoChooser();
 
         // Add options to the chooser
-        autoChooser.addCmd("Example Routine", () -> new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));
+        autoChooser.addCmd("Example Routine", () -> new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_DifferentialWrist, s_EndEffector, manager, autoFactory));
 
         // Put the auto chooser on the dashboard
         SmartDashboard.putData(autoChooser);
@@ -256,12 +256,11 @@ public class RobotContainer {
             extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
             extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
 
-            zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
-            manualWristRoll.whileTrue(new InstantCommand(() -> s_WristRoll.controlManually(operatorHorizontalAxis)));
+            zeroWristRoll.onTrue(new InstantCommand(s_DifferentialWrist::setHomed));
         }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
+        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_DifferentialWrist, s_EndEffector, manager));
         SmartDashboard.putData(autochooser);
     }
     

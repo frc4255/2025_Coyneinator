@@ -1,11 +1,11 @@
 package frc.robot.superstructure;
 
 import frc.robot.SubsystemManager;
+import frc.robot.subsystems.DifferentialWrist;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.GroundIntake;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
 
 /**
  * Context passed to plan steps for callbacks and predicates.
@@ -14,8 +14,8 @@ public final class ManipulatorContext {
     private final SubsystemManager manager;
     private final Pivot pivot;
     private final Elevator elevator;
-    private final WristPitch wristPitch;
-    private final WristRoll wristRoll;
+    private final DifferentialWrist wrist;
+    private final GroundIntake groundIntake;
     private final EndEffector endEffector;
     private final GamePieceState pieceState;
     private final PieceSensors sensors;
@@ -24,8 +24,8 @@ public final class ManipulatorContext {
             SubsystemManager manager,
             Pivot pivot,
             Elevator elevator,
-            WristPitch wristPitch,
-            WristRoll wristRoll,
+            DifferentialWrist wrist,
+            GroundIntake groundIntake,
             EndEffector endEffector,
             GamePieceState pieceState,
             PieceSensors sensors
@@ -33,8 +33,8 @@ public final class ManipulatorContext {
         this.manager = manager;
         this.pivot = pivot;
         this.elevator = elevator;
-        this.wristPitch = wristPitch;
-        this.wristRoll = wristRoll;
+        this.wrist = wrist;
+        this.groundIntake = groundIntake;
         this.endEffector = endEffector;
         this.pieceState = pieceState;
         this.sensors = sensors;
@@ -52,12 +52,12 @@ public final class ManipulatorContext {
         return elevator;
     }
 
-    public WristPitch wristPitch() {
-        return wristPitch;
+    public DifferentialWrist wrist() {
+        return wrist;
     }
 
-    public WristRoll wristRoll() {
-        return wristRoll;
+    public GroundIntake groundIntake() {
+        return groundIntake;
     }
 
     public EndEffector endEffector() {

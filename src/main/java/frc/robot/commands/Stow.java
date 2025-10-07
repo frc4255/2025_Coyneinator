@@ -10,8 +10,7 @@ import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 
 public class Stow extends Command {
 
@@ -21,21 +20,17 @@ public class Stow extends Command {
 
     private Pivot s_Pivot;
     private Elevator s_Elevator;
-    private WristPitch s_WristPitch;
-    private WristRoll s_WristRoll;
-
+    private DifferentialWrist s_Wrist;
     private boolean stopHoming = false;
 
     public Stow(SubsystemManager manager, Pivot s_Pivot, 
-        Elevator s_Elevator, WristPitch s_WristPitch, WristRoll s_WristRoll) {
+        Elevator s_Elevator, DifferentialWrist s_Wrist) {
         this.manager = manager;
 
         this.s_Pivot = s_Pivot;
         this.s_Elevator = s_Elevator;
-        this.s_WristPitch = s_WristPitch;
-        this.s_WristRoll = s_WristRoll;
-        
-        addRequirements(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
+        this.s_Wrist = s_Wrist;
+        addRequirements(s_Pivot, s_Elevator, s_Wrist);
     }
 
     @Override
@@ -44,7 +39,7 @@ public class Stow extends Command {
 
         s_Elevator.setAutoHome(false);
         s_Pivot.setAutoHome(false);
-        s_WristPitch.setAutoHome(false);
+        s_Wrist.setAutoHome(false);
 
     }
 
@@ -57,10 +52,10 @@ public class Stow extends Command {
             System.err.println("AutoHoming");
             s_Pivot.autoHome();
             s_Elevator.autoHome();
-            s_WristPitch.autoHome();
+            s_Wrist.autoHome();
         }
 
-        if (s_Elevator.isHomed() && s_Pivot.isHomed() && s_WristPitch.isHomed()) {
+        if (s_Elevator.isHomed() && s_Pivot.isHomed() && s_Wrist.isHomed()) {
             stopHoming = true;
         } */
     }

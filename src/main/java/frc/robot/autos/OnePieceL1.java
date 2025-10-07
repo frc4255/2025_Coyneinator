@@ -4,8 +4,7 @@ import frc.robot.subsystems.AlignTool;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.WristPitch;
-import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.DifferentialWrist;
 import frc.robot.subsystems.EndEffector;
 
 import java.io.IOException;
@@ -32,13 +31,18 @@ import frc.robot.autos.autocommands.SwerveFollower;
 import frc.robot.commands.CoralHumanPlayerIntake;
 import frc.robot.commands.ExtakeCoral;
 import frc.robot.commands.L1Assist;
-import frc.robot.commands.L4Assist;
 import frc.robot.commands.Stow;
 
 public class OnePieceL1 extends SequentialCommandGroup{
-    public OnePieceL1(Swerve s_Swerve, AlignTool alignTool,
-        Pivot s_Pivot, Elevator s_Elevator, WristPitch s_WristPitch, 
-        WristRoll s_WristRoll, EndEffector s_EndEffector, SubsystemManager manager) {
+    public OnePieceL1(
+            Swerve s_Swerve,
+            AlignTool alignTool,
+            Pivot s_Pivot,
+            Elevator s_Elevator,
+            DifferentialWrist s_Wrist,
+            EndEffector s_EndEffector,
+            SubsystemManager manager
+    ) {
         
         Optional<Trajectory<SwerveSample>> optionalTrajectory = Choreo.loadTrajectory("test");
         Trajectory<SwerveSample> myTrajectory = optionalTrajectory.get();
@@ -52,9 +56,9 @@ public class OnePieceL1 extends SequentialCommandGroup{
                 //s_Swerve.followPathCommand(path0),
                 new SequentialCommandGroup(
                     new WaitCommand(2.4), //TODO TUNE THIS
-                    new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll).withTimeout(3),
+                    new L1Assist(manager, s_Pivot, s_Elevator, s_Wrist).withTimeout(3),
                     new ExtakeCoral(s_EndEffector).withTimeout(0.5), //TODO TUNE THIS
-                    new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)                    
+                    new Stow(manager, s_Pivot, s_Elevator, s_Wrist)
                 )
             )
 
