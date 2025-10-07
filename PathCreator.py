@@ -1,12 +1,12 @@
 import json
 from collections import deque
 
-# Number of controlled subsystems (e.g., 4)
-NUM_SUBSYSTEMS = 4
+# Ordered list of subsystem keys that correspond to entries in the generated graph JSON.
+SUBSYSTEM_KEYS = ["pivot", "elevator", "wristPitch", "wristRoll"]
 
-# Helper function to create a placeholder setpoints array.
+# Helper function to create a placeholder setpoints dictionary.
 def placeholder_setpoints():
-    return [0.0] * NUM_SUBSYSTEMS
+    return {key: 0.0 for key in SUBSYSTEM_KEYS}
 
 # Define nodes with placeholder setpoints using your earlier data.
 nodes = [
@@ -124,7 +124,7 @@ edges = [
     },
     {
         "start": "Stow",
-        "end": "Coral HP Pickup "
+        "end": "Coral HP Pickup"
     },
     {
         "start": "Stow",
@@ -356,13 +356,14 @@ shortest_paths = compute_all_pairs_shortest_paths()
 
 # Combine nodes, edges, and precomputed shortest paths into one structure.
 graph_data = {
+    "subsystems": SUBSYSTEM_KEYS,
     "nodes": nodes,
     "edges": edges,
     "shortestPaths": shortest_paths
 }
 
 # Write the JSON file.
-with open("./src/main/deploy/graph_data.json", "w") as f:
+with open("./src/main/resources/frc/lib/util/graph/graph_data.json", "w") as f:
     json.dump(graph_data, f, indent=2)
 
 print("graph_data.json generated successfully with setpoints and precomputed shortest paths!")

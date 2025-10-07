@@ -3,13 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.graph.GraphParser;
-import frc.lib.util.graph.GraphParser.GraphData;
-import frc.lib.util.graph.Node;
 import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.WristPitch;
 import frc.robot.subsystems.WristRoll;
 
@@ -40,7 +36,7 @@ public class Stow extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Stow"));
+        manager.requestNode("Stow");
 
         /*
         s_Elevator.setAutoHome(false);

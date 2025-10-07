@@ -25,63 +25,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-    public static class LEDs {
-
-        public static HashMap<String, int[]> colorDatabase = new HashMap<String, int[]>();
-
-        static {
-            colorDatabase.put("Red", new int[] {255, 0, 0});
-            colorDatabase.put("Green", new int[] {0, 255, 0});
-            colorDatabase.put("Blue", new int[] {0, 0, 255});
-            colorDatabase.put("Yellow", new int[] {255, 255, 0});
-            colorDatabase.put("Purple", new int[] {255, 0, 255});
-            colorDatabase.put("Cyan", new int[] {0, 255, 255});
-            colorDatabase.put("White", new int[] {255, 255, 255});
-            colorDatabase.put("noColor", new int[] {0, 0, 0});
-        }
-        
-        public static enum LEDStates {
-            OFF(10, colorDatabase.get("noColor"));
-
-
-            
-            private final int[] color;
-            private final int priority;
-    
-            LEDStates(int priority, int[] color) {
-                            this.priority = priority;
-                            this.color = color;
-            }
-    
-            public int getPriority() {
-                return priority;
-            }
-            public int[] getColor() {
-                return color;
-            }
-        }
+    public static final class OperatorConstants {
+        public static final int AUTO_ALIGN_JOYSTICK_PORT = 1;
     }
 
-    public static final Map<Character, Pose2d> BLUE_REEF_SCORINGS_POSITIONS = new HashMap<>();
-
-    static {
-        BLUE_REEF_SCORINGS_POSITIONS.put('A', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('B', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('C', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('D', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('E', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('F', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('G', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('H', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('I', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('J', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('K', new Pose2d());
-        BLUE_REEF_SCORINGS_POSITIONS.put('L', new Pose2d());
-    }
-
-    public final class Climber {
-        public static final int MOTOR_ID = 7; //TODO change this maybe
-    }
     public final class Wrist {
         public static final double kS = 0.0; //TODO tune this
         public static final double kG = 0.0; //TODO tune this 
@@ -157,6 +104,21 @@ public final class Constants {
         public static final double maxHorizontalRobotExtension = 33.75; //Robot length / 2 + extension limit from frame perimeter.
     }
 
+    public static final class Climber {
+        public static final int MOTOR_ID = 0; // TODO configure real motor ID
+        public static final double OPEN_LOOP_RAMP_SECONDS = 0.25;
+        public static final double CURRENT_LIMIT_AMPS = 40.0;
+    }
+
+    public static final class AutoConstants {
+        public static final double kMaxSpeedMetersPerSecond = 3.0;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
+        public static final double kPXController = 1.0;
+        public static final double kPYController = 1.0;
+        public static final double kPThetaController = 1.0;
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+            new TrapezoidProfile.Constraints(Math.PI, Math.PI);
+    }
 
     public static final class Swerve {
 

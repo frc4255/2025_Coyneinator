@@ -1,7 +1,6 @@
 package frc.robot.autos.autocommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.graph.GraphParser;
 import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
@@ -35,7 +34,7 @@ public class IntakeThenReefAlignWhenCurrentAction extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Coral Ground Pickup"));
+        manager.requestNode("Coral Ground Pickup");
         endEffector.setDutyCycle(-8);
     }
 
@@ -43,7 +42,7 @@ public class IntakeThenReefAlignWhenCurrentAction extends Command {
     public void execute() {
         if (endEffector.getMotorCurrent() > 19) {
             endEffector.setDutyCycle(-0.5);
-            manager.requestNode(GraphParser.getNodeByName("Reef Align"));
+            manager.requestNode("Reef Align");
         }
     }
 

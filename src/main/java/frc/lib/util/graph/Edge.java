@@ -1,19 +1,21 @@
 package frc.lib.util.graph;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
+import java.util.Optional;
 
 public class Edge {
-    private String start;
-    private String end;
+    private final String start;
+    private final String end;
+    private final String description;
 
-    public Edge() {
-
+    public Edge(String start, String end) {
+        this(start, end, "");
     }
-    @JsonCreator
-    public Edge(@JsonProperty("start") String start, @JsonProperty("end") String end) {
-        this.start = start;
-        this.end = end;
+
+    public Edge(String start, String end, String description) {
+        this.start = Objects.requireNonNull(start, "start");
+        this.end = Objects.requireNonNull(end, "end");
+        this.description = description == null ? "" : description;
     }
 
     public String getStart() {
@@ -22,5 +24,9 @@ public class Edge {
 
     public String getEnd() {
         return end;
+    }
+
+    public Optional<String> getDescription() {
+        return description.isEmpty() ? Optional.empty() : Optional.of(description);
     }
 }

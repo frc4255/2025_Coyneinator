@@ -1,74 +1,55 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class WristPitch extends SubsystemBase {
-    
-    private TalonFX m_Motor1 = new TalonFX(Constants.Wrist.PITCH_MOTOR_ID);
 
-    private VoltageOut m_Motor0Request = new VoltageOut(0.0);
-    private VoltageOut m_Motor1Request = new VoltageOut(0.0);
+    private static final double HOMING_VOLTAGE = 0.04 * 12.0;
+    private static final double HOMING_VELOCITY_THRESHOLD_RAD_PER_SEC = 0.05;
 
-    //TODO: Custom Feedforward Controller
+    private final WristPitchIO io;
+    private final WristPitchIO.WristPitchIOInputs inputs = new WristPitchIO.WristPitchIOInputs();
 
-    private ProfiledPIDController m_PIDController;
-    private ArmFeedforward m_Feedforward;
+    private final ProfiledPIDController m_PIDController;
+    private final ArmFeedforward feedforward;
+
     private boolean isHomed = false;
-
     private boolean isPosePossible = true;
-
     private boolean active = false;
-    private DataLog log;
 
-    public WristPitch() {
+    public WristPitch(WristPitchIO io) {
+        this.io = io;
         m_PIDController = new ProfiledPIDController(
-            20,
-            0, 
-            0, 
+            Constants.Wrist.Pitch_kP,
+            0,
+            0,
             new TrapezoidProfile.Constraints(
+                8,
                 8
-                , //TODO tune this
-                8 // TODO tune this
             )
         );
-
-        m_Feedforward = new ArmFeedforward(0.05, 0.0, 0.8);
-
-        m_Motor1.setNeutralMode(NeutralModeValue.Brake);
-
-        m_Motor1.setPosition(0);
-        setGoal(0);
-
         m_PIDController.setTolerance(0.3);
-    }
 
-    protected double getMeasurement() {
-        return getCurrentPos();
+        feedforward = new ArmFeedforward(
+            Constants.Wrist.kS,
+            Constants.Wrist.kG,
+            Constants.Wrist.kV
+        );
     }
 
     public void setActive() {
         active = true;
+    }
+
+    public void setActive(boolean request) {
+        active = request;
     }
 
     public void setAutoHome(boolean request) {
@@ -76,52 +57,39 @@ public class WristPitch extends SubsystemBase {
     }
 
     public void autoHome() {
-        m_Motor1.set(0.04);
-        System.err.println("Pitch Motor Current: " + getMotorCurrent());
-        System.err.println("Pitch Velocty: " + m_Motor1.getVelocity().getValueAsDouble());
+        io.updateInputs(inputs);
+        io.setVoltage(HOMING_VOLTAGE);
 
-        Logger.recordOutput("Pitch Velocty", m_Motor1.getVelocity().getValueAsDouble());
-        Logger.recordOutput("Pitch Motor Current", getMotorCurrent());
-        
-        if (m_Motor1.getVelocity().getValueAsDouble() <= 0.05) {//TODO this is def wrong.
-            m_Motor1.setPosition(0);
+        Logger.recordOutput("WristPitch/HomingVelocity", inputs.velocityRadsPerSec);
+        Logger.recordOutput("WristPitch/HomingCurrent", inputs.statorCurrentAmps);
 
-            m_Motor1.stopMotor();
-
+        if (Math.abs(inputs.velocityRadsPerSec) <= HOMING_VELOCITY_THRESHOLD_RAD_PER_SEC) {
+            io.resetPosition(0.0);
+            io.stop();
             setAutoHome(true);
+        }
+    }
 
-            System.err.println("Pitch homed");
-            }
+    public double getCurrentPos() {
+        return inputs.positionRads;
+    }
+
+    public void setHomed() {
+        io.resetPosition(0.0);
+        isHomed = true;
     }
 
     public boolean isHomed() {
         return isHomed;
     }
+
     public double getMotorCurrent() {
-        return m_Motor1.getStatorCurrent().getValueAsDouble();
-    }
-
-    protected void useOutput(double output, TrapezoidProfile.State setpoint) {
-    
-        double finalOut = output + m_Feedforward.calculate(setpoint.position, setpoint.velocity);
-        
-        SmartDashboard.putNumber("Wrist P setpoint velocity", setpoint.velocity);
-        SmartDashboard.putNumber("Wrist P Setpoint position", setpoint.position);
-
-        m_Motor1.setControl(m_Motor1Request.withOutput(finalOut));
-
-    }
-
-    public double getCurrentPos() {
-        return (m_Motor1.getPosition().getValueAsDouble()/51)*2*Math.PI; //TODO: Gear Ratio
-    }
-
-    public void setHomed() {
-        m_Motor1.setPosition(0.0);
+        return inputs.statorCurrentAmps;
     }
 
     public void setGoal(double pos) {
        m_PIDController.setGoal(pos);
+       setActive(true);
     }
 
     public boolean isPivotPosePossible() {
@@ -129,39 +97,52 @@ public class WristPitch extends SubsystemBase {
     }
 
     public void stopMotors() {
-        m_Motor1.stopMotor();
+        io.stop();
     }
 
     public boolean atGoal() {
-        boolean x = (Math.abs(m_PIDController.getPositionError()) < 0.05) && (m_PIDController.getSetpoint().position == m_PIDController.getGoal().position);
-        System.out.println(x+"Pitch");
-        return x;
+        boolean atGoal = Math.abs(m_PIDController.getPositionError()) < 0.05
+            && m_PIDController.getSetpoint().position == m_PIDController.getGoal().position;
+        Logger.recordOutput("WristPitch/AtGoal", atGoal);
+        return atGoal;
     }
 
     @Override
     public void periodic() {
         super.periodic();
 
+        io.updateInputs(inputs);
+
         if (active) {
-            double currentPosition = getMeasurement(); 
-            double pidOutput = m_PIDController.calculate(currentPosition); 
+            double currentPosition = getCurrentPos();
+            double pidOutput = m_PIDController.calculate(currentPosition);
 
-            useOutput(pidOutput, m_PIDController.getSetpoint());
-        } 
+            double finalOut = pidOutput + feedforward.calculate(
+                m_PIDController.getSetpoint().position,
+                m_PIDController.getSetpoint().velocity
+            );
+
+            io.setVoltage(finalOut);
+        }
+
+        if (inputs.positionRads > Constants.Wrist.PitchMaxLimit ||
+            inputs.positionRads < Constants.Wrist.PitchMinLimit) {
+            isPosePossible = false;
+        } else {
+            isPosePossible = true;
+        }
+
         SmartDashboard.putNumber("Wrist Error", m_PIDController.getVelocityError());
+        SmartDashboard.putNumber("Wrist Pitch", inputs.positionRads);
+        SmartDashboard.putNumber("Wrist velocity", inputs.velocityRadsPerSec);
+        SmartDashboard.putNumber("Wrist Acceleration", inputs.accelerationRadsPerSecSq);
+        SmartDashboard.putNumber("Wrist Motors Applied Voltage", inputs.appliedVolts);
 
-        SmartDashboard.putNumber("Wrist Pitch", getCurrentPos());
-        SmartDashboard.putNumber("Wrist velocity", ((m_Motor1.getVelocity().getValueAsDouble())*2*Math.PI)/51);
-        SmartDashboard.putNumber("Wrist Acceleration", ((m_Motor1.getAcceleration().getValueAsDouble()/51)*2*Math.PI));
-        SmartDashboard.putNumber("Wrist Motors Applied Voltage", m_Motor1.getMotorVoltage().getValueAsDouble());
-
-        Logger.recordOutput("Wrist Error", m_PIDController.getVelocityError());
-
-        Logger.recordOutput("Wrist Pitch", getCurrentPos());
-        Logger.recordOutput("Wrist velocity", ((m_Motor1.getVelocity().getValueAsDouble())*2*Math.PI)/51);
-        Logger.recordOutput("Wrist Acceleration", ((m_Motor1.getAcceleration().getValueAsDouble()/51)*2*Math.PI));
-        Logger.recordOutput("Wrist Motors Applied Voltage", m_Motor1.getMotorVoltage().getValueAsDouble());
-
-
+        Logger.recordOutput("WristPitch/Error", m_PIDController.getVelocityError());
+        Logger.recordOutput("WristPitch/Position", inputs.positionRads);
+        Logger.recordOutput("WristPitch/Velocity", inputs.velocityRadsPerSec);
+        Logger.recordOutput("WristPitch/Acceleration", inputs.accelerationRadsPerSecSq);
+        Logger.recordOutput("WristPitch/AppliedVolts", inputs.appliedVolts);
+        Logger.recordOutput("WristPitch/StatorCurrent", inputs.statorCurrentAmps);
     }
 }

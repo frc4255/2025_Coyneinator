@@ -15,9 +15,10 @@ import frc.robot.FieldLayout;
 import frc.robot.StateManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import org.littletonrobotics.junction.Logger;
 
 public class AlignTool extends SubsystemBase{
-    
+
     private Joystick hexaTroller;
 
     public static Pose2d currentRobotPoseSelection; // What pose the Spotter has chosen for the robot to go to
@@ -34,7 +35,7 @@ public class AlignTool extends SubsystemBase{
         I,
         J,
         K,
-        L,        
+        L,
     };
 
     private ScoringPosition chosen = null;
@@ -60,7 +61,7 @@ public class AlignTool extends SubsystemBase{
         blueAllianceTags.put(6, FieldLayout.AprilTags.APRIL_TAG_POSE.get(19).pose.toPose2d());
 
         //flipped in accordance with unit circle so that operator doesn't crash out while trying to figure out what to click.
-        redAllianceTags.put(1, FieldLayout.AprilTags.APRIL_TAG_POSE.get(7).pose.toPose2d()); 
+        redAllianceTags.put(1, FieldLayout.AprilTags.APRIL_TAG_POSE.get(7).pose.toPose2d());
         redAllianceTags.put(2, FieldLayout.AprilTags.APRIL_TAG_POSE.get(8).pose.toPose2d());
         redAllianceTags.put(3, FieldLayout.AprilTags.APRIL_TAG_POSE.get(9).pose.toPose2d());
         redAllianceTags.put(4, FieldLayout.AprilTags.APRIL_TAG_POSE.get(10).pose.toPose2d());
@@ -109,7 +110,7 @@ public class AlignTool extends SubsystemBase{
         }
 
         return selectedBranch.get(requested);
-        
+
     }
 
     public Pose2d chosenAprilTag(ScoringPosition wanted) {
@@ -244,7 +245,7 @@ public class AlignTool extends SubsystemBase{
                 break;
 
 
-        }   
+        }
 
         return chosenOffset;
     }
@@ -331,8 +332,8 @@ public class AlignTool extends SubsystemBase{
 
         int i = SelectedBranch(requestedBranch);
 
-        Pose2d calculatedPosition = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(), 
-                                                       chosenAprilTag(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(), 
+        Pose2d calculatedPosition = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(),
+                                                       chosenAprilTag(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(),
                                                        robotPoseOffset(selectPosition(i)).getRotation());
 
 
@@ -345,14 +346,14 @@ public class AlignTool extends SubsystemBase{
         for (int i = 1; i <= 12; i++) {
             if (isButtonPressed(i) && StateManager.getCurrentState() == StateManager.RobotStateMachine.Coral) {
 
-                currentRobotPoseSelection = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + offset(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(), 
-                                                       chosenAprilTag(selectPosition(i)).getY() + offset(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(), 
+                currentRobotPoseSelection = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + offset(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(),
+                                                       chosenAprilTag(selectPosition(i)).getY() + offset(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(),
                                                        robotPoseOffset(selectPosition(i)).getRotation());
 
             } else if (isButtonPressed(i) && StateManager.getCurrentState() == StateManager.RobotStateMachine.Algae) {
 
-                currentRobotPoseSelection = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(), 
-                                                       chosenAprilTag(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(), 
+                currentRobotPoseSelection = new Pose2d(chosenAprilTag(selectPosition(i)).getX() + robotPoseOffset(selectPosition(i)).getX(),
+                                                       chosenAprilTag(selectPosition(i)).getY() + robotPoseOffset(selectPosition(i)).getY(),
                                                        robotPoseOffset(selectPosition(i)).getRotation());
             }
         }
@@ -362,6 +363,16 @@ public class AlignTool extends SubsystemBase{
             if (isButtonPressed(i)) {
                 wantedScoringLevel = getWantedScoringLevel(i);
             }
+        }
+
+        Logger.recordOutput("AlignTool/HasSelectedPose", currentRobotPoseSelection != null);
+        if (currentRobotPoseSelection != null) {
+            Logger.recordOutput("AlignTool/SelectedPose", currentRobotPoseSelection);
+        }
+
+        Logger.recordOutput("AlignTool/HasScoringLevel", wantedScoringLevel != null);
+        if (wantedScoringLevel != null) {
+            Logger.recordOutput("AlignTool/WantedScoringLevel", wantedScoringLevel);
         }
     }
 

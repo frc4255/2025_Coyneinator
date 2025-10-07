@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.graph.GraphParser;
 import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
@@ -35,7 +34,7 @@ public class AlgaeL3Pickup extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("L3 Algae Pickup"));
+        manager.requestNode("L3 Algae Pickup");
         endEffector.setDutyCycle(10);
 
 

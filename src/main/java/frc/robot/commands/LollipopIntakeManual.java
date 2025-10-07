@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.graph.GraphParser;
 import frc.robot.SubsystemManager;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
@@ -35,7 +34,7 @@ public class LollipopIntakeManual extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Algae Ground Pickup"));
+        manager.requestNode("Algae Ground Pickup");
         endEffector.setDutyCycle(12);
 
 

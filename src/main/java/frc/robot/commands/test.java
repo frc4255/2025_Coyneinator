@@ -4,8 +4,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.graph.GraphParser;
-import frc.lib.util.graph.GraphParser.GraphData;
 import frc.robot.SubsystemManager;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.Elevator;

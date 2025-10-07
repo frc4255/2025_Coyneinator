@@ -1,34 +1,78 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.security.Timestamp;
-import java.util.Map;
-
-import org.photonvision.PhotonCamera;
-
-import choreo.auto.AutoChooser;
-import choreo.auto.AutoFactory;
-import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autos.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
-import frc.robot.subsystems.Vision.Camera;
+import frc.lib.util.graph.GraphParser;
+import frc.robot.autos.TrajectoryLibrary;
+import frc.robot.autos.TwoPiece;
+import frc.robot.autos.exampleAuto;
+import frc.robot.commands.AlgaeGroundIntake;
+import frc.robot.commands.AlgaeL2Pickup;
+import frc.robot.commands.AlgaeL3Pickup;
+import frc.robot.commands.CoralGroundIntake;
+import frc.robot.commands.CoralHumanPlayerIntake;
+import frc.robot.commands.ExtakeAlgae;
+import frc.robot.commands.ExtakeCoral;
+import frc.robot.commands.L1Assist;
+import frc.robot.commands.L2Assist;
+import frc.robot.commands.L3Assist;
+import frc.robot.commands.L4Assist;
+import frc.robot.commands.NetAssist;
+import frc.robot.commands.ReefAlign;
+import frc.robot.commands.Score;
+import frc.robot.commands.Stow;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.test;
+import frc.robot.subsystems.AutoAlignConfig;
+import frc.robot.subsystems.AutoAlignController;
+import frc.robot.subsystems.AutoAlignPresets;
+import frc.robot.subsystems.CoordinatedSubsystem;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ElevatorIOSim;
+import frc.robot.subsystems.ElevatorIOTalonFX;
+import frc.robot.subsystems.EndEffector;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.PivotIOSim;
+import frc.robot.subsystems.PivotIOTalonFX;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveIO;
+import frc.robot.subsystems.SwerveIOSim;
+import frc.robot.subsystems.SwerveIOTalonFX;
+import frc.robot.subsystems.SwerveIOReplay;
+import frc.robot.subsystems.Vision.VisionIO;
+import frc.robot.subsystems.Vision.VisionIOPhoton;
+import frc.robot.subsystems.Vision.VisionIOPhoton.CameraConfig;
+import frc.robot.subsystems.Vision.VisionIOSim;
+import frc.robot.subsystems.Vision.VisionObservation;
 import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.sim.Coyneinator3dVisualizer;
+import frc.robot.subsystems.WristPitch;
+import frc.robot.subsystems.WristPitchIOSim;
+import frc.robot.subsystems.WristPitchIOTalonFX;
+import frc.robot.subsystems.WristRoll;
+import frc.robot.subsystems.WristRollIOSim;
+import frc.robot.subsystems.WristRollIOTalonFX;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,214 +82,391 @@ import frc.robot.subsystems.Vision.VisionSubsystem;
  */
 public class RobotContainer {
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
+    private final CommandXboxController driverController = new CommandXboxController(0);
+    private final CommandXboxController operatorController = new CommandXboxController(1);
 
-    private final Joystick operator = new Joystick(1);
+    /* Driver Triggers */
+    private final Trigger zeroGyro = driverController.y();
+    private final Trigger toggleRobotState = driverController.rightBumper();
+    private final Trigger climb = driverController.a();
+    private final Trigger reefAlignDriver = driverController.b();
+    private final Trigger runElevatorTesting = driverController.start();
 
-    /* Drive Controls */
-    private final int translationAxis = XboxController.Axis.kLeftY.value;
-    private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    private final int rotationAxis = XboxController.Axis.kRightX.value;
+    /* Operator Triggers */
+    private final Trigger groundIntake = operatorController.a();
+    private final Trigger coralHPIntake = operatorController.b();
+    private final Trigger scoreBarge = operatorController.x();
+    private final Trigger stow = operatorController.y();
+    private final Trigger levelL1 = operatorController.povDown();
+    private final Trigger levelL2 = operatorController.povLeft();
+    private final Trigger levelL3 = operatorController.povUp();
+    private final Trigger levelL4 = operatorController.povRight();
+    private final Trigger algaeGroundIntake = operatorController.leftBumper();
+    private final Trigger algaeL2Pickup = operatorController.rightBumper();
+    private final Trigger algaeL3Pickup = operatorController.start();
+    private final Trigger processorScore = operatorController.back();
+    private final Trigger rightTrigger = operatorController.rightTrigger(0.3);
+    private final Trigger leftTrigger = operatorController.leftTrigger(0.3);
+    private final Trigger zeroWristRoll = operatorController.leftStick();
+    private final Trigger manualWristRoll = operatorController.rightStick();
 
-    /* Operator Controls */
+    private static final List<CameraConfig> VISION_CAMERA_CONFIGS = List.of(
+        new CameraConfig(
+            "LeftCam",
+            new Transform3d(
+                new Translation3d(0.258, 0.291, 0.2),
+                new Rotation3d(0, -1.08, 0.523)
+            )
+        ),
+        new CameraConfig(
+            "RightCam",
+            new Transform3d(
+                new Translation3d(0.258, -0.291, 0.2),
+                new Rotation3d(0, -1.08, -0.523)
+            )
+        )
+    );
 
-    private final int operatorHorizontalAxis = XboxController.Axis.kLeftX.value;
+    private VisionIO visionIOBackend;
+    private final Random visionSimRandom = new Random();
 
-    /* When viewed from behind the bot */ //OFFSETS NEED TO BE REDONE
-    private final Camera leftFrontCam = new Camera(new PhotonCamera("Left_Forward"), 
-        new Transform3d(new Translation3d(0.206, 0.265, 0.208), //TODO re-do offsets
-        new Rotation3d(0, -1.08, 0.524)));
-        
-    private final Camera rightFrontCam = new Camera(new PhotonCamera("Right_Forward"), 
-        new Transform3d(new Translation3d(0.206, -0.265, 0.208), //TODO re-do offsets
-        new Rotation3d(0, -1.08, -0.524)));
+    /* Subsystems */
+    private final StateManager stateManager = new StateManager();
+    private final EndEffector s_EndEffector = new EndEffector();
+    private final VisionSubsystem s_VisionSubsystem = new VisionSubsystem(createVisionIO());
+    private final Swerve s_Swerve = new Swerve(createSwerveIO(), s_VisionSubsystem);
+    private final AutoAlignController autoAlignController = createAutoAlignController();
 
-    private final Camera rightRearCam = new Camera(new PhotonCamera("Right_Rear"), 
-        new Transform3d(new Translation3d(-0.374, -0.262, 0.195), //TODO re-do offsets
-        new Rotation3d(0, 0, -3.88)));
-        
-    private final Camera leftRearCam = new Camera(new PhotonCamera("Left_Rear"), 
-        new Transform3d(new Translation3d(-0.374, 0.262, 0.195), //TODO re-do offsets
-        new Rotation3d(0, 0, 3.88)));
-    //private final Camera LLCam = new Camera(new PhotonCamera("LLCam"), new Transform3d(new Translation3d(0.135, 0, 0.204), new Rotation3d(0, -1.04, 0)));*/
-    /* Operator Buttons */
+    private final Pivot s_Pivot = new Pivot(
+        RobotBase.isReal() ? new PivotIOTalonFX() : new PivotIOSim()
+    );
+    private final Elevator s_Elevator = new Elevator(
+        RobotBase.isReal() ? new ElevatorIOTalonFX() : new ElevatorIOSim(),
+        s_Pivot::getPivotPosition
+    );
+    private final WristPitch s_WristPitch = new WristPitch(
+        RobotBase.isReal() ? new WristPitchIOTalonFX() : new WristPitchIOSim()
+    );
+    private final WristRoll s_WristRoll = new WristRoll(
+        RobotBase.isReal() ? new WristRollIOTalonFX() : new WristRollIOSim()
+    );
+    private final Coyneinator3dVisualizer simVisualizer;
 
-    private final JoystickButton manualWristRoll = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton zeroWristRoll = new JoystickButton(operator, XboxController.Button.kBack.value);
+    private enum SwerveIOMode {
+        AUTO,
+        REAL,
+        SIM,
+        REPLAY
+    }
 
-    private final JoystickButton coralHPIntake = new JoystickButton(operator, XboxController.Button.kB.value);
+    private enum VisionIOMode {
+        AUTO,
+        PHOTON,
+        SIM
+    }
 
-    /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private AutoAlignController createAutoAlignController() {
+        AutoAlignController controller = new AutoAlignController(
+            new Joystick(Constants.OperatorConstants.AUTO_ALIGN_JOYSTICK_PORT),
+            loadAutoAlignConfig(),
+            StateManager::getCurrentState
+        );
+        controller.setPoseListener(s_Swerve::setAutoAlignTarget);
+        return controller;
+    }
 
-    private final JoystickButton algaeL2Pickup = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
-    private final JoystickButton algaeL3Pickup = new JoystickButton(driver, XboxController.Button.kRightStick.value);
+    private AutoAlignConfig loadAutoAlignConfig() {
+        String preset = System.getProperty("autoAlignPreset");
+        if (preset == null || preset.isBlank()) {
+            preset = System.getenv("AUTO_ALIGN_PRESET");
+        }
 
-    private final JoystickButton processorScore = new JoystickButton(driver, XboxController.Button.kX.value);
+        if (preset == null || preset.isBlank()) {
+            return AutoAlignConfig.empty();
+        }
 
-    private final JoystickButton runElevatorTesting = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+        if ("orientation".equalsIgnoreCase(preset.trim())) {
+            return AutoAlignPresets.orientation();
+        }
 
-    private final JoystickButton scoreBarge = new JoystickButton(driver, XboxController.Button.kY.value);
+        System.err.println("Unrecognized auto align preset '" + preset + "', defaulting to empty configuration.");
+        return AutoAlignConfig.empty();
+    }
 
-    private final JoystickButton algaeGroundIntake = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private VisionIO createVisionIO() {
+        VisionIO io;
+        VisionIOMode mode = getRequestedVisionIOMode();
+        switch (mode) {
+            case PHOTON:
+                io = new VisionIOPhoton(VISION_CAMERA_CONFIGS);
+                break;
+            case SIM:
+                io = new VisionIOSim();
+                break;
+            case AUTO:
+            default:
+                io = RobotBase.isReal()
+                    ? new VisionIOPhoton(VISION_CAMERA_CONFIGS)
+                    : new VisionIOSim();
+                break;
+        }
+        visionIOBackend = io;
+        return io;
+    }
 
-    private final CommandXboxController driverAgain = new CommandXboxController(0);
-    private final Trigger extakeAlgae = new Trigger(driverAgain.leftTrigger(0.1));
-    private final Trigger extakeCoral = new Trigger(driverAgain.rightTrigger(0.1));
+    private VisionIOMode getRequestedVisionIOMode() {
+        String modeValue = System.getProperty("visionIOMode");
+        if (modeValue == null || modeValue.isBlank()) {
+            modeValue = System.getenv("VISION_IO_MODE");
+        }
 
-    private final JoystickButton reefAlign = new JoystickButton(driver, XboxController.Button.kB.value);
+        if (modeValue == null || modeValue.isBlank()) {
+            return VisionIOMode.AUTO;
+        }
 
-    private final JoystickButton climb = new JoystickButton(driver, XboxController.Button.kStart.value);
+        try {
+            return VisionIOMode.valueOf(modeValue.trim().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Unrecognized vision IO mode '" + modeValue + "', defaulting to AUTO.");
+            return VisionIOMode.AUTO;
+        }
+    }
 
-    private final POVButton L1 = new POVButton(driver, 90);
-    private final POVButton L2 = new POVButton(driver, 180);
-    private final POVButton L3 = new POVButton(driver, 270);
-    private final POVButton L4 = new POVButton(driver, 0);
-    
-        /* Subsystems */
-        private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
-            new Camera[]{rightFrontCam, leftFrontCam, rightRearCam, leftRearCam});
-                
-        private final Swerve s_Swerve = new Swerve(s_VisionSubystem);
-    
-        private final Pivot s_Pivot = new Pivot();
-        private final Elevator s_Elevator = new Elevator(s_Pivot::getPivotPosition);
-        private final WristPitch s_WristPitch = new WristPitch();
-        private final WristRoll s_WristRoll = new WristRoll();
-        private final EndEffector s_EndEffector = new EndEffector();
-        private final Climber s_Climber = new Climber();
-        //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
-        //private final AlignTool alignTool = new AlignTool();
+    private SwerveIO createSwerveIO() {
+        SwerveIOMode requestedMode = getRequestedSwerveIOMode();
 
-        private final SubsystemManager manager = new SubsystemManager(s_Pivot, s_Elevator, s_WristPitch, s_WristRoll);
-        
-        /* auto stuff */
-        private SendableChooser<Command> autochooser;
-        //private final AutoChooser autoChooser;
+        if (RobotBase.isReal()) {
+            if (requestedMode == SwerveIOMode.SIM || requestedMode == SwerveIOMode.REPLAY) {
+                System.out.println(
+                    "Ignoring requested swerve IO mode '" + requestedMode + "' because the robot is running on real hardware."
+                );
+            }
+            return new SwerveIOTalonFX();
+        }
 
-        private final AutoFactory autoFactory;
-    
-        /** The container for the robot. Contains subsystems, OI devices, and commands. 
-                 * @throws ParseException 
-                 * @throws IOException 
-                 * @throws FileVersionException */
-        public RobotContainer() {
-            s_Swerve.setDefaultCommand(
-                new TeleopSwerve(
-                    s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
-                    () -> -driver.getRawAxis(rotationAxis), 
-                    () -> true //For the love of god do not change this
-                )
-            );
+        return switch (requestedMode) {
+            case REAL -> new SwerveIOTalonFX();
+            case SIM -> new SwerveIOSim();
+            case REPLAY -> {
+                SwerveIO replay = attemptLoadReplay();
+                if (replay != null) {
+                    yield replay;
+                }
+                System.err.println("Falling back to SwerveIOSim after replay log load failed.");
+                yield new SwerveIOSim();
+            }
+            case AUTO -> {
+                SwerveIO replay = attemptLoadReplay();
+                yield replay != null ? replay : new SwerveIOSim();
+            }
+        };
+    }
 
-            s_WristRoll.setDefaultCommand(new WristRollManual(s_WristRoll, () -> operator.getRawAxis(operatorHorizontalAxis)));
-            // Configure the button bindings
-            configureButtonBindings();
+    private SwerveIOMode getRequestedSwerveIOMode() {
+        String modeValue = System.getProperty("swerveIOMode");
+        if (modeValue == null || modeValue.isBlank()) {
+            modeValue = System.getenv("SWERVE_IO_MODE");
+        }
 
-            addTuningSliders();
+        if (modeValue == null || modeValue.isBlank()) {
+            return SwerveIOMode.AUTO;
+        }
 
-            autoFactory = new AutoFactory(
-            s_Swerve::getPose, // A function that returns the current robot pose
-            s_Swerve::setPose, // A function that resets the current robot pose to the provided Pose2d
-            s_Swerve::followTrajectory, // The drive subsystem trajectory follower 
-            true, // If alliance flipping should be enabled 
-            s_Swerve // The drive subsystem
+        try {
+            return SwerveIOMode.valueOf(modeValue.trim().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Unrecognized swerve IO mode '" + modeValue + "', defaulting to AUTO.");
+            return SwerveIOMode.AUTO;
+        }
+    }
+
+    private SwerveIO attemptLoadReplay() {
+        String replayPath = System.getProperty("swerveReplayLog");
+        if (replayPath == null || replayPath.isBlank()) {
+            replayPath = System.getenv("SWERVE_REPLAY_LOG");
+        }
+
+        if (replayPath == null || replayPath.isBlank()) {
+            return null;
+        }
+
+        Path logPath = Path.of(replayPath);
+        if (Files.exists(logPath)) {
+            try {
+                return new SwerveIOReplay(logPath);
+            } catch (RuntimeException ex) {
+                System.err.println("Failed to load swerve replay log from '" + logPath + "': " + ex.getMessage());
+            }
+        } else {
+            System.err.println("Swerve replay log '" + logPath + "' does not exist.");
+        }
+
+        return null;
+    }
+
+    private final SubsystemManager subsystemManager = new SubsystemManager(
+        new CoordinatedSubsystem(SubsystemManager.PIVOT_KEY, s_Pivot::setGoal, s_Pivot::atGoal),
+        new CoordinatedSubsystem(SubsystemManager.ELEVATOR_KEY, s_Elevator::setGoal, s_Elevator::atGoal),
+        new CoordinatedSubsystem(SubsystemManager.WRIST_PITCH_KEY, s_WristPitch::setGoal, s_WristPitch::atGoal),
+        new CoordinatedSubsystem(SubsystemManager.WRIST_ROLL_KEY, s_WristRoll::setGoal, s_WristRoll::atGoal)
+    );
+
+    private final TrajectoryLibrary trajectoryLibrary = new TrajectoryLibrary(
+        () -> new TrajectoryConfig(
+            Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+            Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared
+        ).setKinematics(Constants.Swerve.swerveKinematics),
+        Constants.Swerve.swerveKinematics,
+        Constants.AutoConstants.kPXController,
+        Constants.AutoConstants.kPYController,
+        Constants.AutoConstants.kPThetaController,
+        Constants.AutoConstants.kThetaControllerConstraints
+    );
+
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+        s_VisionSubsystem.setRobotPoseSupplier(s_Swerve::getPose);
+
+        simVisualizer =
+            RobotBase.isSimulation()
+                ? new Coyneinator3dVisualizer(s_Swerve, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll)
+                : null;
+
+        if (visionIOBackend instanceof VisionIOSim simIO) {
+            simIO.setObservationSupplier(this::generateSimVisionObservations);
+        }
+        s_VisionSubsystem.setKnownCameraNames(
+            VISION_CAMERA_CONFIGS.stream().map(CameraConfig::name).collect(Collectors.toList())
         );
 
+        s_Swerve.setDefaultCommand(
+            new TeleopSwerve(
+                s_Swerve,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(),
+                () -> -driverController.getRightX(),
+                () -> false
+            )
+        );
+
+        GraphParser.getNodeByName("Stow").ifPresent(subsystemManager::setCurrentNode);
+
+        configureButtonBindings();
         configureAutoChooser();
-
-            /*
-        autoChooser = new AutoChooser();
-
-        // Add options to the chooser
-        autoChooser.addCmd("Example Routine", () -> new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager, autoFactory));
-
-        // Put the auto chooser on the dashboard
-        SmartDashboard.putData(autoChooser);
-
-        // Schedule the selected auto during the autonomous period
-        RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());*/
-        }
-    
-        /**
-         * Use this method to define your button->command mappings. Buttons can be created by
-         * instantiating a {@link GenericHID} or one of its subclasses ({@link
-         * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-         * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-         */
-
-        public void setManagerAsInactive () {
-            manager.setInactive();
-        }
-
-        public void updateManager() {
-            manager.update();
-        }
-        
-        private void configureButtonBindings() {
-            /* Driver Buttons */
-            zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-            groundIntake.onTrue(new CoralGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            L1.onTrue(new L1Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L2.onTrue(new L2Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L3.onTrue(new L3Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            L4.onTrue(new L4Assist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            stow.onTrue(new Stow(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5)));
-
-            extakeCoral.whileTrue(new ExtakeCoral(s_EndEffector));
-
-            scoreBarge.onTrue(new NetAssist(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector));
-
-            algaeL2Pickup.onTrue(new AlgaeL2Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-            algaeL3Pickup.onTrue(new AlgaeL3Pickup(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            algaeGroundIntake.onTrue(new AlgaeGroundIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            coralHPIntake.onTrue(new CoralHumanPlayerIntake(manager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            processorScore.onTrue(new Score(4, manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_Swerve, s_EndEffector, () -> true)); //TODO: Bind confirm button
-            extakeAlgae.whileTrue(new ExtakeAlgae(s_EndEffector));
-
-            reefAlign.onTrue(new ReefAlign(manager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
-
-            climb.onTrue(new test(s_Swerve));
-
-            zeroWristRoll.onTrue(new InstantCommand(() -> s_WristRoll.setHomed()));
-
-            manualWristRoll.whileTrue(new InstantCommand(() -> s_WristRoll.controlManually(operatorHorizontalAxis)));
-
-            
-
     }
+
+    /**
+     * Use this method to define your button->command mappings.
+     */
+    public void setManagerAsInactive() {
+        subsystemManager.setInactive();
+    }
+
+    public void updateManager() {
+        subsystemManager.update();
+        if (simVisualizer != null) {
+            simVisualizer.update();
+        }
+    }
+
+    private void configureButtonBindings() {
+        zeroGyro.onTrue(new InstantCommand(s_Swerve::zeroHeading, s_Swerve));
+        toggleRobotState.onTrue(new InstantCommand(stateManager::toggleRobotState));
+
+        groundIntake.onTrue(new CoralGroundIntake(subsystemManager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        coralHPIntake.onTrue(new CoralHumanPlayerIntake(subsystemManager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        scoreBarge.onTrue(new NetAssist(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector));
+        stow.onTrue(new Stow(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+        levelL1.onTrue(new L1Assist(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        levelL2.onTrue(new L2Assist(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        levelL3.onTrue(new L3Assist(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        levelL4.onTrue(new L4Assist(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+        algaeGroundIntake.onTrue(new AlgaeGroundIntake(subsystemManager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        algaeL2Pickup.onTrue(new AlgaeL2Pickup(subsystemManager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        algaeL3Pickup.onTrue(new AlgaeL3Pickup(subsystemManager, s_EndEffector, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+
+        runElevatorTesting.onTrue(new InstantCommand(() -> s_Elevator.setGoal(0.5), s_Elevator));
+
+        rightTrigger.whileTrue(new ExtakeCoral(s_EndEffector));
+        leftTrigger.whileTrue(new ExtakeAlgae(s_EndEffector));
+
+        processorScore.onTrue(
+            new Score(
+                4,
+                subsystemManager,
+                s_Pivot,
+                s_Elevator,
+                s_WristPitch,
+                s_WristRoll,
+                s_Swerve,
+                s_EndEffector,
+                rightTrigger::getAsBoolean
+            )
+        );
+
+        reefAlignDriver.onTrue(new ReefAlign(subsystemManager, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll));
+        climb.onTrue(new test(s_Swerve));
+
+        zeroWristRoll.onTrue(new InstantCommand(s_WristRoll::setHomed, s_WristRoll));
+        manualWristRoll
+            .whileTrue(
+                new RunCommand(
+                    () -> s_WristRoll.controlManually(operatorController.getLeftX()),
+                    s_WristRoll
+                )
+            )
+            .onFalse(new InstantCommand(s_WristRoll::stopMotor, s_WristRoll));
+    }
+
     private void configureAutoChooser() {
-        autochooser = new SendableChooser<>();
-        autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));            
-        autochooser.addOption("4 piece new testing one", new OldFourPieceNoHPL4(s_Swerve, s_Pivot, s_Pivot, s_Elevator, s_WristPitch, s_WristRoll, s_EndEffector, manager));      
+        autoChooser.setDefaultOption("2 piece test auto", new TwoPiece(s_Swerve, trajectoryLibrary));
+        autoChooser.addOption("Example trajectory", new exampleAuto(s_Swerve, trajectoryLibrary));
+        SmartDashboard.putData("Auto Mode", autoChooser);
+    }
 
-        SmartDashboard.putData(autochooser);
+    public SubsystemManager getSubsystemManager() {
+        return subsystemManager;
     }
-    
-    private void addTuningSliders() {
+
+    public TrajectoryLibrary getTrajectoryLibrary() {
+        return trajectoryLibrary;
     }
-    
-    
+
+    public AutoAlignController getAutoAlignController() {
+        return autoAlignController;
+    }
+
+    private List<VisionObservation> generateSimVisionObservations() {
+        if (s_Swerve == null) {
+            return List.of();
+        }
+
+        Pose2d robotPose = s_Swerve.getPose();
+        double timestamp = Timer.getFPGATimestamp();
+        List<VisionObservation> observations = new ArrayList<>(VISION_CAMERA_CONFIGS.size());
+
+        for (CameraConfig config : VISION_CAMERA_CONFIGS) {
+            Pose2d noisyPose = new Pose2d(
+                robotPose.getX() + visionSimRandom.nextGaussian() * 0.03,
+                robotPose.getY() + visionSimRandom.nextGaussian() * 0.03,
+                robotPose.getRotation().plus(new Rotation2d(visionSimRandom.nextGaussian() * Math.toRadians(2.0)))
+            );
+            observations.add(new VisionObservation(config.name(), noisyPose, timestamp, 0.1));
+        }
+
+        return observations;
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
-    
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return autochooser.getSelected();
+        return autoChooser.getSelected();
     }
 }

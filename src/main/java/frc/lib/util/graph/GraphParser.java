@@ -1,37 +1,82 @@
 package frc.lib.util.graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.wpi.first.wpilibj.Filesystem;
-
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GraphParser {
 
+    private static final List<String> DEFAULT_SUBSYSTEM_ORDER =
+        List.of("pivot", "elevator", "wristPitch", "wristRoll");
+    private static final String DEFAULT_RESOURCE_PATH = "/frc/lib/util/graph/graph_data.json";
+    private static final Path FALLBACK_FILESYSTEM_PATH =
+        Path.of("src", "main", "resources", "frc", "lib", "util", "graph", "graph_data.json");
+
     // A lookup table for Node objects (for O(1) access)
-    private static Map<String, Node> nodeLookup = new HashMap<>();
+    private static final Map<String, Node> nodeLookup = new HashMap<>();
 
     // This is the class we use in our code.
     public static class GraphData {
-        public List<Node> nodes;
-        public List<Edge> edges;
-        public Map<String, Map<String, List<Node>>> shortestPaths;
+        public List<String> subsystemKeys = DEFAULT_SUBSYSTEM_ORDER;
+        public List<Node> nodes = List.of();
+        public List<Edge> edges = List.of();
+        public Map<String, Map<String, List<Node>>> shortestPaths = Map.of();
     }
 
     // This class is used only for JSON deserialization.
     public static class GraphDataRaw {
-        public List<Node> nodes;
-        public List<Edge> edges;
+        public List<String> subsystems;
+        public List<NodeDefinition> nodes;
+        public List<EdgeDefinition> edges;
         public Map<String, Map<String, List<String>>> shortestPaths;
     }
-    
+
+    public static class NodeDefinition {
+        public String name;
+        public Map<String, Double> setpoints;
+        public List<Double> legacySetpoints;
+    }
+
+    public static class EdgeDefinition {
+        public String start;
+        public String end;
+        public String description;
+    }
+
     private static GraphData graphData;
 
     // Static initializer: load the graph once when the class is first referenced.
     static {
-        loadGraph("/graph_data.json");
+        loadDefaultGraph();
+    }
+
+    private static void loadDefaultGraph() {
+        if (!loadGraphFromResource(DEFAULT_RESOURCE_PATH)) {
+            loadGraph(FALLBACK_FILESYSTEM_PATH.toString());
+        }
+    }
+
+    private static boolean loadGraphFromResource(String resourcePath) {
+        try (InputStream stream = GraphParser.class.getResourceAsStream(resourcePath)) {
+            if (stream == null) {
+                return false;
+            }
+            loadGraph(stream);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void funny() {
@@ -44,29 +89,77 @@ public class GraphParser {
      * @param filePath The path to the JSON file.
      */
     private static void loadGraph(String filePath) {
-        ObjectMapper mapper = new ObjectMapper();
-        File deployFile = new File(Filesystem.getDeployDirectory(), "graph_data.json");
-        try {
-            // First, deserialize the raw JSON data.
-            GraphDataRaw raw = mapper.readValue(deployFile, GraphDataRaw.class);
-
-            // Create our GraphData instance.
-            graphData = new GraphData();
-            graphData.nodes = raw.nodes;
-            graphData.edges = raw.edges;
-
-            // Build the node lookup map for O(1) access.
-            for (Node node : graphData.nodes) {
-                nodeLookup.put(node.getName(), node);
-            }
-
-            // Convert the raw shortestPaths (List<String>) into List<Node>
-            graphData.shortestPaths = convertShortestPaths(raw.shortestPaths);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (filePath == null || filePath.isBlank()) {
+            loadDefaultGraph();
+            return;
         }
 
-        System.out.println(nodeLookup);
+        Path path = Path.of(filePath);
+        if (!Files.exists(path)) {
+            System.err.println("GraphParser: Could not find graph definition at " + filePath);
+            loadDefaultGraph();
+            return;
+        }
+
+        try (InputStream stream = Files.newInputStream(path)) {
+            loadGraph(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void loadGraph(InputStream stream) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        GraphDataRaw raw = mapper.readValue(stream, GraphDataRaw.class);
+        applyRawGraph(raw);
+    }
+
+    private static void applyRawGraph(GraphDataRaw raw) {
+        graphData = new GraphData();
+        nodeLookup.clear();
+
+        List<String> subsystemKeys =
+            raw != null && raw.subsystems != null && !raw.subsystems.isEmpty()
+                ? List.copyOf(raw.subsystems)
+                : DEFAULT_SUBSYSTEM_ORDER;
+        graphData.subsystemKeys = subsystemKeys;
+
+        if (raw != null && raw.nodes != null) {
+            List<Node> nodes = raw.nodes.stream()
+                .map(node -> toNode(node, subsystemKeys))
+                .collect(Collectors.toUnmodifiableList());
+            graphData.nodes = nodes;
+            for (Node node : nodes) {
+                nodeLookup.put(node.getName(), node);
+            }
+        } else {
+            graphData.nodes = List.of();
+        }
+
+        if (raw != null && raw.edges != null) {
+            graphData.edges = raw.edges.stream()
+                .map(edge -> new Edge(edge.start, edge.end, edge.description))
+                .collect(Collectors.toUnmodifiableList());
+        } else {
+            graphData.edges = List.of();
+        }
+
+        graphData.shortestPaths = convertShortestPaths(
+            raw == null ? null : raw.shortestPaths
+        );
+    }
+
+    private static Node toNode(NodeDefinition rawNode, List<String> subsystemKeys) {
+        Map<String, Double> resolved = new LinkedHashMap<>();
+        if (rawNode.setpoints != null) {
+            resolved.putAll(rawNode.setpoints);
+        }
+        if (rawNode.legacySetpoints != null && !rawNode.legacySetpoints.isEmpty()) {
+            for (int i = 0; i < Math.min(rawNode.legacySetpoints.size(), subsystemKeys.size()); i++) {
+                resolved.putIfAbsent(subsystemKeys.get(i), rawNode.legacySetpoints.get(i));
+            }
+        }
+        return new Node(rawNode.name, resolved);
     }
 
     /**
@@ -78,6 +171,10 @@ public class GraphParser {
      */
     private static Map<String, Map<String, List<Node>>> convertShortestPaths(
             Map<String, Map<String, List<String>>> stringPaths) {
+        if (stringPaths == null || stringPaths.isEmpty()) {
+            return Map.of();
+        }
+
         Map<String, Map<String, List<Node>>> convertedPaths = new HashMap<>();
 
         for (Map.Entry<String, Map<String, List<String>>> entry : stringPaths.entrySet()) {
@@ -89,18 +186,17 @@ public class GraphParser {
                 String endNode = destEntry.getKey();
                 List<String> nodeNames = destEntry.getValue();
 
-                List<Node> nodePath = new ArrayList<>();
-                for (String nodeName : nodeNames) {
-                    Node node = nodeLookup.get(nodeName);
-                    if (node != null) {
-                        nodePath.add(node);
-                    }
-                }
+                List<Node> nodePath = nodeNames == null
+                    ? List.of()
+                    : nodeNames.stream()
+                        .map(nodeLookup::get)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toUnmodifiableList());
                 convertedDestinations.put(endNode, nodePath);
             }
-            convertedPaths.put(startNode, convertedDestinations);
+            convertedPaths.put(startNode, Collections.unmodifiableMap(convertedDestinations));
         }
-        return convertedPaths;
+        return Collections.unmodifiableMap(convertedPaths);
     }
 
     /**
@@ -112,17 +208,25 @@ public class GraphParser {
      * @return A List of Nodes representing the fastest path, or an empty list if no path exists.
      */
     public static List<Node> getFastestPath(Node currentNode, Node requestedNode) {
-        if (graphData == null || graphData.shortestPaths == null ||
-            !graphData.shortestPaths.containsKey(currentNode.getName())) {
+        if (graphData == null || currentNode == null || requestedNode == null) {
             return Collections.emptyList();
         }
-        return graphData.shortestPaths.getOrDefault(currentNode.getName(), Collections.emptyMap())
-                                      .getOrDefault(requestedNode.getName(), Collections.emptyList());
+
+        Map<String, List<Node>> startMap = graphData.shortestPaths.get(currentNode.getName());
+        if (startMap == null) {
+            return Collections.emptyList();
+        }
+        return startMap.getOrDefault(requestedNode.getName(), Collections.emptyList());
     }
 
-    public static Node getNodeByName(String nodeName) {
-        return nodeLookup.get(nodeName);
+    public static Optional<Node> getNodeByName(String nodeName) {
+        return Optional.ofNullable(nodeLookup.get(nodeName));
     }
+
+    public static List<String> getSubsystemKeys() {
+        return graphData == null ? DEFAULT_SUBSYSTEM_ORDER : graphData.subsystemKeys;
+    }
+
     /**
      * Allows manual reloading of the graph if necessary.
      *

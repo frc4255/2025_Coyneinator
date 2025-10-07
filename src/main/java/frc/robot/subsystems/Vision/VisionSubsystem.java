@@ -1,95 +1,78 @@
 package frc.robot.subsystems.Vision;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 public class VisionSubsystem extends SubsystemBase {
-    
-    /* Might need to create a custom class if I need more features. */
-    private Camera[] cameras;
 
-    /* Possibly a list of poses generated from each individual camera */
-    public List<PoseAndTimestampAndDev> results = new ArrayList<>();
+    private final VisionIO io;
+    private final VisionIOInputs inputs = new VisionIOInputs();
+    private final List<VisionObservation> results = new ArrayList<>();
+    private final List<String> knownCameraNames = new ArrayList<>();
+    private static final int DASHBOARD_UPDATE_INTERVAL = 3;
+    private int dashboardCounter = 0;
 
-    public DoubleArrayLogEntry cameraPoseEntry;
-
-    public VisionSubsystem(Camera[] cameras) {
-        this.cameras = cameras;      
+    public VisionSubsystem(VisionIO io) {
+        this.io = io;
     }
 
-    public byte[] convertToByteArray(Optional<VisionSubsystem.PoseAndTimestampAndDev> optionalPose) {
-        if (optionalPose.isPresent()) {
-            VisionSubsystem.PoseAndTimestampAndDev pose = optionalPose.get();
-    
-            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-    
-                objectOutputStream.writeObject(pose);
-                return byteArrayOutputStream.toByteArray();
-    
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new byte[0]; // Return an empty byte array if the Optional is empty
-    }
-    
     @Override
     public void periodic() {
-
+        io.updateInputs(inputs);
         results.clear();
-        
-        for (Camera cam : cameras) {
-            cam.updateEstimate();
-            cam.updateCameraPoseEntry();
-            Optional<PoseAndTimestampAndDev> camEst = cam.getEstimate();
-            if (camEst != null) {
-                results.add(camEst.get());
-                Logger.recordOutput("Camera " + cam + " Pose", camEst.get().getPose());
+        results.addAll(inputs.observations);
+
+        Logger.recordOutput("Vision/ObservationCount", results.size());
+        dashboardCounter = (dashboardCounter + 1) % DASHBOARD_UPDATE_INTERVAL;
+        if (dashboardCounter == 0) {
+            for (String cameraName : knownCameraNames) {
+                String baseKey = "Vision/Cameras/" + cameraName;
+                Logger.recordOutput(baseKey + "/HasObservation", false);
+                SmartDashboard.putBoolean(baseKey + "/HasObservation", false);
+                SmartDashboard.putNumberArray(baseKey + "/Pose", new double[] {});
+                SmartDashboard.putNumber(baseKey + "/Timestamp", 0.0);
+                SmartDashboard.putNumber(baseKey + "/StdDev", 0.0);
+            }
+
+            for (VisionObservation observation : results) {
+                String baseKey = "Vision/Cameras/" + observation.cameraName();
+                Logger.recordOutput(baseKey + "/HasObservation", true);
+                Logger.recordOutput(baseKey + "/Pose", Pose2d.struct, observation.pose());
+                Logger.recordOutput(baseKey + "/Timestamp", observation.timestamp());
+                Logger.recordOutput(baseKey + "/StdDev", observation.stdDev());
+
+                SmartDashboard.putBoolean(baseKey + "/HasObservation", true);
+                SmartDashboard.putNumberArray(
+                    baseKey + "/Pose",
+                    new double[] {
+                        observation.pose().getX(),
+                        observation.pose().getY(),
+                        observation.pose().getRotation().getDegrees()
+                    }
+                );
+                SmartDashboard.putNumber(baseKey + "/Timestamp", observation.timestamp());
+                SmartDashboard.putNumber(baseKey + "/StdDev", observation.stdDev());
             }
         }
-    }  
-
-    public List<PoseAndTimestampAndDev> getResults() {
-        return results;
     }
 
-    public static class PoseAndTimestampAndDev {
-        Pose2d pose;
-        double timestamp;
-        double stdDev;
-
-        public PoseAndTimestampAndDev(Pose2d pose, double timestamp, double stdDev) {
-            this.pose = pose;
-            this.timestamp = timestamp;
-            this.stdDev = stdDev;
-        }
-
-        public Pose2d getPose() {
-            return pose;
-        }
-
-        public double getTimestamp() {
-            return timestamp;
-        }
-
-        public double getStdDev() {
-            return stdDev;
-        }
+    public List<VisionObservation> getResults() {
+        return List.copyOf(results);
     }
 
-    public Camera[] getCameraArray() {
-        return cameras;
+    public void setRobotPoseSupplier(Supplier<Pose2d> supplier) {
+        io.setRobotPoseSupplier(supplier);
     }
 
+    public void setKnownCameraNames(List<String> cameraNames) {
+        knownCameraNames.clear();
+        if (cameraNames != null) {
+            knownCameraNames.addAll(cameraNames);
+        }
+    }
 }

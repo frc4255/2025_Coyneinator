@@ -4,30 +4,22 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.util.graph.GraphParser;
 import java.io.IOException;
-import java.util.List;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.util.graph.GraphParser;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -42,10 +34,6 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  public Robot() {
-    super(0.02);
-  }
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -55,26 +43,15 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
-    Logger.recordMetadata("ProjectName", "Coyneinator"); // Set a metadata value
+    configureAdvantageKit();
 
-    if (isReal()) {
-        Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    } else {
-        setUseTiming(false); // Run as fast as possible
-        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_actualLog"))); // Save outputs to a new log
-    }
-    
-    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    Logger.start();
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
 
     GraphParser.funny();
-    
-    m_robotContainer = new RobotContainer();
 
+    m_robotContainer = new RobotContainer();
   }
 
   /**
@@ -144,10 +121,55 @@ public class Robot extends LoggedRobot {
   @Override
   public void testPeriodic() {}
 
-  @Override
-  public void simulationInit() {
-    // Perform any simulation-specific initialization here.
-    m_robotContainer = new RobotContainer();
+  private void configureAdvantageKit() {
+    Logger.recordMetadata("ProjectName", "Coyneinator");
+    Logger.recordMetadata("RuntimeType", isReal() ? "REAL" : "SIM");
+    Logger.recordMetadata("RuntimeLocation", Filesystem.getOperatingDirectory().toString());
 
+    if (shouldReplay()) {
+      String logPath = LogFileUtil.findReplayLog();
+      Logger.setReplaySource(new WPILOGReader(logPath));
+      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replayed")));
+    } else if (isReal()) {
+      Path logsDir = Paths.get(Filesystem.getOperatingDirectory().toString(), "logs");
+      try {
+        Files.createDirectories(logsDir);
+      } catch (IOException ignored) {}
+      Logger.addDataReceiver(new WPILOGWriter(logsDir.resolve(timestampedLogName("real")).toString()));
+    } else {
+      // In sim, default to real-time timing to reduce CPU usage and UI lag.
+      // Opt-in to fast sim with -Dsim.fast=true or environment SIM_FAST=true
+      boolean fastSim = Boolean.getBoolean("sim.fast")
+          || "true".equalsIgnoreCase(System.getenv("SIM_FAST"));
+      if (fastSim) {
+        setUseTiming(false);
+      }
+
+      // Prefer live NT4 streaming only; write a .wpilog in sim only if explicitly requested
+      boolean writeSimFile = Boolean.getBoolean("ak.logFileSim")
+          || "true".equalsIgnoreCase(System.getenv("AK_LOG_FILE_SIM"));
+      if (writeSimFile) {
+        Path logsDir = Paths.get(Filesystem.getOperatingDirectory().toString(), "logs", "sim");
+        try {
+          Files.createDirectories(logsDir);
+        } catch (IOException ignored) {}
+        Logger.addDataReceiver(new WPILOGWriter(logsDir.resolve(timestampedLogName("sim")).toString()));
+      }
+    }
+
+    Logger.addDataReceiver(new NT4Publisher());
+  }
+
+  private static boolean shouldReplay() {
+    String property = System.getProperty("advkit.replay");
+    if (property != null) {
+      return property.equalsIgnoreCase("true");
+    }
+    String env = System.getenv("ADVANTAGEKIT_REPLAY");
+    return env != null && env.equalsIgnoreCase("true");
+  }
+
+  private static String timestampedLogName(String prefix) {
+    return prefix + "-" + System.currentTimeMillis() + ".wpilog";
   }
 }

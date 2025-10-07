@@ -16,8 +16,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.graph.GraphParser;
-import frc.lib.util.graph.GraphParser.GraphData;
 import frc.robot.Constants;
 import frc.robot.FieldLayout;
 import frc.robot.SubsystemManager;
@@ -101,9 +99,10 @@ public class Score extends Command {
 
     @Override
     public void initialize() {
-        manager.requestNode(GraphParser.getNodeByName("Reef Align"));
+        manager.requestNode("Reef Align");
 
-        sector = s_Swerve.findClosestBranch(DriverStation.getAlliance().get() == Alliance.Red ? true : false);
+        Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+        sector = s_Swerve.findClosestBranch(alliance == Alliance.Red);
         int branchNumber = frc.robot.FieldLayout.Reef.branchesToInt.get(sector);
         activeTargetPose = (branchNumber % 2 == 1) ? leftScoringPose : rightScoringPose;
 
@@ -131,7 +130,6 @@ public class Score extends Command {
         
         // Transform activeTargetPose from apriltag-relative coordinates to field coordinates
         
-        Logger.recordOutput("target pose", fieldTargetPose);
 
         // Calculate PID outputs for x, y, and heading to move towards the field target pose
         double xCommand = xController.calculate(currentPose.getTranslation().getX());
@@ -142,12 +140,12 @@ public class Score extends Command {
         s_Swerve.drive(new Translation2d(xCommand, yCommand), headingCommand, true, false);
 
         if (xController.atSetpoint() && yController.atSetpoint() && headingController.atSetpoint()) {
-            manager.requestNode(GraphParser.getNodeByName("L" + level + " Init"));
+            manager.requestNode("L" + level + " Init");
             s_Swerve.drive(new Translation2d(0,0), 0, false, false);
         }
 
         if (manager.hasReachedGoal("L" + String.valueOf(level) + " Init") && confirmSupplier.getAsBoolean()) {
-            manager.requestNode(GraphParser.getNodeByName("Stow"));
+            manager.requestNode("Stow");
             s_EndEffector.setDutyCycle(2);
             canEnd = true;
         }
@@ -162,7 +160,7 @@ public class Score extends Command {
 
     @Override
     public boolean isFinished() { 
-        return manager.hasReachedGoal("ReefAlign") && canEnd;
+        return manager.hasReachedGoal("Reef Align") && canEnd;
     }
 
 }
