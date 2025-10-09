@@ -20,6 +20,7 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -74,7 +75,11 @@ public class Robot extends LoggedRobot {
 
     GraphParser.funny();
     
-    m_robotContainer = new RobotContainer();
+    if (RobotBase.isReal()) {
+      m_robotContainer = new RobotContainer();
+    } else {
+      m_robotContainer = null;
+    }
 
   }
 
@@ -92,14 +97,18 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateManager();
-    m_robotContainer.updateVisualizer();
+    if (m_robotContainer != null) {
+      m_robotContainer.updateManager();
+      m_robotContainer.updateVisualizer();
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.setManagerAsInactive();
+    if (m_robotContainer != null) {
+      m_robotContainer.setManagerAsInactive();
+    }
   }
 
   @Override
@@ -108,11 +117,13 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    if (m_robotContainer != null) {
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      // schedule the autonomous command (example)
+      if (m_autonomousCommand != null) {
+        m_autonomousCommand.schedule();
+      }
     }
   }
 
@@ -149,7 +160,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     // Perform any simulation-specific initialization here.
-    m_robotContainer = new RobotContainer();
+    if (m_robotContainer == null) {
+      m_robotContainer = new RobotContainer();
+    }
 
   }
 }

@@ -7,12 +7,13 @@ public class PivotIOSim implements PivotIO {
     private static final double MAX_VELOCITY = 5.0; // rad/s
     private static final double MAX_ACCELERATION = 20.0; // rad/s^2
     private static final double DAMPING_COEFFICIENT = 2.0;
-    private static final double POSITION_LIMIT = Math.PI;
+    private static final double POSITION_LIMIT = 3.4; // rad (~195 degrees)
 
     private double positionRadians = 0.0;
     private double velocityRadiansPerSecond = 0.0;
     private double appliedVolts = 0.0;
     private double lastTimestamp = Timer.getFPGATimestamp();
+
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
@@ -41,6 +42,14 @@ public class PivotIOSim implements PivotIO {
         inputs.accelerationRadiansPerSecondSq = acceleration;
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = Math.abs(appliedVolts) / 12.0 * 45.0;
+
+        System.out.println(
+            "dt=" + dt
+            + " appliedVolts=" + appliedVolts
+            + " vel=" + velocityRadiansPerSecond
+            + " posBefore=" + positionRadians);
+        System.out.println(" posAfter=" + positionRadians);
+
     }
 
     @Override

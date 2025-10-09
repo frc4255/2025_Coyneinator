@@ -54,10 +54,16 @@ public class DifferentialWrist extends SubsystemBase {
     }
 
     public void setPitchActive(boolean active) {
+        if (active && !pitchActive) {
+            pitchController.reset(getPitchPosition());
+        }
         pitchActive = active;
     }
 
     public void setRollActive(boolean active) {
+        if (active && !rollActive) {
+            rollController.reset(getRollPosition());
+        }
         rollActive = active;
     }
 

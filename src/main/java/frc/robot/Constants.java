@@ -200,7 +200,28 @@ public final class Constants {
 
         public static final Translation3d PIVOT_MOUNT = new Translation3d(-0.2667, 0.0, 0.3048);
         public static final Translation3d PIVOT_TO_ELEVATOR = new Translation3d(0.0, 0.0, 0.0);
-        public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.35, 0.0, 0.0);
+        /**
+         * Pivot sensor reading when the mechanism is in its stow pose. Update this if the sensor
+         * zero shifts due to re-homing or IO updates.
+         */
+        public static final double PIVOT_STOW_SENSOR_RADIANS = 0.0;
+        /**
+         * Desired visual angle (in robot coordinates) of the manipulator in the stow pose. A value
+         * of -π/2 points the elevator backward/left relative to the robot's forward axis when
+         * looking from the robot's right side.
+         */
+        public static final double PIVOT_STOW_VISUAL_RADIANS = -Math.PI / 2.0;
+        public static final double[] ELEVATOR_STAGE_REST_LENGTHS = {
+            0.0, // Outer stage is fully nested when stowed.
+            0.0, // Middle stage is fully nested when stowed.
+            0.0  // Inner stage is fully nested when stowed.
+        };
+        public static final double[] ELEVATOR_STAGE_MAX_EXTENSIONS = {
+            Units.inchesToMeters(20.0), // TODO: Replace with actual outer stage travel.
+            Units.inchesToMeters(18.0), // TODO: Replace with actual middle stage travel.
+            Units.inchesToMeters(16.0)  // TODO: Replace with actual inner stage travel.
+        };
+        public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.03, 0.0, 0.0);
         public static final Translation3d PITCH_TO_ROLL = new Translation3d(0.0, 0.0, 0.0);
         public static final Translation3d ROLL_TO_END_EFFECTOR = new Translation3d(0.20, 0.0, 0.0);
     }

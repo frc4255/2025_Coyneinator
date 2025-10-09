@@ -19,6 +19,7 @@ public class Pivot extends SubsystemBase {
     private boolean isHomed = false;
     private boolean isPosePossible = true;
     private boolean isStowed = false;
+    private double goalRadians = 0.0;
 
     public Pivot(PivotIO io) {
         this.io = io;
@@ -82,6 +83,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setGoal(double pos) {
+        goalRadians = pos;
         controller.setGoal(pos);
     }
 
@@ -114,6 +116,8 @@ public class Pivot extends SubsystemBase {
         useOutput(pidOutput, controller.getSetpoint());
 
         Logger.recordOutput("Pivot/Position", currentPosition);
+        Logger.recordOutput("Pivot/GoalPosition", goalRadians);
+        Logger.recordOutput("Pivot/SetpointPosition", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Velocity", inputs.velocityRadiansPerSecond);
         Logger.recordOutput("Pivot/Acceleration", inputs.accelerationRadiansPerSecondSq);
 

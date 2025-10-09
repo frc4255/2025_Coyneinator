@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.wpilibj.Filesystem;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.InputStream;
 import java.util.*;
 
@@ -46,10 +49,14 @@ public class GraphParser {
     private static void loadGraph(String filePath) {
         ObjectMapper mapper = new ObjectMapper();
         File deployFile = new File(Filesystem.getDeployDirectory(), "graph_data.json");
-        try {
+        try (InputStream input = openGraphStream(deployFile)) {
+            if (input == null) {
+                System.err.println("Failed to locate graph_data.json for parsing.");
+                return;
+            }
             nodeLookup.clear();
             // First, deserialize the raw JSON data.
-            GraphDataRaw raw = mapper.readValue(deployFile, GraphDataRaw.class);
+            GraphDataRaw raw = mapper.readValue(input, GraphDataRaw.class);
 
             // Create our GraphData instance.
             graphData = new GraphData();
@@ -68,6 +75,30 @@ public class GraphParser {
         }
 
         System.out.println(nodeLookup);
+    }
+
+    private static InputStream openGraphStream(File deployFile) {
+        try {
+            if (deployFile.exists()) {
+                System.out.println("Loaded graph_data.json from deploy directory: " + deployFile.getAbsolutePath());
+                return Files.newInputStream(deployFile.toPath());
+            }
+
+            Path projectPath = Path.of("src", "main", "deploy", "graph_data.json");
+            if (Files.exists(projectPath)) {
+                System.out.println("Loaded graph_data.json from project deploy folder: " + projectPath.toAbsolutePath());
+                return Files.newInputStream(projectPath);
+            }
+
+            InputStream resourceStream = GraphParser.class.getResourceAsStream("/graph_data.json");
+            if (resourceStream != null) {
+                System.out.println("Loaded graph_data.json from classpath resource.");
+            }
+            return resourceStream;
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return null;
+        }
     }
 
     /**

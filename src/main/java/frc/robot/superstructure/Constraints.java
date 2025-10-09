@@ -1,10 +1,10 @@
 package frc.robot.superstructure;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 
 /**
  * Centralised envelope and guard calculations for the superstructure.
- *git 
  * <p>The constants are intentionally conservative and should be tuned on-robot. All values are in
  * SI units.</p>
  */
@@ -42,11 +42,18 @@ public final class Constraints {
         if (pivotMotionAllowed(elevatorMeters)) {
             return desiredRadians;
         }
-        // Hold current pivot while the elevator retracts.
-        if (Math.abs(desiredRadians - currentRadians) <= PIVOT_HOLD_WINDOW) {
+
+        double delta = desiredRadians - currentRadians;
+        if (Math.abs(delta) <= PIVOT_HOLD_WINDOW) {
             return desiredRadians;
         }
-        return currentRadians;
+
+        double step = Math.copySign(Math.min(Math.abs(delta), PIVOT_HOLD_WINDOW), delta);
+        double next = currentRadians + step;
+        if ((delta > 0.0 && next > desiredRadians) || (delta < 0.0 && next < desiredRadians)) {
+            next = desiredRadians;
+        }
+        return next;
     }
 
     public static double clampElevator(
@@ -64,7 +71,6 @@ public final class Constraints {
         allowable = Math.max(allowable, ELEVATOR_LIMIT_LOW_PIVOT);
         double commanded = clamp(desiredMeters, ELEVATOR_MIN_HEIGHT, allowable);
 
-        // For climb profile we slow expansion when pivot is low to avoid bar interference.
         if (profile == ManipulatorProfile.CLIMB && pivotRadians < PIVOT_HIGH_THRESHOLD) {
             commanded = Math.min(commanded, currentMeters + 0.02);
         }
@@ -103,6 +109,6 @@ public final class Constraints {
     }
 
     public static double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
+        return MathUtil.clamp(value, min, max);
     }
 }

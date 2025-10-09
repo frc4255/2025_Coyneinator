@@ -1,18 +1,20 @@
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
-import frc.robot.superstructure.Constraints;
-import frc.robot.superstructure.ManipulatorProfile;
+import frc.robot.subsystems.DifferentialWrist;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.DifferentialWrist;
-import edu.wpi.first.wpilibj.Timer;
+import frc.robot.superstructure.Constraints;
+import frc.robot.superstructure.ManipulatorProfile;
 
 public class SubsystemManager {
 
@@ -39,6 +41,7 @@ public class SubsystemManager {
     private Node targetNode;
     private double[] targetSetpoints = new double[] {0, 0, 0, 0};
     private final double[] commandedSetpoints = new double[] {0, 0, 0, 0};
+
 
     public SubsystemManager(
             Pivot sPivot, Elevator sElevator, DifferentialWrist sWrist
@@ -89,8 +92,33 @@ public class SubsystemManager {
         this.holdSatisfied = this.minHoldTimeSeconds <= 0.0;
 
         this.currentIndex = 0;
-        this.path = GraphParser.getFastestPath(currentNode, requestedNode);
-        this.active = (path != null && !path.isEmpty());
+        List<Node> shortestPath = GraphParser.getFastestPath(currentNode, requestedNode);
+        if (shortestPath != null && !shortestPath.isEmpty()) {
+            this.path = new ArrayList<>(shortestPath);
+        } else {
+            this.path = new ArrayList<>();
+            if (currentNode != null) {
+                this.path.add(currentNode);
+            }
+            if (requestedNode != null
+                    && (this.path.isEmpty()
+                        || !this.path.get(this.path.size() - 1).getName().equals(requestedNode.getName()))) {
+                this.path.add(requestedNode);
+            }
+
+            Logger.recordOutput(
+                    "Manager/MissingPathFallback",
+                    (currentNode != null ? currentNode.getName() : "unknown")
+                            + " -> "
+                            + requestedNode.getName()
+            );
+        }
+        if (!this.path.isEmpty() && currentNode != null) {
+            while (!this.path.isEmpty() && this.path.get(0).getName().equals(currentNode.getName())) {
+                this.path.remove(0);
+            }
+        }
+        this.active = !this.path.isEmpty();
     }
 
     /**
@@ -122,6 +150,8 @@ public class SubsystemManager {
             setpoints = Arrays.copyOf(setpoints, 4);
         }
 
+        targetSetpoints = Arrays.copyOf(setpoints, 4);
+
         /*  Code to automatically go to reef align, can be added back based on driver feedback
 
         Not completed, isWithinReefZone() likely requires Swerve subsystem.
@@ -134,15 +164,22 @@ public class SubsystemManager {
         }
        */
 
-        double pivotGoal = Constraints.clampPivot(setpoints[0], pivotPosition, elevatorPosition);
+        double currentPivot = pivotPosition;
+        double pivotGoalRaw = setpoints[0];
+        Logger.recordOutput("Manager/PivotGoalRaw", pivotGoalRaw);
+        double pivotGoal = Constraints.clampPivot(pivotGoalRaw, currentPivot, elevatorPosition);
+        Logger.recordOutput("Manager/PivotGoalCommanded", pivotGoal);
         double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, currentProfile);
-        double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, currentProfile);
+        double wristPitchGoal = setpoints[2];
         double wristRollGoal = Constraints.clampRoll(setpoints[3]);
 
         commandedSetpoints[0] = pivotGoal;
         commandedSetpoints[1] = elevatorGoal;
         commandedSetpoints[2] = wristPitchGoal;
         commandedSetpoints[3] = wristRollGoal;
+
+        Logger.recordOutput("Manager/CommandedSetpoints", commandedSetpoints);
+        Logger.recordOutput("Manager/RawSetpoints", setpoints);
 
         if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
             reactivation = false;
@@ -154,7 +191,7 @@ public class SubsystemManager {
         sElevator.setGoal(elevatorGoal);
         sWrist.setGoals(wristPitchGoal, wristRollGoal);
 
-        if (hasReachedTarget(setpoints, measurements)) {
+        if (hasReachedTarget(targetSetpoints, measurements)) {
             lastNode = currentNode;
             currentIndex++;
             if (currentIndex >= path.size()) {
@@ -262,3 +299,4 @@ public class SubsystemManager {
         return active;
     } 
 }
+
