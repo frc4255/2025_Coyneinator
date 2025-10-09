@@ -2,101 +2,112 @@ import json
 from collections import deque
 
 # Number of controlled subsystems (e.g., 4)
-NUM_SUBSYSTEMS = 4
+NUM_SUBSYSTEMS = 5
 
 # Helper function to create a placeholder setpoints array.
 def placeholder_setpoints():
     return [0.0] * NUM_SUBSYSTEMS
 
+def normalize_setpoints(values):
+    """Ensure each node setpoint list matches NUM_SUBSYSTEMS by padding or truncating."""
+    if values is None:
+        values = []
+    length = len(values)
+    if length < NUM_SUBSYSTEMS:
+        values = list(values) + [0.0] * (NUM_SUBSYSTEMS - length)
+    elif length > NUM_SUBSYSTEMS:
+        values = list(values[:NUM_SUBSYSTEMS])
+    return values
+
 # Define nodes with placeholder setpoints using your earlier data.
 nodes = [
     {
         "name": "Stow",
-        "setpoints": [0,0,0,0]
+        "setpoints": [0,0,0,0,3.56]
     },
     {
         "name" : "Intake Intermediate",
-        "setpoints": [0.42, 0, 0, 3.14 / 2]
+        "setpoints": [0.42, 0, 0, 3.14 / 2,3.56]
     },
     {
         "name": "Coral Ground Pickup",
-        "setpoints": [0.42, 0.2, -2.35, 3.14 / 2]
+        "setpoints": [0.42, 0.2, -2.35, 3.14 / 2,3.56]
     },
     {
         "name": "Lollipop Coral Pickup",
-        "setpoints": [0,0,-1.46, 3.14 / 2]
+        "setpoints": [0,0,-1.46, 3.14 / 2,3.56]
     },
     {
         "name": "Reef Align",
-        "setpoints": [1.57, 0, -0.37, 0]
+        "setpoints": [1.57, 0, -0.37, 0,3.56]
     },
     {
         "name": "L4 Intermediate",
-        "setpoints": [1.65, 0.77, -1.38, 0]
+        "setpoints": [1.65, 0.77, -1.38, 0,3.56]
     },
     {
         "name": "L4 Init",
-        "setpoints": [1.65, 0.77, -1.02, 0]
+        "setpoints": [1.65, 0.77, -1.02, 0,3.56]
     },
     {
         "name": "L4 Dunk",
-        "setpoints": [1.65 ,0.77,-0.37,0]
+        "setpoints": [1.65 ,0.77,-0.37,0,3.56]
     },
     {
         "name":"L3 Intermediate",
-        "setpoints":[1.5, 0.05,-1.38, 0]
+        "setpoints":[1.5, 0.05,-1.38, 0,3.56]
     },
     {
         "name": "L3 Init",
-        "setpoints": [1.5, .05, -1.38, 0]
+        "setpoints": [1.5, .05, -1.38, 0,3.56]
     },
     {
         "name": "L3 Dunk",
-        "setpoints": [1.75, 0, -0.76, 0]
+        "setpoints": [1.75, 0, -0.76, 0,3.56]
     },
     {
         "name" : "Net Intermediate",
-        "setpoints" : [1.76, 0, -1.12, 3.14 / 2]
+        "setpoints" : [1.76, 0, -1.12, 3.14 / 2,3.56]
     },
     {
         "name": "Net Score", 
-        "setpoints": [1.76, 1, -1.12, 3.14 / 2]
+        "setpoints": [1.76, 1, -1.12, 3.14 / 2,3.56]
     },
     {
         "name": "L2 Algae Pickup",
-        "setpoints": [1.6, 0, -0.27, 3.14 / 2]
+        "setpoints": [1.6, 0, -0.27, 3.14 / 2,3.56]
     },
     {
         "name": "L3 Algae Pickup",
-        "setpoints": [1.6, 0.23, -0.27, 3.14 / 2]
+        "setpoints": [1.6, 0.23, -0.27, 3.14 / 2,3.56]
     },
     {
         "name": "Algae Ground Pickup",
-        "setpoints": [0,0,-1.43,-0, 0]
+        "setpoints": [0, 0, -1.43, 0,3.56]
     },
     {
         "name": "Processor Score",
-        "setpoints": [0.01, 0, -1.14, 0]
+        "setpoints": [0.01, 0, -1.14, 0,3.56]
     },
     {
         "name": "Coral HP Pickup",
-        "setpoints": [0.99, 0, -1.44, -3.14 / 2]
+        "setpoints": [0.99, 0, -1.44, -3.14 / 2,3.56]
     },
     {
         "name": "L2 Align",
-        "setpoints": [1.37, 0, -0.2, 0]
+        "setpoints": [1.37, 0, -0.2, 0,3.56]
     },
     {
         "name": "L1 Score",
-        "setpoints": [1.4, 0, 0, 3.14 / 2]
+        "setpoints": [1.4, 0, 0, 3.14 / 2,3.56]
     },
     {
         "name": "Climb",
-        "setpoints": [1.82, 0, -1.37, 0]
+        "setpoints": [1.82, 0, -1.37, 0,3.56]
     },
     {
         "name": "Climb End",
-        "setpoints": [0, 0, -1.37, 0]
+        "setpoints": [0, 0, -1.37, 0,3.56]
     }
 ]
 
@@ -303,6 +314,7 @@ edges = [
 # Build an adjacency list representation.
 graph_adj = {}
 for node in nodes:
+    node["setpoints"] = normalize_setpoints(node["setpoints"])
     graph_adj[node["name"]] = []
 for edge in edges:
     if edge["start"] in graph_adj:

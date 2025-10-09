@@ -5,8 +5,10 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.PivotIOInputsAutoLogged;
 
 public class Pivot extends SubsystemBase {
@@ -70,7 +72,19 @@ public class Pivot extends SubsystemBase {
     }
 
     public double getPivotPosition() {
-        return inputs.positionRadians;
+        double position = inputs.positionRadians;
+        if (Robot.isReal()) {
+            position -= Constants.Elevator.Pivot.ZERO_OFFSET_RADIANS;
+        }
+        return position;
+    }
+
+    public double getSetpointPosition() {
+        return controller.getSetpoint().position;
+    }
+
+    public double getGoalPosition() {
+        return controller.getGoal().position;
     }
 
     public void setPivotAsHomed() {
@@ -83,6 +97,7 @@ public class Pivot extends SubsystemBase {
 
     public void setGoal(double pos) {
         controller.setGoal(pos);
+        Logger.recordOutput("Pivot/GoalPosition", pos);
     }
 
     public boolean isPivotPosePossible() {
@@ -99,8 +114,11 @@ public class Pivot extends SubsystemBase {
     }
 
     private void useOutput(double output, TrapezoidProfile.State setpoint) {
-        double finalOut = output + feedforward.calculate(setpoint.position, setpoint.velocity);
+        double ffVolts = feedforward.calculate(setpoint.position, setpoint.velocity);
+        double finalOut = output + ffVolts;
         io.setVoltage(finalOut);
+        Logger.recordOutput("Pivot/PIDOutputVolts", output);
+        Logger.recordOutput("Pivot/FeedforwardVolts", ffVolts);
         Logger.recordOutput("Pivot/AppliedVoltage", finalOut);
     }
 
@@ -110,8 +128,13 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
 
         double currentPosition = getPivotPosition();
+        Logger.recordOutput("Pivot/MeasurementRadians", currentPosition);
         double pidOutput = controller.calculate(currentPosition);
-        useOutput(pidOutput, controller.getSetpoint());
+        TrapezoidProfile.State setpoint = controller.getSetpoint();
+        Logger.recordOutput("Pivot/PositionError", controller.getPositionError());
+        Logger.recordOutput("Pivot/SetpointPosition", setpoint.position);
+        Logger.recordOutput("Pivot/SetpointVelocity", setpoint.velocity);
+        useOutput(pidOutput, setpoint);
 
         Logger.recordOutput("Pivot/Position", currentPosition);
         Logger.recordOutput("Pivot/Velocity", inputs.velocityRadiansPerSecond);

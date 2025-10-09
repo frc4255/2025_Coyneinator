@@ -3,6 +3,9 @@ package frc.robot.visualization;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import org.littletonrobotics.junction.Logger;
 import frc.robot.Constants;
@@ -89,6 +92,11 @@ public final class SuperstructureVisualizer {
     private final GroundIntake groundIntake;
     private final Config config;
     private final Pose3d[] zeroedManipulatorPoses;
+    private final NetworkTableEntry demoPivotRadiansEntry;
+    private final NetworkTableEntry demoElevatorMetersEntry;
+    private final NetworkTableEntry demoPitchRadiansEntry;
+    private final NetworkTableEntry demoRollRadiansEntry;
+    private final NetworkTableEntry demoGroundIntakeRadiansEntry;
 
     public SuperstructureVisualizer(
             Pivot pivot,
@@ -118,6 +126,21 @@ public final class SuperstructureVisualizer {
                 new Pose3d(),
                 new Pose3d()
         };
+
+        NetworkTable manualTable = NetworkTableInstance.getDefault()
+                .getTable("SuperstructureVisualizer")
+                .getSubTable("ManualPose");
+        demoPivotRadiansEntry = manualTable.getEntry("PivotRadians");
+        demoElevatorMetersEntry = manualTable.getEntry("ElevatorMeters");
+        demoPitchRadiansEntry = manualTable.getEntry("WristPitchRadians");
+        demoRollRadiansEntry = manualTable.getEntry("WristRollRadians");
+        demoGroundIntakeRadiansEntry = manualTable.getEntry("GroundIntakeRadians");
+
+        demoPivotRadiansEntry.setDefaultDouble(0.0);
+        demoElevatorMetersEntry.setDefaultDouble(0.0);
+        demoPitchRadiansEntry.setDefaultDouble(0.0);
+        demoRollRadiansEntry.setDefaultDouble(0.0);
+        demoGroundIntakeRadiansEntry.setDefaultDouble(0.0);
     }
 
     public Config getConfig() {
@@ -133,7 +156,18 @@ public final class SuperstructureVisualizer {
         double elevatorMeters = elevator.getElevatorPosition();
         double pitchRadians = wrist.getPitchPosition();
         double rollRadians = wrist.getRollPosition();
-        double groundIntakePitch = groundIntake != null ? groundIntake.getPitchPosition() : 0.0;
+        double groundIntakePitch = groundIntake != null ? groundIntake.getPosition() : 0.0;
+
+        double pivotGoal = pivot.getGoalPosition();
+        double elevatorGoal = elevator.getGoalPosition();
+        double pitchGoal = wrist.getPitchGoalPosition();
+        double rollGoal = wrist.getRollGoalPosition();
+        double groundIntakeGoal = groundIntake != null ? groundIntake.getPitchGoalPosition() : 0.0;
+        double demoPivot = demoPivotRadiansEntry.getDouble(0.0);
+        double demoElevator = demoElevatorMetersEntry.getDouble(0.0);
+        double demoPitch = demoPitchRadiansEntry.getDouble(0.0);
+        double demoRoll = demoRollRadiansEntry.getDouble(0.0);
+        double demoGroundIntake = demoGroundIntakeRadiansEntry.getDouble(0.0);
 
         if (Constants.SuperstructureVisualization.ENABLE_ANIMATION) {
             double phase = 2.0 * Math.PI * Timer.getFPGATimestamp()
@@ -156,6 +190,14 @@ public final class SuperstructureVisualizer {
             ) * sinPhase;
         }
 
+        Pose3d[] goalPoses = computeComponentPoses(
+                pivotGoal,
+                elevatorGoal,
+                pitchGoal,
+                rollGoal,
+                groundIntakeGoal
+        );
+
         Pose3d[] poses = computeComponentPoses(
                 pivotRadians,
                 elevatorMeters,
@@ -166,6 +208,15 @@ public final class SuperstructureVisualizer {
 
         Logger.recordOutput("ZereodComponentPoses", zeroedManipulatorPoses);
         Logger.recordOutput("FinalComponentPoses", poses);
+        Logger.recordOutput("GoalComponentPoses", goalPoses);
+        Pose3d[] demoPoses = computeComponentPoses(
+                demoPivot,
+                demoElevator,
+                demoPitch,
+                demoRoll,
+                demoGroundIntake
+        );
+        Logger.recordOutput("ManualComponentPoses", demoPoses);
     }
 
     private Pose3d[] computeComponentPoses(
@@ -178,10 +229,16 @@ public final class SuperstructureVisualizer {
         ManipulatorDimensions dimensions = config.manipulator;
         GroundIntakeDimensions groundDimensions = config.groundIntake;
 
-        Rotation3d groundIntakeRotation = new Rotation3d(0.0, groundIntakePitchRadians, 0.0);
+        // WPILib uses right-handed rotations where +Y is CCW (robot nose down). Negate our physics angles
+        // so that a positive "up" command still renders correctly in the visualizer.
+        double wpiPivot = -pivotRadians;
+        double wpiPitch = -pitchRadians;
+        double wpiGroundIntake = -groundIntakePitchRadians;
+
+        Rotation3d groundIntakeRotation = new Rotation3d(0.0, wpiGroundIntake, 0.0);
         Pose3d groundIntakePose = new Pose3d(groundDimensions.baseMountTranslation(), groundIntakeRotation);
 
-        Rotation3d pivotRotation = new Rotation3d(0.0, pivotRadians, 0.0);
+        Rotation3d pivotRotation = new Rotation3d(0.0, wpiPivot, 0.0);
         Translation3d pivotTranslation = dimensions.pivotMountTranslation();
         Pose3d pivotPose = new Pose3d(pivotTranslation, pivotRotation);
 
@@ -192,7 +249,7 @@ public final class SuperstructureVisualizer {
 
         Translation3d pitchTranslation = elevatorTranslation
                 .plus(dimensions.elevatorToPitchOffset().rotateBy(pivotRotation));
-        Rotation3d pitchRotation = pivotRotation.rotateBy(new Rotation3d(0.0, pitchRadians, 0.0));
+        Rotation3d pitchRotation = pivotRotation.rotateBy(new Rotation3d(0.0, wpiPitch, 0.0));
         Pose3d pitchPose = new Pose3d(pitchTranslation, pitchRotation);
 
         Translation3d rollTranslation = pitchTranslation

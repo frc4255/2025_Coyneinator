@@ -41,25 +41,15 @@ public class DifferentialWristIOReal implements DifferentialWristIO {
 
     @Override
     public void updateInputs(DifferentialWristIOInputs inputs) {
-        double leftMotorRotations = leftMotor.getPosition().getValueAsDouble();
-        double rightMotorRotations = rightMotor.getPosition().getValueAsDouble();
-        double leftMotorVelocity = leftMotor.getVelocity().getValueAsDouble();
-        double rightMotorVelocity = rightMotor.getVelocity().getValueAsDouble();
+        double leftEncoderRotations = leftEncoder.getPosition().getValueAsDouble();
+        double rightEncoderRotations = rightEncoder.getPosition().getValueAsDouble();
+        double leftEncoderVelocity = leftEncoder.getVelocity().getValueAsDouble();
+        double rightEncoderVelocity = rightEncoder.getVelocity().getValueAsDouble();
 
-        // Convert motor sensor rotations into differential bevel rotations before decoupling.
-        double leftDifferentialRotations = leftMotorRotations / MOTOR_TO_DIFF_GEAR_RATIO;
-        double rightDifferentialRotations = rightMotorRotations / MOTOR_TO_DIFF_GEAR_RATIO;
-        double leftDifferentialVelocity = leftMotorVelocity / MOTOR_TO_DIFF_GEAR_RATIO;
-        double rightDifferentialVelocity = rightMotorVelocity / MOTOR_TO_DIFF_GEAR_RATIO;
-
-        double pitchDifferentialRotations = 0.5
-            * (leftDifferentialRotations + rightDifferentialRotations);
-        double rollDifferentialRotations = 0.5
-            * (leftDifferentialRotations - rightDifferentialRotations);
-        double pitchDifferentialVelocity = 0.5
-            * (leftDifferentialVelocity + rightDifferentialVelocity);
-        double rollDifferentialVelocity = 0.5
-            * (leftDifferentialVelocity - rightDifferentialVelocity);
+        double pitchDifferentialRotations = 0.5 * (leftEncoderRotations + rightEncoderRotations);
+        double rollDifferentialRotations = 0.5 * (leftEncoderRotations - rightEncoderRotations);
+        double pitchDifferentialVelocity = 0.5 * (leftEncoderVelocity + rightEncoderVelocity);
+        double rollDifferentialVelocity = 0.5 * (leftEncoderVelocity - rightEncoderVelocity);
 
         inputs.pitchPositionRadians = pitchDifferentialRotations * PITCH_DIFF_ROTATIONS_TO_RADIANS;
         inputs.rollPositionRadians = rollDifferentialRotations * ROLL_DIFF_ROTATIONS_TO_RADIANS;
@@ -68,10 +58,10 @@ public class DifferentialWristIOReal implements DifferentialWristIO {
         inputs.rollVelocityRadiansPerSecond = rollDifferentialVelocity
             * ROLL_DIFF_ROTATIONS_TO_RADIANS;
 
-        double leftEncoderRotations = leftEncoder.getPosition().getValueAsDouble();
-        double rightEncoderRotations = rightEncoder.getPosition().getValueAsDouble();
-        double leftEncoderVelocity = leftEncoder.getVelocity().getValueAsDouble();
-        double rightEncoderVelocity = rightEncoder.getVelocity().getValueAsDouble();
+        double leftMotorRotations = leftMotor.getPosition().getValueAsDouble();
+        double rightMotorRotations = rightMotor.getPosition().getValueAsDouble();
+        double leftMotorVelocity = leftMotor.getVelocity().getValueAsDouble();
+        double rightMotorVelocity = rightMotor.getVelocity().getValueAsDouble();
 
         inputs.leftPositionRotations = leftMotorRotations;
         inputs.rightPositionRotations = rightMotorRotations;
@@ -118,10 +108,8 @@ public class DifferentialWristIOReal implements DifferentialWristIO {
     @Override
     public void resetPitchPosition(double radians) {
         double desiredPitchDifferentialRotations = radians * RADIANS_TO_PITCH_DIFF_ROTATIONS;
-        double currentLeftMotorRotations = leftMotor.getPosition().getValueAsDouble();
-        double currentRightMotorRotations = rightMotor.getPosition().getValueAsDouble();
-        double currentLeftDifferentialRotations = currentLeftMotorRotations / MOTOR_TO_DIFF_GEAR_RATIO;
-        double currentRightDifferentialRotations = currentRightMotorRotations / MOTOR_TO_DIFF_GEAR_RATIO;
+        double currentLeftDifferentialRotations = leftEncoder.getPosition().getValueAsDouble();
+        double currentRightDifferentialRotations = rightEncoder.getPosition().getValueAsDouble();
         double currentRollDifferentialRotations = 0.5
             * (currentLeftDifferentialRotations - currentRightDifferentialRotations);
 
@@ -142,10 +130,8 @@ public class DifferentialWristIOReal implements DifferentialWristIO {
     @Override
     public void resetRollPosition(double radians) {
         double desiredRollDifferentialRotations = radians * RADIANS_TO_ROLL_DIFF_ROTATIONS;
-        double currentLeftMotorRotations = leftMotor.getPosition().getValueAsDouble();
-        double currentRightMotorRotations = rightMotor.getPosition().getValueAsDouble();
-        double currentLeftDifferentialRotations = currentLeftMotorRotations / MOTOR_TO_DIFF_GEAR_RATIO;
-        double currentRightDifferentialRotations = currentRightMotorRotations / MOTOR_TO_DIFF_GEAR_RATIO;
+        double currentLeftDifferentialRotations = leftEncoder.getPosition().getValueAsDouble();
+        double currentRightDifferentialRotations = rightEncoder.getPosition().getValueAsDouble();
         double currentPitchDifferentialRotations = 0.5
             * (currentLeftDifferentialRotations + currentRightDifferentialRotations);
 

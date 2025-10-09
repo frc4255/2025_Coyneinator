@@ -64,14 +64,18 @@ public class DifferentialWrist extends SubsystemBase {
     public void setGoals(double pitchRadians, double rollRadians) {
         pitchController.setGoal(pitchRadians);
         rollController.setGoal(rollRadians);
+        Logger.recordOutput("DifferentialWrist/PitchGoal", pitchRadians);
+        Logger.recordOutput("DifferentialWrist/RollGoal", rollRadians);
     }
 
     public void setPitchGoal(double pitchRadians) {
         pitchController.setGoal(pitchRadians);
+        Logger.recordOutput("DifferentialWrist/PitchGoal", pitchRadians);
     }
 
     public void setRollGoal(double rollRadians) {
         rollController.setGoal(rollRadians);
+        Logger.recordOutput("DifferentialWrist/RollGoal", rollRadians);
     }
 
     public double getPitchPosition() {
@@ -80,6 +84,22 @@ public class DifferentialWrist extends SubsystemBase {
 
     public double getRollPosition() {
         return inputs.rollPositionRadians;
+    }
+
+    public double getPitchSetpointPosition() {
+        return pitchController.getSetpoint().position;
+    }
+
+    public double getRollSetpointPosition() {
+        return rollController.getSetpoint().position;
+    }
+
+    public double getPitchGoalPosition() {
+        return pitchController.getGoal().position;
+    }
+
+    public double getRollGoalPosition() {
+        return rollController.getGoal().position;
     }
 
     public void setAutoHome(boolean request) {
@@ -152,24 +172,35 @@ public class DifferentialWrist extends SubsystemBase {
 
         if (pitchActive) {
             double pitchOutput = pitchController.calculate(pitchMeasurement);
+            TrapezoidProfile.State pitchSetpoint = pitchController.getSetpoint();
             double pitchFeedforwardVoltage = pitchFeedforward.calculate(
-                pitchController.getSetpoint().position,
-                pitchController.getSetpoint().velocity
+                pitchSetpoint.position,
+                pitchSetpoint.velocity
             );
             double pitchVoltage = pitchOutput + pitchFeedforwardVoltage;
             leftVoltage += pitchVoltage;
             rightVoltage += pitchVoltage;
+            Logger.recordOutput("DifferentialWrist/PitchSetpointPosition", pitchSetpoint.position);
+            Logger.recordOutput("DifferentialWrist/PitchSetpointVelocity", pitchSetpoint.velocity);
+            Logger.recordOutput("DifferentialWrist/PitchError", pitchController.getPositionError());
             Logger.recordOutput("DifferentialWrist/PitchVoltage", pitchVoltage);
+            Logger.recordOutput("DifferentialWrist/PitchPIDVoltage", pitchOutput);
+            Logger.recordOutput("DifferentialWrist/PitchFeedforwardVolts", pitchFeedforwardVoltage);
         }
 
         if (rollActive) {
             double rollOutput = rollController.calculate(rollMeasurement);
             leftVoltage += rollOutput;
             rightVoltage -= rollOutput;
+            Logger.recordOutput("DifferentialWrist/RollSetpointPosition", rollController.getSetpoint().position);
+            Logger.recordOutput("DifferentialWrist/RollSetpointVelocity", rollController.getSetpoint().velocity);
+            Logger.recordOutput("DifferentialWrist/RollError", rollController.getPositionError());
             Logger.recordOutput("DifferentialWrist/RollVoltage", rollOutput);
         }
 
         io.setMotorVoltages(leftVoltage, rightVoltage);
+        Logger.recordOutput("DifferentialWrist/LeftAppliedVolts", leftVoltage);
+        Logger.recordOutput("DifferentialWrist/RightAppliedVolts", rightVoltage);
     }
 
     private void applyManualOutputs() {
@@ -185,6 +216,9 @@ public class DifferentialWrist extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("DifferentialWrist", inputs);
 
+        Logger.recordOutput("DifferentialWrist/PitchMeasurement", getPitchPosition());
+        Logger.recordOutput("DifferentialWrist/RollMeasurement", getRollPosition());
+
         if (autoHomeRequested && !isHomed) {
             autoHome();
         } else if (manualRollControl) {
@@ -197,5 +231,8 @@ public class DifferentialWrist extends SubsystemBase {
         Logger.recordOutput("DifferentialWrist/PitchPosition", getPitchPosition());
         Logger.recordOutput("DifferentialWrist/RollGoal", rollController.getGoal().position);
         Logger.recordOutput("DifferentialWrist/RollPosition", getRollPosition());
+        Logger.recordOutput("DifferentialWrist/ManualMode", manualRollControl);
+        Logger.recordOutput("DifferentialWrist/PitchActive", pitchActive);
+        Logger.recordOutput("DifferentialWrist/RollActive", rollActive);
     }
 }

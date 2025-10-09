@@ -75,12 +75,21 @@ public class Elevator extends SubsystemBase {
         return inputs.positionMeters;
     }
 
+    public double getSetpointPosition() {
+        return controller.getSetpoint().position;
+    }
+
+    public double getGoalPosition() {
+        return controller.getGoal().position;
+    }
+
     public void setElevatorAsHomed() {
         io.resetPosition(0.0);
     }
 
     public void setGoal(double pos) {
         controller.setGoal(pos);
+        Logger.recordOutput("Elevator/GoalPosition", pos);
     }
 
     public boolean atGoal() {
@@ -93,14 +102,16 @@ public class Elevator extends SubsystemBase {
     }
 
     private void useOutput(double output, TrapezoidProfile.State setpoint) {
-        double totalOutput =
-            output
-                + feedforward.calculate(
-                    setpoint.velocity,
-                    setpoint.position,
-                    pivotAngleSupplier.getAsDouble()
+        double feedforwardVolts =
+                feedforward.calculate(
+                        setpoint.velocity,
+                        setpoint.position,
+                        pivotAngleSupplier.getAsDouble()
                 );
+        double totalOutput = output + feedforwardVolts;
         io.setVoltage(totalOutput);
+        Logger.recordOutput("Elevator/PIDOutputVolts", output);
+        Logger.recordOutput("Elevator/FeedforwardVolts", feedforwardVolts);
         Logger.recordOutput("Elevator/AppliedVoltage", totalOutput);
     }
 
@@ -109,13 +120,22 @@ public class Elevator extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
 
+        double measurement = getElevatorPosition();
+        Logger.recordOutput("Elevator/MeasurementMeters", measurement);
         if (active) {
-            double measurement = getElevatorPosition();
             double pidOutput = controller.calculate(measurement);
+            TrapezoidProfile.State setpoint = controller.getSetpoint();
+            Logger.recordOutput("Elevator/PositionError", controller.getPositionError());
+            Logger.recordOutput("Elevator/SetpointPosition", setpoint.position);
+            Logger.recordOutput("Elevator/SetpointVelocity", setpoint.velocity);
             useOutput(pidOutput, controller.getSetpoint());
+        } else {
+            Logger.recordOutput("Elevator/AppliedVoltage", 0.0);
+            Logger.recordOutput("Elevator/PositionError", controller.getPositionError());
+            Logger.recordOutput("Elevator/SetpointPosition", controller.getSetpoint().position);
+            Logger.recordOutput("Elevator/SetpointVelocity", controller.getSetpoint().velocity);
         }
 
-        Logger.recordOutput("Elevator/GoalPosition", controller.getGoal().position);
         Logger.recordOutput("Elevator/PositionMeters", getElevatorPosition());
         Logger.recordOutput("Elevator/VelocityMetersPerSecond", inputs.velocityMetersPerSecond);
         Logger.recordOutput("Elevator/AccelerationMetersPerSecondSq", inputs.accelerationMetersPerSecondSq);

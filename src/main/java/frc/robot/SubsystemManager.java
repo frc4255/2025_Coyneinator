@@ -11,6 +11,7 @@ import frc.robot.superstructure.Constraints;
 import frc.robot.superstructure.ManipulatorProfile;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.GroundIntake;
 import frc.robot.subsystems.DifferentialWrist;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -19,6 +20,7 @@ public class SubsystemManager {
     private final Pivot sPivot;
     private final Elevator sElevator;
     private final DifferentialWrist sWrist;
+    private final GroundIntake sGroundIntake;
     
     private List<Node> path;
     private int currentIndex;
@@ -37,21 +39,22 @@ public class SubsystemManager {
     private double holdStartTime = -1.0;
     private boolean holdSatisfied = true;
     private Node targetNode;
-    private double[] targetSetpoints = new double[] {0, 0, 0, 0};
-    private final double[] commandedSetpoints = new double[] {0, 0, 0, 0};
+    private double[] targetSetpoints = new double[] {0, 0, 0, 0, 0};
+    private final double[] commandedSetpoints = new double[] {0, 0, 0, 0, 0};
 
     public SubsystemManager(
-            Pivot sPivot, Elevator sElevator, DifferentialWrist sWrist
+            Pivot sPivot, Elevator sElevator, DifferentialWrist sWrist, GroundIntake sGroundIntake
         ) {
 
         this.sPivot = sPivot;
         this.sElevator = sElevator;
         this.sWrist = sWrist;
+        this.sGroundIntake = sGroundIntake;
         
         this.active = false;
         this.currentIndex = 0;
 
-        lastNode = new Node("Empty", new double[] {0, 0, 0, 0});
+        lastNode = new Node("Empty", new double[] {0, 0, 0, 0, 0});
 
     }
 
@@ -72,14 +75,14 @@ public class SubsystemManager {
             currentNode = GraphParser.getNodeByName("Stow");
         }
         reactivation = true;
-        lastNode = new Node("Empty", new double[] {0, 0, 0, 0});
+        lastNode = new Node("Empty", new double[] {0, 0, 0, 0, 0});
 
         this.requestedNode = requestedNode;
         this.targetNode = requestedNode;
         this.targetSetpoints = requestedNode.getSetpoints();
         this.currentProfile = profile != null ? profile : ManipulatorProfile.TRANSIT;
         double[] fallbackTolerance = this.currentProfile.toleranceCopy();
-        if (tolerance != null && tolerance.length == 4) {
+        if (tolerance != null && tolerance.length == 5) {
             this.currentTolerance = Arrays.copyOf(tolerance, tolerance.length);
         } else {
             this.currentTolerance = fallbackTolerance;
@@ -107,8 +110,16 @@ public class SubsystemManager {
         double elevatorPosition = sElevator.getElevatorPosition();
         double wristPitchPosition = sWrist.getPitchPosition();
         double wristRollPosition = sWrist.getRollPosition();
+        double groundIntakePosition = sGroundIntake != null ? sGroundIntake.getPitchPosition() : 0.0;
 
-        double[] measurements = new double[] {pivotPosition, elevatorPosition, wristPitchPosition, wristRollPosition};
+        double[] measurements = new double[] {
+                pivotPosition,
+                elevatorPosition,
+                wristPitchPosition,
+                wristRollPosition,
+                groundIntakePosition
+        };
+        Logger.recordOutput("Manager/Measurements", measurements);
 
         if (!active || currentIndex >= path.size()) {
             evaluateHold(measurements);
@@ -118,8 +129,8 @@ public class SubsystemManager {
         currentNode = path.get(currentIndex);
         double[] setpoints = currentNode.getSetpoints();
 
-        if (setpoints.length != 4) {
-            setpoints = Arrays.copyOf(setpoints, 4);
+        if (setpoints.length != 5) {
+            setpoints = Arrays.copyOf(setpoints, 5);
         }
 
         /*  Code to automatically go to reef align, can be added back based on driver feedback
@@ -138,11 +149,14 @@ public class SubsystemManager {
         double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, currentProfile);
         double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, currentProfile);
         double wristRollGoal = Constraints.clampRoll(setpoints[3]);
+        double groundIntakeGoal = Constraints.clampGroundIntake(setpoints[4]);
 
         commandedSetpoints[0] = pivotGoal;
         commandedSetpoints[1] = elevatorGoal;
         commandedSetpoints[2] = wristPitchGoal;
         commandedSetpoints[3] = wristRollGoal;
+        commandedSetpoints[4] = groundIntakeGoal;
+        Logger.recordOutput("Manager/CommandedSetpoints", commandedSetpoints);
 
         if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
             reactivation = false;
@@ -153,6 +167,11 @@ public class SubsystemManager {
         sPivot.setGoal(pivotGoal);
         sElevator.setGoal(elevatorGoal);
         sWrist.setGoals(wristPitchGoal, wristRollGoal);
+        if (sGroundIntake != null) {
+            sGroundIntake.setPitchGoal(groundIntakeGoal);
+        }
+        Logger.recordOutput("Manager/ActiveNode", currentNode.getName());
+        Logger.recordOutput("Manager/ActiveProfile", currentProfile.name());
 
         if (hasReachedTarget(setpoints, measurements)) {
             lastNode = currentNode;
@@ -169,6 +188,15 @@ public class SubsystemManager {
         Logger.recordOutput("CurrentNode", currentNode.getName());
         Logger.recordOutput("Manager/Active", active);
         Logger.recordOutput("Manager/HoldSatisfied", holdSatisfied);
+        Logger.recordOutput("Manager/PathIndex", currentIndex);
+        Logger.recordOutput("Manager/PathLength", path != null ? path.size() : 0);
+        Logger.recordOutput("Manager/RawSetpoints", setpoints);
+
+        double[] errors = new double[5];
+        for (int i = 0; i < errors.length; i++) {
+            errors[i] = setpoints[i] - measurements[i];
+        }
+        Logger.recordOutput("Manager/SetpointErrors", errors);
     }
 
     /**
@@ -178,11 +206,11 @@ public class SubsystemManager {
      * @return true if all subsystems are at their target, false otherwise.
      */
     public boolean hasReachedTarget(double[] setpoints, double[] measurements) {
-        if (setpoints.length != 4 || measurements.length != 4) {
+        if (setpoints.length != 5 || measurements.length != 5) {
             return false;
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             if (Math.abs(setpoints[i] - measurements[i]) > currentTolerance[i]) {
                 return false;
             }
@@ -221,6 +249,7 @@ public class SubsystemManager {
         }
 
         if (!withinTolerance(targetSetpoints, measurements, currentTolerance)) {
+            Logger.recordOutput("Manager/HoldWithinTolerance", false);
             holdStartTime = -1.0;
             holdSatisfied = minHoldTimeSeconds <= 0.0;
             return;
@@ -238,14 +267,16 @@ public class SubsystemManager {
         if (elapsed >= minHoldTimeSeconds) {
             holdSatisfied = true;
         }
+        Logger.recordOutput("Manager/HoldWithinTolerance", true);
+        Logger.recordOutput("Manager/HoldElapsed", elapsed);
     }
 
     private boolean withinTolerance(double[] setpoints, double[] measurements, double[] tolerance) {
-        if (setpoints.length != 4 || measurements.length != 4) {
+        if (setpoints.length != 5 || measurements.length != 5 || tolerance.length != 5) {
             return false;
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             if (Math.abs(setpoints[i] - measurements[i]) > tolerance[i]) {
                 return false;
             }

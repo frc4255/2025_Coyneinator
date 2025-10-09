@@ -31,6 +31,8 @@ public final class Constraints {
 
     private static final double ROLL_MIN = Units.degreesToRadians(-200.0);
     private static final double ROLL_MAX = Units.degreesToRadians(200.0);
+    private static final double GROUND_INTAKE_MIN = Units.degreesToRadians(-150.0);
+    private static final double GROUND_INTAKE_MAX = Units.degreesToRadians(150.0);
 
     private static final double PIVOT_HOLD_WINDOW = Units.degreesToRadians(2.0);
 
@@ -100,6 +102,10 @@ public final class Constraints {
 
     public static double clampRoll(double desiredRadians) {
         return clamp(desiredRadians, ROLL_MIN, ROLL_MAX);
+    }
+
+    public static double clampGroundIntake(double desiredRadians) {
+        return clamp(desiredRadians, GROUND_INTAKE_MIN, GROUND_INTAKE_MAX);
     }
 
     public static double clamp(double value, double min, double max) {

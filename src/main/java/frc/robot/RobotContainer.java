@@ -166,7 +166,7 @@ public class RobotContainer {
             s_EndEffector = new EndEffector(endEffectorIO);
             s_Climber = new Climber(climberIO);
 
-            manager = new SubsystemManager(s_Pivot, s_Elevator, s_DifferentialWrist);
+            manager = new SubsystemManager(s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake);
 
             pieceSensors = new PieceSensors();
             supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake, s_EndEffector, pieceSensors);

@@ -147,6 +147,8 @@ public final class Constants {
             public static final double kG = 0; //TODO tune this
             public static final double kV = 0; //TODO tune this
             public static final double kA = 0; //TODO tune this
+
+            public static final double ZERO_OFFSET_RADIANS = 0.0;
         }
 
         public static final int LEFT_MOTOR_ID = 2;
@@ -227,6 +229,21 @@ public final class Constants {
         public static final int PITCH_FOLLOWER_MOTOR_ID = -1;
         public static final int ROLLER_MOTOR_ID = -1;
         public static final double PITCH_GEAR_RATIO = 1.0; // TODO: Update with the real ground intake gear ratio.
+
+        public static final double ZERO_OFFSET_RADIANS = 0.0;
+
+        public static final double PITCH_KS = 0.0;
+        public static final double PITCH_KG = 0.0;
+        public static final double PITCH_KV = 0.0;
+        public static final double PITCH_KA = 0.0;
+
+        public static final double PITCH_KP = 1.0;
+        public static final double PITCH_KI = 0.0;
+        public static final double PITCH_KD = 0.0;
+
+        public static final double PITCH_MAX_VELOCITY_RAD_PER_SEC = 4.0;
+        public static final double PITCH_MAX_ACCEL_RAD_PER_SEC_SQ = 10.0;
+        public static final double PITCH_POSITION_TOLERANCE_RADIANS = Math.toRadians(2.0);
     }
     
     public static final class Swerve {

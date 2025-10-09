@@ -320,6 +320,13 @@ public final class RobotSupervisor {
         stepStartTime = Timer.getFPGATimestamp();
         waitingForConfirm = false;
         confirmQueued = false;
+        Logger.recordOutput("Supervisor/PlanStepIndex", currentStepIndex);
+        Logger.recordOutput("Supervisor/PlanStepTotal", currentPlan.steps().size());
+        Logger.recordOutput("Supervisor/StepNode", activeStep.nodeName());
+        Logger.recordOutput("Supervisor/StepProfile", activeStep.profile().name());
+        Logger.recordOutput("Supervisor/StepMinHoldSeconds", activeStep.minHoldTimeSeconds());
+        Logger.recordOutput("Supervisor/StepRequiresConfirm", activeStep.requiresConfirm());
+        Logger.recordOutput("Supervisor/StepTolerance", activeStep.tolerance());
 
         StepAction onEnter = activeStep.onEnter();
         if (onEnter != null) {
