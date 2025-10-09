@@ -170,7 +170,13 @@ public class RobotContainer {
 
             pieceSensors = new PieceSensors();
             supervisor = new RobotSupervisor(manager, s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake, s_EndEffector, pieceSensors);
-            superstructureVisualizer = new SuperstructureVisualizer(s_Pivot, s_Elevator, s_DifferentialWrist);
+            superstructureVisualizer = new SuperstructureVisualizer(
+                s_Pivot,
+                s_Elevator,
+                s_DifferentialWrist,
+                s_GroundIntake,
+                SuperstructureVisualizer.Config.fromConstants()
+            );
 
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(

@@ -198,11 +198,27 @@ public final class Constants {
     public static final class SuperstructureVisualization {
         private SuperstructureVisualization() {}
 
-        public static final Translation3d PIVOT_MOUNT = new Translation3d(-0.2667, 0.0, 0.3048);
-        public static final Translation3d PIVOT_TO_ELEVATOR = new Translation3d(0.0, 0.0, 0.0);
-        public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.35, 0.0, 0.0);
-        public static final Translation3d PITCH_TO_ROLL = new Translation3d(0.0, 0.0, 0.0);
-        public static final Translation3d ROLL_TO_END_EFFECTOR = new Translation3d(0.20, 0.0, 0.0);
+        public static final class Manipulator {
+            private Manipulator() {}
+            public static final Translation3d PIVOT_MOUNT = new Translation3d(-0.2667, 0.0, 0.3048);
+            public static final Translation3d PIVOT_TO_ELEVATOR = new Translation3d(0.0, 0.0, 0.0);
+            public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.61595, 0.0, 0.0);
+            public static final Translation3d PITCH_TO_ROLL = new Translation3d(0.053887, 0.0, 0.0);
+        }
+
+        public static final class GroundIntake {
+            private GroundIntake() {}
+
+            public static final Translation3d BASE_MOUNT = new Translation3d(0.333, 0.0, 0.220);
+        }
+
+        public static final boolean ENABLE_ANIMATION = false;
+        public static final double ANIMATION_PERIOD_SECONDS = 6.0;
+        public static final double ANIMATION_PIVOT_SWING_DEGREES = 20.0;
+        public static final double ANIMATION_ELEVATOR_TRAVEL_METERS = 0.3;
+        public static final double ANIMATION_PITCH_SWING_DEGREES = 30.0;
+        public static final double ANIMATION_ROLL_SWING_DEGREES = 45.0;
+        public static final double ANIMATION_GROUND_PITCH_SWING_DEGREES = 25.0;
     }
 
 

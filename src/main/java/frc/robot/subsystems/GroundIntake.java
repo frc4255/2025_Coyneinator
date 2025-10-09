@@ -31,6 +31,14 @@ public class GroundIntake extends SubsystemBase {
         io.stop();
     }
 
+    public double getPitchPosition() {
+        return inputs.pitchPositionRadians;
+    }
+
+    public double getPitchVelocity() {
+        return inputs.pitchVelocityRadiansPerSecond;
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
