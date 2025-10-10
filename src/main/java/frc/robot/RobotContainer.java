@@ -78,7 +78,7 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     private final JoystickButton algaeL2Pickup = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
@@ -96,7 +96,7 @@ public class RobotContainer {
     private final Trigger extakeAlgae = new Trigger(driverAgain.leftTrigger(0.1));
     private final Trigger extakeCoral = new Trigger(driverAgain.rightTrigger(0.1));
 
-    private final JoystickButton reefAlign = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton autoAlign = new JoystickButton(driver, XboxController.Button.kA.value);
 
     private final JoystickButton climb = new JoystickButton(driver, XboxController.Button.kStart.value);
 
@@ -244,7 +244,17 @@ public class RobotContainer {
             algaeL2Pickup.onTrue(new InstantCommand(supervisor::requestAlgaeGroundIntake));
             processorScore.onTrue(new InstantCommand(supervisor::requestProcessorScore));
             scoreBarge.onTrue(new InstantCommand(supervisor::requestBargeScore));
-            reefAlign.onTrue(new InstantCommand(supervisor::requestAutoAlgae));
+            autoAlign.onTrue(
+                new InstantCommand(supervisor::requestAutoAlgae)
+                    .andThen(
+                        new AutoAlignToClosestBranch(
+                            s_Swerve,
+                            () -> -driver.getRawAxis(translationAxis),
+                            () -> -driver.getRawAxis(strafeAxis),
+                            () -> driver.getRawAxis(rotationAxis)
+                        )
+                    )
+            );
 
             climb.onTrue(new InstantCommand(supervisor::toggleClimbMode));
             algaeL3Pickup.onTrue(new InstantCommand(supervisor::executeClimb));

@@ -43,13 +43,6 @@ public class PivotIOSim implements PivotIO {
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = Math.abs(appliedVolts) / 12.0 * 45.0;
 
-        System.out.println(
-            "dt=" + dt
-            + " appliedVolts=" + appliedVolts
-            + " vel=" + velocityRadiansPerSecond
-            + " posBefore=" + positionRadians);
-        System.out.println(" posAfter=" + positionRadians);
-
     }
 
     @Override

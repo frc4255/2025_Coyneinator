@@ -17,12 +17,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.FlippingUtil;
 import frc.robot.Constants;
 import frc.robot.FieldLayout;
 import frc.robot.subsystems.SwerveIOInputsAutoLogged;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
+import frc.robot.util.AutoAlignHelper;
 
 public class Swerve extends SubsystemBase {
     private final SwerveIO io;
@@ -187,25 +187,24 @@ public class Swerve extends SubsystemBase {
     }
 
     public char findClosestBranch(boolean flipForAlliance) {
-        Translation2d allianceReef = flipForAlliance
-            ? FlippingUtil.flipFieldPosition(FieldLayout.Reef.center)
-            : FieldLayout.Reef.center;
-        double dx = getPose().getX() - allianceReef.getX();
-        double dy = getPose().getY() - allianceReef.getY();
-        double angle = Math.toDegrees(Math.atan2(dy, dx));
+        Translation2d robotTranslation = getPose().getTranslation();
+        char[] branches = FieldLayout.Reef.branches;
+        char closestBranch = branches[0];
+        double minDistance = Double.POSITIVE_INFINITY;
 
-        if (angle < 0) {
-            angle += 360;
+        for (char branch : branches) {
+            Pose2d branchPose = AutoAlignHelper.computeBranchPose(branch);
+            Translation2d targetTranslation = branchPose.getTranslation();
+
+            double distance = robotTranslation.getDistance(targetTranslation);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestBranch = branch;
+            }
         }
 
-        angle = (angle + 180) % 360;
-
-        char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
-        int sectorIndex = (int) (angle / 30.0);
-
-        Logger.recordOutput("Swerve/ActiveSector", branches[sectorIndex]);
-
-        return branches[sectorIndex];
+        Logger.recordOutput("Swerve/ActiveSector", String.valueOf(closestBranch));
+        return closestBranch;
     }
 
     @Override
