@@ -3,6 +3,7 @@ package frc.robot.visualization;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -33,12 +34,15 @@ public final class SuperstructureVisualizer {
      *                              joint when the elevator is at zero extension.
      * @param pitchToRollOffset     Offset from the pitch joint to the roll joint in the pitch
      *                              coordinate frame.
+     * @param rollAxis              Axis about which the roll joint rotates, expressed in the pitch
+     *                              frame when all joints are at zero.
      */
     public record ManipulatorDimensions(
             Translation3d pivotMountTranslation,
             Translation3d pivotToElevatorOffset,
             Translation3d elevatorToPitchOffset,
-            Translation3d pitchToRollOffset
+            Translation3d pitchToRollOffset,
+            Translation3d rollAxis
     ) {}
 
     /**
@@ -67,7 +71,8 @@ public final class SuperstructureVisualizer {
                             Constants.SuperstructureVisualization.Manipulator.PIVOT_MOUNT,
                             Constants.SuperstructureVisualization.Manipulator.PIVOT_TO_ELEVATOR,
                             Constants.SuperstructureVisualization.Manipulator.ELEVATOR_TO_PITCH,
-                            Constants.SuperstructureVisualization.Manipulator.PITCH_TO_ROLL
+                            Constants.SuperstructureVisualization.Manipulator.PITCH_TO_ROLL,
+                            Constants.SuperstructureVisualization.Manipulator.ROLL_AXIS
                     ),
                     new GroundIntakeDimensions(Constants.SuperstructureVisualization.GroundIntake.BASE_MOUNT)
             );
@@ -254,7 +259,9 @@ public final class SuperstructureVisualizer {
 
         Translation3d rollTranslation = pitchTranslation
                 .plus(dimensions.pitchToRollOffset().rotateBy(pitchRotation));
-        Rotation3d rollRotation = pitchRotation.rotateBy(new Rotation3d(rollRadians, 0.0, 0.0));
+        Translation3d rollAxisWorld = dimensions.rollAxis().rotateBy(pitchRotation);
+        Rotation3d rollIncrement = rotationAroundAxis(rollAxisWorld, rollRadians);
+        Rotation3d rollRotation = pitchRotation.rotateBy(rollIncrement);
         Pose3d rollPose = new Pose3d(rollTranslation, rollRotation);
 
         // Order matches AdvantageScope component stack: [groundIntake, pivot, elevator, pitch, roll].
@@ -265,5 +272,29 @@ public final class SuperstructureVisualizer {
                 pitchPose,
                 rollPose
         };
+    }
+
+    private static Rotation3d rotationAroundAxis(Translation3d axis, double radians) {
+        double magnitude = axis.getNorm();
+        if (magnitude < 1e-9 || Math.abs(radians) < 1e-9) {
+            return new Rotation3d();
+        }
+
+        double invMag = 1.0 / magnitude;
+        double unitX = axis.getX() * invMag;
+        double unitY = axis.getY() * invMag;
+        double unitZ = axis.getZ() * invMag;
+
+        double halfAngle = radians / 2.0;
+        double sinHalf = Math.sin(halfAngle);
+        double cosHalf = Math.cos(halfAngle);
+
+        Quaternion quaternion = new Quaternion(
+                cosHalf,
+                unitX * sinHalf,
+                unitY * sinHalf,
+                unitZ * sinHalf
+        );
+        return new Rotation3d(quaternion);
     }
 }

@@ -1,3072 +1,4023 @@
 {
   "nodes": [
     {
-      "name": "Stow",
+      "name": "Start",
       "setpoints": [
-        0,
-        0,
-        0,
-        0,
-        2.66
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.56
       ]
     },
     {
-      "name": "Intake Intermediate",
+      "name": "Idle",
       "setpoints": [
-        0.42,
-        0,
+        1.14,
+        0.0,
+        0.45,
+        0.0,
+        3.56
+      ]
+    },
+    {
+      "name": "Ground Intake",
+      "setpoints": [
+        1.14,
+        0.0,
+        -2.15,
+        1.57,
+        -0.27
+      ]
+    },
+    {
+      "name": "Handoff",
+      "setpoints": [
+        1.14,
+        0.0,
+        -2.15,
+        1.57,
+        2.23
+      ]
+    },
+    {
+      "name": "Score L1",
+      "setpoints": [
+        1.14,
+        0.0,
+        -2.15,
+        1.57,
+        1.33
+      ]
+    },
+    {
+      "name": "Lollipop Intake",
+      "setpoints": [
+        0.0,
+        0.0,
+        -0.24,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "HP Intake",
+      "setpoints": [
+        0.9,
+        0.0,
+        -0.37,
+        1.57,
+        3.59
+      ]
+    },
+    {
+      "name": "Waiting to Score",
+      "setpoints": [
+        1.14,
+        0.0,
         0,
         1.57,
-        2.66
+        3.59
       ]
     },
     {
-      "name": "Coral Ground Pickup",
+      "name": "Score L2 Front",
       "setpoints": [
-        0.42,
+        0.68,
+        0.0,
+        0.11,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Score L3 Front",
+      "setpoints": [
+        0.96,
+        0.26,
+        0.0,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Score L4 Front",
+      "setpoints": [
+        1.29,
+        0.92,
+        -0.48,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Score L2 Back",
+      "setpoints": [
+        1.7,
+        0.0,
+        0.73,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Score L3 Back",
+      "setpoints": [
+        1.59,
+        0.05,
+        0.5,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "L4 Back Intermediate",
+      "setpoints": [
+        1.5,
+        0.93,
+        0,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Score L4 Back",
+      "setpoints": [
+        1.5,
+        0.93,
+        1.03,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Ground Intake Algae",
+      "setpoints": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.59
+      ]
+    },
+    {
+      "name": "Holding Algae",
+      "setpoints": [
+        1.1,
+        0.0,
         0.2,
-        -2.35,
-        1.57,
-        2.66
+        0.0,
+        3.59
       ]
     },
     {
-      "name": "Lollipop Coral Pickup",
+      "name": "Score Processor",
       "setpoints": [
-        0,
-        0,
-        -1.46,
-        1.57,
-        2.66
+        0.0,
+        0.0,
+        0.14,
+        0.0,
+        3.59
       ]
     },
     {
-      "name": "Reef Align",
-      "setpoints": [
-        1.57,
-        0,
-        -0.37,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "L4 Intermediate",
+      "name": "Score Barge",
       "setpoints": [
         1.65,
-        0.77,
-        -1.38,
-        0,
-        2.66
+        0.95,
+        0.2,
+        0.0,
+        3.59
       ]
     },
     {
-      "name": "L4 Init",
+      "name": "Algae L2 Front",
       "setpoints": [
-        1.65,
-        0.77,
-        -1.02,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "L4 Dunk",
-      "setpoints": [
-        1.65,
-        0.77,
-        -0.37,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "L3 Intermediate",
-      "setpoints": [
-        1.5,
-        0.05,
-        -1.38,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "L3 Init",
-      "setpoints": [
-        1.5,
-        0.05,
-        -1.38,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "L3 Dunk",
-      "setpoints": [
-        1.75,
-        0,
-        -0.76,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "Net Intermediate",
-      "setpoints": [
-        1.76,
-        0,
-        -1.12,
+        1.0,
+        0.15,
+        -1.06,
         1.57,
-        2.66
+        3.59
       ]
     },
     {
-      "name": "Net Score",
+      "name": "Algae L3 Front",
       "setpoints": [
-        1.76,
-        1,
-        -1.12,
+        1.08,
+        0.31,
+        -0.61,
         1.57,
-        2.66
+        3.59
       ]
     },
     {
-      "name": "L2 Algae Pickup",
+      "name": "Algae L2 Back",
       "setpoints": [
-        1.6,
-        0,
-        -0.27,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Algae L3 Back",
+      "setpoints": [
+        1.38,
+        0.28,
         1.57,
-        2.66
-      ]
-    },
-    {
-      "name": "L3 Algae Pickup",
-      "setpoints": [
-        1.6,
-        0.23,
-        -0.27,
         1.57,
-        2.66
+        3.59
       ]
     },
     {
-      "name": "Algae Ground Pickup",
+      "name": "Climb Init",
       "setpoints": [
+        1.57,
+        0.0,
+        -1.29,
         0,
-        0,
-        -1.43,
-        0,
-        2.66
+        3.59
       ]
     },
     {
-      "name": "Processor Score",
+      "name": "Climb Final",
       "setpoints": [
-        0.01,
-        0,
-        -1.14,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "Coral HP Pickup",
-      "setpoints": [
-        0.99,
-        0,
-        -1.44,
-        -1.57,
-        2.66
-      ]
-    },
-    {
-      "name": "L2 Align",
-      "setpoints": [
-        1.37,
-        0,
         -0.2,
         0,
-        2.66
-      ]
-    },
-    {
-      "name": "L1 Score",
-      "setpoints": [
-        1.4,
-        0,
-        0,
         1.57,
-        2.66
-      ]
-    },
-    {
-      "name": "Climb",
-      "setpoints": [
-        1.82,
         0,
-        -1.37,
-        0,
-        2.66
-      ]
-    },
-    {
-      "name": "Climb End",
-      "setpoints": [
-        0,
-        0,
-        -1.37,
-        0,
-        2.66
+        3.59
       ]
     }
   ],
   "edges": [
     {
-      "start": "Stow",
-      "end": "Intake Intermediate"
+      "start": "Start",
+      "end": "Idle"
     },
     {
-      "start": "Stow",
-      "end": "Lollipop Coral Pickup"
+      "start": "Start",
+      "end": "Waiting to Score"
     },
     {
-      "start": "Stow",
-      "end": "Reef Align"
+      "start": "Idle",
+      "end": "Ground Intake"
     },
     {
-      "start": "Stow",
-      "end": "L1 Score"
+      "start": "Ground Intake",
+      "end": "Idle"
     },
     {
-      "start": "Stow",
-      "end": "L2 Align"
+      "start": "Ground Intake",
+      "end": "Handoff"
     },
     {
-      "start": "Stow",
-      "end": "Coral HP Pickup "
+      "start": "Handoff",
+      "end": "Score L1"
     },
     {
-      "start": "Stow",
-      "end": "Algae Ground Pickup"
+      "start": "Score L1",
+      "end": "Idle"
     },
     {
-      "start": "Stow",
-      "end": "Processor Score"
+      "start": "Score L1",
+      "end": "Handoff"
     },
     {
-      "start": "Stow",
-      "end": "Net Intermediate"
+      "start": "Idle",
+      "end": "Lollipop Intake"
     },
     {
-      "start": "Stow",
-      "end": "Climb"
+      "start": "Lollipop Intake",
+      "end": "Waiting to Score"
     },
     {
-      "start": "Intake Intermediate",
-      "end": "Stow"
+      "start": "Idle",
+      "end": "HP Intake"
     },
     {
-      "start": "Intake Intermediate",
-      "end": "Coral Ground Pickup"
+      "start": "HP Intake",
+      "end": "Waiting to Score"
     },
     {
-      "start": "Coral Ground Pickup",
-      "end": "Intake Intermediate"
+      "start": "HP Intake",
+      "end": "Idle"
     },
     {
-      "start": "Coral Ground Pickup",
-      "end": "Reef Align"
+      "start": "Handoff",
+      "end": "Waiting to Score"
     },
     {
-      "start": "Lollipop Coral Pickup",
-      "end": "Stow"
+      "start": "Waiting to Score",
+      "end": "Score L2 Front"
     },
     {
-      "start": "Lollipop Coral Pickup",
-      "end": "Reef Align"
+      "start": "Score L2 Front",
+      "end": "Idle"
     },
     {
-      "start": "Reef Align",
-      "end": "Stow"
+      "start": "Waiting to Score",
+      "end": "Score L3 Front"
     },
     {
-      "start": "Reef Align",
-      "end": "Lollipop Coral Pickup"
+      "start": "Score L3 Front",
+      "end": "Idle"
     },
     {
-      "start": "Reef Align",
-      "end": "Coral Ground Pickup"
+      "start": "Waiting to Score",
+      "end": "Score L4 Front"
     },
     {
-      "start": "Reef Align",
-      "end": "L3 Intermediate"
+      "start": "Score L4 Front",
+      "end": "Idle"
     },
     {
-      "start": "Reef Align",
-      "end": "L4 Intermediate"
+      "start": "Waiting to Score",
+      "end": "Score L2 Back"
     },
     {
-      "start": "L3 Intermediate",
-      "end": "L3 Init"
+      "start": "Score L2 Back",
+      "end": "Idle"
     },
     {
-      "start": "Reef Align",
-      "end": "L3 Algae Pickup"
+      "start": "Waiting to Score",
+      "end": "Score L3 Back"
     },
     {
-      "start": "Reef Align",
-      "end": "L2 Algae Pickup"
+      "start": "Score L3 Back",
+      "end": "Idle"
     },
     {
-      "start": "L3 Intermediate",
-      "end": "Reef Align"
+      "start": "Waiting to Score",
+      "end": "L4 Back Intermediate"
     },
     {
-      "start": "L4 Intermediate",
-      "end": "L4 Init"
+      "start": "L4 Back Intermediate",
+      "end": "Score L4 Back"
     },
     {
-      "start": "L4 Intermediate",
-      "end": "Reef Align"
+      "start": "Score L4 Back",
+      "end": "Idle"
     },
     {
-      "start": "L4 Init",
-      "end": "L4 Dunk"
+      "start": "Waiting to Score",
+      "end": "Algae L2 Front"
     },
     {
-      "start": "L4 Init",
-      "end": "L3 Init"
+      "start": "Algae L2 Front",
+      "end": "Holding Algae"
     },
     {
-      "start": "L3 Init",
-      "end": "L3 Dunk"
+      "start": "Waiting to Score",
+      "end": "Algae L3 Front"
     },
     {
-      "start": "L3 Init",
-      "end": "L4 Init"
+      "start": "Algae L3 Front",
+      "end": "Holding Algae"
     },
     {
-      "start": "L3 Init",
-      "end": "Reef Align"
+      "start": "Waiting to Score",
+      "end": "Algae L2 Back"
     },
     {
-      "start": "L4 Dunk",
-      "end": "Reef Align"
+      "start": "Algae L2 Back",
+      "end": "Holding Algae"
     },
     {
-      "start": "L4 Dunk",
-      "end": "L3 Algae pickup"
+      "start": "Waiting to Score",
+      "end": "Algae L3 Back"
     },
     {
-      "start": "L4 Dunk",
-      "end": "L2 Algae Pickup"
+      "start": "Algae L3 Back",
+      "end": "Holding Algae"
     },
     {
-      "start": "L3 Dunk",
-      "end": "Reef Align"
+      "start": "Idle",
+      "end": "Ground Intake Algae"
     },
     {
-      "start": "L3 Algae Pickup",
-      "end": "Reef Align"
+      "start": "Ground Intake Algae",
+      "end": "Holding Algae"
     },
     {
-      "start": "L2 Algae Pickup",
-      "end": "Reef Align"
+      "start": "Ground Intake Algae",
+      "end": "Idle"
     },
     {
-      "start": "Processor Score",
-      "end": "Stow"
+      "start": "Holding Algae",
+      "end": "Idle"
     },
     {
-      "start": "Algae Ground Pickup",
-      "end": "Stow"
+      "start": "Holding Algae",
+      "end": "Score Processor"
     },
     {
-      "start": "Algae Ground Pickup",
-      "end": "Processor Score"
+      "start": "Holding Algae",
+      "end": "Score Barge"
     },
     {
-      "start": "Coral HP Pickup",
-      "end": "Stow"
+      "start": "Score Processor",
+      "end": "Idle"
     },
     {
-      "start": "L2 Align",
-      "end": "Stow"
+      "start": "Score Barge",
+      "end": "Idle"
     },
     {
-      "start": "L1 Score",
-      "end": "Stow"
+      "start": "Idle",
+      "end": "Climb Init"
     },
     {
-      "start": "Net Intermediate",
-      "end": "Stow"
+      "start": "Climb Init",
+      "end": "Climb Final"
     },
     {
-      "start": "Net Intermediate",
-      "end": "Net Score"
+      "start": "Climb Init",
+      "end": "Idle"
     },
     {
-      "start": "Net Score",
-      "end": "Net Intermediate"
-    },
-    {
-      "start": "Climb",
-      "end": "Climb End"
-    },
-    {
-      "start": "Climb End",
-      "end": "Stow"
+      "start": "Climb Final",
+      "end": "Climb Final"
     }
   ],
   "shortestPaths": {
-    "Stow": {
-      "Stow": [
-        "Stow"
+    "Start": {
+      "Start": [
+        "Start"
       ],
-      "Intake Intermediate": [
-        "Stow",
-        "Intake Intermediate"
+      "Idle": [
+        "Start",
+        "Idle"
       ],
-      "Coral Ground Pickup": [
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Ground Intake": [
+        "Start",
+        "Idle",
+        "Ground Intake"
       ],
-      "Lollipop Coral Pickup": [
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Handoff": [
+        "Start",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Reef Align": [
-        "Stow",
-        "Reef Align"
+      "Score L1": [
+        "Start",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "L4 Intermediate": [
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "Lollipop Intake": [
+        "Start",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Init": [
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "HP Intake": [
+        "Start",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Dunk": [
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Waiting to Score": [
+        "Start",
+        "Waiting to Score"
       ],
-      "L3 Intermediate": [
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L2 Front": [
+        "Start",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Init": [
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L3 Front": [
+        "Start",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Dunk": [
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L4 Front": [
+        "Start",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "Net Intermediate": [
-        "Stow",
-        "Net Intermediate"
+      "Score L2 Back": [
+        "Start",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Score": [
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "Score L3 Back": [
+        "Start",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "L2 Algae Pickup": [
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "L4 Back Intermediate": [
+        "Start",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L3 Algae Pickup": [
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Score L4 Back": [
+        "Start",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "Algae Ground Pickup": [
-        "Stow",
-        "Algae Ground Pickup"
+      "Ground Intake Algae": [
+        "Start",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Processor Score": [
-        "Stow",
-        "Processor Score"
+      "Holding Algae": [
+        "Start",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Stow",
-        "L2 Align"
+      "Score Processor": [
+        "Start",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "L1 Score": [
-        "Stow",
-        "L1 Score"
+      "Score Barge": [
+        "Start",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "Climb": [
-        "Stow",
-        "Climb"
+      "Algae L2 Front": [
+        "Start",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb End": [
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L3 Front": [
+        "Start",
+        "Waiting to Score",
+        "Algae L3 Front"
+      ],
+      "Algae L2 Back": [
+        "Start",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Start",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Start",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Start",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Intake Intermediate": {
-      "Stow": [
-        "Intake Intermediate",
-        "Stow"
+    "Idle": {
+      "Start": [],
+      "Idle": [
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Intake Intermediate",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Intake Intermediate",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Intake Intermediate",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Intake Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Intake Intermediate",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Intake Intermediate",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Intake Intermediate",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Intake Intermediate",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Intake Intermediate",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Intake Intermediate",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Coral Ground Pickup": {
-      "Stow": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow"
+    "Ground Intake": {
+      "Start": [],
+      "Idle": [
+        "Ground Intake",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Coral Ground Pickup",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Coral Ground Pickup",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Ground Intake",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Ground Intake",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Coral Ground Pickup",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Ground Intake",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Ground Intake",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Ground Intake",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Ground Intake",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Coral Ground Pickup",
-        "Intake Intermediate",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Ground Intake",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Ground Intake",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Ground Intake",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Lollipop Coral Pickup": {
-      "Stow": [
-        "Lollipop Coral Pickup",
-        "Stow"
+    "Handoff": {
+      "Start": [],
+      "Idle": [
+        "Handoff",
+        "Score L1",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Handoff",
+        "Score L1",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Lollipop Coral Pickup",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Handoff",
+        "Score L1",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Handoff",
+        "Score L1",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Handoff",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Handoff",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Handoff",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Handoff",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Handoff",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Handoff",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Handoff",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Handoff",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Lollipop Coral Pickup",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Handoff",
+        "Score L1",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Lollipop Coral Pickup",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Handoff",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Handoff",
+        "Score L1",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Handoff",
+        "Score L1",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Reef Align": {
-      "Stow": [
-        "Reef Align",
-        "Stow"
+    "Score L1": {
+      "Start": [],
+      "Idle": [
+        "Score L1",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L1",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L1",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L1"
       ],
-      "Reef Align": [
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L1",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L1",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L1",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L1",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L1",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L1",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L1",
+        "Handoff",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L1",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L1",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L4 Intermediate": {
-      "Stow": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow"
+    "Lollipop Intake": {
+      "Start": [],
+      "Idle": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L4 Intermediate",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L4 Intermediate"
+      "HP Intake": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L4 Intermediate",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L4 Intermediate",
-        "L4 Init",
-        "L3 Init"
+      "Score L4 Front": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L4 Intermediate",
-        "L4 Init",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L4 Intermediate",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L4 Intermediate",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L4 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L4 Init": {
-      "Stow": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow"
+    "HP Intake": {
+      "Start": [],
+      "Idle": [
+        "HP Intake",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "HP Intake",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "HP Intake",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "HP Intake",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align"
+      "Lollipop Intake": [
+        "HP Intake",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L4 Init"
+      "Waiting to Score": [
+        "HP Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "HP Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "HP Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L4 Init",
-        "L3 Init"
+      "Score L4 Front": [
+        "HP Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L4 Init",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "HP Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "HP Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "HP Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L4 Init",
-        "L4 Dunk",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "HP Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "HP Intake",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L4 Init",
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "HP Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "HP Intake",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "HP Intake",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L4 Dunk": {
-      "Stow": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow"
+    "Waiting to Score": {
+      "Start": [],
+      "Idle": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L4 Dunk",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L4 Dunk",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L4 Dunk",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L4 Dunk",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L4 Dunk",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L4 Dunk",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L4 Dunk",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L4 Dunk",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L4 Dunk",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L4 Dunk",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Waiting to Score",
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L4 Dunk",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Waiting to Score",
+        "Score L2 Front",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L3 Intermediate": {
-      "Stow": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow"
+    "Score L2 Front": {
+      "Start": [],
+      "Idle": [
+        "Score L2 Front",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L3 Intermediate",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L3 Intermediate",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L2 Front",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L3 Intermediate",
-        "L3 Init",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L3 Intermediate",
-        "L3 Init",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L3 Intermediate",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L3 Intermediate",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L2 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L3 Intermediate",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L2 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L2 Front",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L2 Front",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L3 Init": {
-      "Stow": [
-        "L3 Init",
-        "Reef Align",
-        "Stow"
+    "Score L3 Front": {
+      "Start": [],
+      "Idle": [
+        "Score L3 Front",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L3 Init",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L3 Init",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L3 Init",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L3 Init",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L3 Front",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L3 Init",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L3 Init",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L3 Init",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L3 Init",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L3 Init",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L3 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L3 Init",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L3 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L3 Front",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L3 Front",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L3 Dunk": {
-      "Stow": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow"
+    "Score L4 Front": {
+      "Start": [],
+      "Idle": [
+        "Score L4 Front",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L3 Dunk",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L3 Dunk",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L3 Dunk",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L3 Dunk",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L4 Front",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L3 Dunk",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L3 Dunk",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L3 Dunk",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L3 Dunk",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L3 Dunk",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L3 Dunk",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L4 Front",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L3 Dunk",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L4 Front",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L4 Front",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L4 Front",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Net Intermediate": {
-      "Stow": [
-        "Net Intermediate",
-        "Stow"
+    "Score L2 Back": {
+      "Start": [],
+      "Idle": [
+        "Score L2 Back",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Net Intermediate",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Net Intermediate",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Net Intermediate",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L2 Back",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Net Intermediate",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Net Intermediate",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Net Intermediate",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L2 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Net Intermediate",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Net Intermediate",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Net Intermediate",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L2 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L2 Back",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L2 Back",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Net Score": {
-      "Stow": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow"
+    "Score L3 Back": {
+      "Start": [],
+      "Idle": [
+        "Score L3 Back",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L3 Back",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Net Score",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L3 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Net Score",
-        "Net Intermediate",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L3 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L3 Back",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L3 Back",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L2 Algae Pickup": {
-      "Stow": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow"
+    "L4 Back Intermediate": {
+      "Start": [],
+      "Idle": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L2 Algae Pickup",
-        "Reef Align"
+      "Lollipop Intake": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L2 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "L4 Back Intermediate",
+        "Score L4 Back",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L3 Algae Pickup": {
-      "Stow": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow"
+    "Score L4 Back": {
+      "Start": [],
+      "Idle": [
+        "Score L4 Back",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L3 Algae Pickup",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score L4 Back",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Score L4 Back",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L3 Algae Pickup",
-        "Reef Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score L4 Back",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score L4 Back",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score L4 Back",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Algae Ground Pickup": {
-      "Stow": [
-        "Algae Ground Pickup",
-        "Stow"
+    "Ground Intake Algae": {
+      "Start": [],
+      "Idle": [
+        "Ground Intake Algae",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Ground Intake Algae",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Ground Intake Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Ground Intake Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Ground Intake Algae",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Algae Ground Pickup",
-        "Processor Score"
+      "Score Processor": [
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Algae Ground Pickup",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Algae Ground Pickup",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Algae Ground Pickup",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Ground Intake Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Ground Intake Algae",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Ground Intake Algae",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Processor Score": {
-      "Stow": [
-        "Processor Score",
-        "Stow"
+    "Holding Algae": {
+      "Start": [],
+      "Idle": [
+        "Holding Algae",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Processor Score",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Holding Algae",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Processor Score",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Processor Score",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Processor Score",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Holding Algae",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Processor Score",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Processor Score",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Processor Score",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Holding Algae",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Processor Score",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Processor Score"
+      "Score Processor": [
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Processor Score",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Processor Score",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Processor Score",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Processor Score",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Holding Algae",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Holding Algae",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Coral HP Pickup": {
-      "Stow": [
-        "Coral HP Pickup",
-        "Stow"
+    "Score Processor": {
+      "Start": [],
+      "Idle": [
+        "Score Processor",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Coral HP Pickup",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score Processor",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Coral HP Pickup",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score Processor",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Coral HP Pickup",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score Processor",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score Processor",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Coral HP Pickup",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Coral HP Pickup",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Coral HP Pickup",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score Processor",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Coral HP Pickup",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score Processor",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Coral HP Pickup",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score Processor"
       ],
-      "Coral HP Pickup": [
-        "Coral HP Pickup"
+      "Score Barge": [
+        "Score Processor",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L2 Align": [
-        "Coral HP Pickup",
-        "Stow",
-        "L2 Align"
+      "Algae L2 Front": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "L1 Score": [
-        "Coral HP Pickup",
-        "Stow",
-        "L1 Score"
+      "Algae L3 Front": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb": [
-        "Coral HP Pickup",
-        "Stow",
-        "Climb"
+      "Algae L2 Back": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
       ],
-      "Climb End": [
-        "Coral HP Pickup",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L3 Back": [
+        "Score Processor",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score Processor",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score Processor",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L2 Align": {
-      "Stow": [
-        "L2 Align",
-        "Stow"
+    "Score Barge": {
+      "Start": [],
+      "Idle": [
+        "Score Barge",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L2 Align",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Score Barge",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L2 Align",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Score Barge",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L2 Align",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Score Barge",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L2 Align",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Score Barge",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L2 Align",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L2 Align",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L2 Align",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Score Barge",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L2 Align",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Score Barge",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L2 Align",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Score Barge",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L2 Align"
+      "Score Barge": [
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L2 Align",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L2 Align",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L2 Align",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Score Barge",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Score Barge",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Score Barge",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "L1 Score": {
-      "Stow": [
-        "L1 Score",
-        "Stow"
+    "Algae L2 Front": {
+      "Start": [],
+      "Idle": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "L1 Score",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "L1 Score",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "L1 Score",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "L1 Score",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "L1 Score",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "L1 Score",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "L1 Score",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "L1 Score",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Algae L2 Front",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "L1 Score",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "L1 Score",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "L1 Score"
+      "Algae L2 Front": [
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "L1 Score",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "L1 Score",
-        "Stow",
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Algae L2 Front",
+        "Holding Algae",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Climb": {
-      "Stow": [
-        "Climb",
-        "Climb End",
-        "Stow"
+    "Algae L3 Front": {
+      "Start": [],
+      "Idle": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Algae L3 Front",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Climb",
-        "Climb End",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Climb"
+      "Algae L3 Front": [
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Climb",
-        "Climb End"
+      "Algae L2 Back": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Algae L3 Front",
+        "Holding Algae",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
       ]
     },
-    "Climb End": {
-      "Stow": [
-        "Climb End",
-        "Stow"
+    "Algae L2 Back": {
+      "Start": [],
+      "Idle": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle"
       ],
-      "Intake Intermediate": [
-        "Climb End",
-        "Stow",
-        "Intake Intermediate"
+      "Ground Intake": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake"
       ],
-      "Coral Ground Pickup": [
-        "Climb End",
-        "Stow",
-        "Intake Intermediate",
-        "Coral Ground Pickup"
+      "Handoff": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
       ],
-      "Lollipop Coral Pickup": [
-        "Climb End",
-        "Stow",
-        "Lollipop Coral Pickup"
+      "Score L1": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
       ],
-      "Reef Align": [
-        "Climb End",
-        "Stow",
-        "Reef Align"
+      "Lollipop Intake": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake"
       ],
-      "L4 Intermediate": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate"
+      "HP Intake": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "HP Intake"
       ],
-      "L4 Init": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init"
+      "Waiting to Score": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
       ],
-      "L4 Dunk": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L4 Intermediate",
-        "L4 Init",
-        "L4 Dunk"
+      "Score L2 Front": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
       ],
-      "L3 Intermediate": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate"
+      "Score L3 Front": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
       ],
-      "L3 Init": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init"
+      "Score L4 Front": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
       ],
-      "L3 Dunk": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Intermediate",
-        "L3 Init",
-        "L3 Dunk"
+      "Score L2 Back": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
       ],
-      "Net Intermediate": [
-        "Climb End",
-        "Stow",
-        "Net Intermediate"
+      "Score L3 Back": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
       ],
-      "Net Score": [
-        "Climb End",
-        "Stow",
-        "Net Intermediate",
-        "Net Score"
+      "L4 Back Intermediate": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
       ],
-      "L2 Algae Pickup": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L2 Algae Pickup"
+      "Score L4 Back": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
       ],
-      "L3 Algae Pickup": [
-        "Climb End",
-        "Stow",
-        "Reef Align",
-        "L3 Algae Pickup"
+      "Ground Intake Algae": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake Algae"
       ],
-      "Algae Ground Pickup": [
-        "Climb End",
-        "Stow",
-        "Algae Ground Pickup"
+      "Holding Algae": [
+        "Algae L2 Back",
+        "Holding Algae"
       ],
-      "Processor Score": [
-        "Climb End",
-        "Stow",
-        "Processor Score"
+      "Score Processor": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Score Processor"
       ],
-      "Coral HP Pickup": [],
-      "L2 Align": [
-        "Climb End",
-        "Stow",
-        "L2 Align"
+      "Score Barge": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Score Barge"
       ],
-      "L1 Score": [
-        "Climb End",
-        "Stow",
-        "L1 Score"
+      "Algae L2 Front": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
       ],
-      "Climb": [
-        "Climb End",
-        "Stow",
-        "Climb"
+      "Algae L3 Front": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
       ],
-      "Climb End": [
-        "Climb End"
+      "Algae L2 Back": [
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Algae L2 Back",
+        "Holding Algae",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
+      ]
+    },
+    "Algae L3 Back": {
+      "Start": [],
+      "Idle": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle"
+      ],
+      "Ground Intake": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake"
+      ],
+      "Handoff": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
+      ],
+      "Score L1": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
+      ],
+      "Lollipop Intake": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake"
+      ],
+      "HP Intake": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "HP Intake"
+      ],
+      "Waiting to Score": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
+      ],
+      "Score L2 Front": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
+      ],
+      "Score L3 Front": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
+      ],
+      "Score L4 Front": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
+      ],
+      "Score L2 Back": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
+      ],
+      "Score L3 Back": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
+      ],
+      "L4 Back Intermediate": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
+      ],
+      "Score L4 Back": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
+      ],
+      "Ground Intake Algae": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Ground Intake Algae"
+      ],
+      "Holding Algae": [
+        "Algae L3 Back",
+        "Holding Algae"
+      ],
+      "Score Processor": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Score Processor"
+      ],
+      "Score Barge": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Score Barge"
+      ],
+      "Algae L2 Front": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
+      ],
+      "Algae L3 Front": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
+      ],
+      "Algae L2 Back": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Algae L3 Back",
+        "Holding Algae",
+        "Idle",
+        "Climb Init",
+        "Climb Final"
+      ]
+    },
+    "Climb Init": {
+      "Start": [],
+      "Idle": [
+        "Climb Init",
+        "Idle"
+      ],
+      "Ground Intake": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake"
+      ],
+      "Handoff": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake",
+        "Handoff"
+      ],
+      "Score L1": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake",
+        "Handoff",
+        "Score L1"
+      ],
+      "Lollipop Intake": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake"
+      ],
+      "HP Intake": [
+        "Climb Init",
+        "Idle",
+        "HP Intake"
+      ],
+      "Waiting to Score": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score"
+      ],
+      "Score L2 Front": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Front"
+      ],
+      "Score L3 Front": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Front"
+      ],
+      "Score L4 Front": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L4 Front"
+      ],
+      "Score L2 Back": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L2 Back"
+      ],
+      "Score L3 Back": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Score L3 Back"
+      ],
+      "L4 Back Intermediate": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate"
+      ],
+      "Score L4 Back": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "L4 Back Intermediate",
+        "Score L4 Back"
+      ],
+      "Ground Intake Algae": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake Algae"
+      ],
+      "Holding Algae": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae"
+      ],
+      "Score Processor": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Processor"
+      ],
+      "Score Barge": [
+        "Climb Init",
+        "Idle",
+        "Ground Intake Algae",
+        "Holding Algae",
+        "Score Barge"
+      ],
+      "Algae L2 Front": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Front"
+      ],
+      "Algae L3 Front": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Front"
+      ],
+      "Algae L2 Back": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L2 Back"
+      ],
+      "Algae L3 Back": [
+        "Climb Init",
+        "Idle",
+        "Lollipop Intake",
+        "Waiting to Score",
+        "Algae L3 Back"
+      ],
+      "Climb Init": [
+        "Climb Init"
+      ],
+      "Climb Final": [
+        "Climb Init",
+        "Climb Final"
+      ]
+    },
+    "Climb Final": {
+      "Start": [],
+      "Idle": [],
+      "Ground Intake": [],
+      "Handoff": [],
+      "Score L1": [],
+      "Lollipop Intake": [],
+      "HP Intake": [],
+      "Waiting to Score": [],
+      "Score L2 Front": [],
+      "Score L3 Front": [],
+      "Score L4 Front": [],
+      "Score L2 Back": [],
+      "Score L3 Back": [],
+      "L4 Back Intermediate": [],
+      "Score L4 Back": [],
+      "Ground Intake Algae": [],
+      "Holding Algae": [],
+      "Score Processor": [],
+      "Score Barge": [],
+      "Algae L2 Front": [],
+      "Algae L3 Front": [],
+      "Algae L2 Back": [],
+      "Algae L3 Back": [],
+      "Climb Init": [],
+      "Climb Final": [
+        "Climb Final"
       ]
     }
   }

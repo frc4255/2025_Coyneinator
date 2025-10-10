@@ -1,8 +1,6 @@
 package frc.robot;
 
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -14,13 +12,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 
 public final class Constants {
@@ -206,6 +200,7 @@ public final class Constants {
             public static final Translation3d PIVOT_TO_ELEVATOR = new Translation3d(0.0, 0.0, 0.0);
             public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.61595, 0.0, 0.0);
             public static final Translation3d PITCH_TO_ROLL = new Translation3d(0.053887, 0.0, 0.0);
+            public static final Translation3d ROLL_AXIS = new Translation3d(1.0, 0.0, 0.0);
         }
 
         public static final class GroundIntake {
