@@ -1,32 +1,36 @@
 package frc.robot.superstructure;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Arrays;
 import java.util.Objects;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.graph.GraphParser;
+import frc.lib.util.graph.Node;
 import frc.robot.SubsystemManager;
-import frc.robot.superstructure.ManipulatorPlan.Step;
-import frc.robot.superstructure.ManipulatorPlan.StepAction;
-import frc.robot.superstructure.ManipulatorPlan.AdvanceCondition;
-import frc.robot.superstructure.ManipulatorProfile;
-import frc.robot.subsystems.DifferentialWrist;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.GroundIntake;
-import frc.robot.subsystems.Pivot;
 
 /**
- * Coordinates high-level intents and the manipulator plan execution.
+ * High-level coordinator for superstructure intents.
+ *
+ * <p>The supervisor owns:
+ * <ul>
+ *   <li>Requesting nodes through {@link SubsystemManager}</li>
+ *   <li>Managing tolerance/hold settings for different kinds of motion</li>
+ *   <li>Tracking game-piece state and simple mode flags (algae/climb)</li>
+ *   <li>Providing helpers for commands to run intake / end-effector actions</li>
+ * </ul>
+ *
+ * <p>Driver automation will be implemented in commands that call these helpers. No plan/step
+ * abstraction remains; commands choose the node and motion settings explicitly.</p>
  */
 public final class RobotSupervisor {
-    public enum HighLevelState {
-        MANIPULATE,
-        CLIMB,
-        FAULT
+    public enum Mode {
+        CORAL,
+        ALGAE,
+        CLIMB
     }
 
     public enum ScoreLevel {
@@ -36,318 +40,270 @@ public final class RobotSupervisor {
         L4
     }
 
+    private static final double[] TRANSIT_TOLERANCE = {0.06, 0.04, 0.08, 0.12, 0.10};
+    private static final double[] SCORE_TOLERANCE = {0.04, 0.03, 0.05, 0.08, 0.06};
+    private static final double[] CLIMB_TOLERANCE = {0.05, 0.04, 0.06, 0.10, 0.08};
+
+    private static final double TRANSIT_HOLD_SECONDS = 0.0;
+    private static final double SCORE_HOLD_SECONDS = 0.12;
+    private static final double CLIMB_HOLD_SECONDS = 0.10;
+
     private final SubsystemManager manager;
     private final EndEffector endEffector;
     private final GroundIntake groundIntake;
     private final GamePieceState pieceState = new GamePieceState();
     private final PieceSensors sensors;
-    private final ManipulatorContext context;
 
-    private final Deque<ManipulatorPlan> planQueue = new ArrayDeque<>();
+    private String lastRequestedNode = "Idle";
+    private double[] lastRequestedTolerance = Arrays.copyOf(TRANSIT_TOLERANCE, TRANSIT_TOLERANCE.length);
+    private double lastRequestedHold = TRANSIT_HOLD_SECONDS;
+    private boolean lastRequestUsedClimbMode = false;
 
-    private ManipulatorPlan currentPlan;
-    private int currentStepIndex = -1;
-    private Step activeStep;
-    private double stepStartTime;
-    private boolean waitingForConfirm;
-    private boolean confirmQueued;
-    private HighLevelState state = HighLevelState.MANIPULATE;
-    private ScoreLevel activeScoreLevel;
+    private boolean algaeMode = false;
+    private boolean climbMode = false;
+    private Mode mode = Mode.CORAL;
+
+    private boolean lastEndEffectorOccupied = false;
+    private double lastAlgaeAcquisitionTimestamp = -10.0;
+    private static final double ALGAE_CONFIDENCE_WINDOW_SECONDS = 1.0;
 
     public RobotSupervisor(
             SubsystemManager manager,
-            Pivot pivot,
-            Elevator elevator,
-            DifferentialWrist wrist,
             GroundIntake groundIntake,
             EndEffector endEffector,
             PieceSensors sensors
     ) {
         this.manager = Objects.requireNonNull(manager);
-        this.endEffector = Objects.requireNonNull(endEffector);
         this.groundIntake = Objects.requireNonNull(groundIntake);
+        this.endEffector = Objects.requireNonNull(endEffector);
         this.sensors = Objects.requireNonNull(sensors);
-        this.context = new ManipulatorContext(manager, pivot, elevator, wrist, groundIntake, endEffector, pieceState, sensors);
     }
 
     public void periodic() {
         pieceState.updateFromSensors(sensors);
-
-        Logger.recordOutput("Supervisor/State", state.name());
-        Logger.recordOutput("Supervisor/CurrentPlan", currentPlan != null ? currentPlan.name() : "none");
-        Logger.recordOutput("Supervisor/CurrentStep", activeStep != null ? activeStep.nodeName() : "none");
-        Logger.recordOutput("Supervisor/QueueSize", planQueue.size());
-        Logger.recordOutput("Supervisor/WaitingForConfirm", waitingForConfirm);
-        Logger.recordOutput("Supervisor/ConfirmQueued", confirmQueued);
-        Logger.recordOutput("Supervisor/CoralIntake", pieceState.isCoralInIntake());
-        Logger.recordOutput("Supervisor/CoralWrist", pieceState.isCoralInWrist());
-        Logger.recordOutput("Supervisor/AlgaeIntake", pieceState.isAlgaeInIntake());
-        Logger.recordOutput("Supervisor/AlgaeEffector", pieceState.isAlgaeInEndEffector());
-
-        if (activeStep != null && activeStep.whileActive() != null) {
-            activeStep.whileActive().run(context);
+        if (pieceState.isAlgaeInIntake() || pieceState.isAlgaeInEndEffector()) {
+            algaeMode = true;
         }
 
-        if (currentPlan == null) {
-            pollQueue();
+        boolean endEffectorSensor = sensors.hasAlgaeEndEffectorSensor()
+                && sensors.algaeDetectedAtEndEffector();
+        updatePossessionHeuristics(endEffectorSensor);
+
+        if (climbMode) {
+            mode = Mode.CLIMB;
+        } else if (algaeMode) {
+            mode = Mode.ALGAE;
+        } else {
+            mode = Mode.CORAL;
+        }
+
+        Logger.recordOutput("Supervisor/RequestedNode", lastRequestedNode);
+        Logger.recordOutput("Supervisor/NodeSettled", manager.isTargetSettled());
+        Logger.recordOutput("Supervisor/ClimbMode", climbMode);
+        Logger.recordOutput("Supervisor/AlgaeMode", algaeMode);
+        Logger.recordOutput("Supervisor/Mode", mode.name());
+        Logger.recordOutput("Supervisor/EndEffectorSensor", endEffectorSensor);
+        Logger.recordOutput("Supervisor/CoralInIntake", pieceState.isCoralInIntake());
+        Logger.recordOutput("Supervisor/CoralInWrist", pieceState.isCoralInWrist());
+        Logger.recordOutput("Supervisor/AlgaeInIntake", pieceState.isAlgaeInIntake());
+        Logger.recordOutput("Supervisor/AlgaeInEndEffector", pieceState.isAlgaeInEndEffector());
+    }
+
+    /** Request a node using transit tolerances. */
+    public void goToTransit(String nodeName) {
+        goToNode(nodeName, TRANSIT_TOLERANCE, TRANSIT_HOLD_SECONDS, false);
+    }
+
+    /** Request a node using the tighter scoring tolerances. */
+    public void goToScorePose(String nodeName) {
+        goToNode(nodeName, SCORE_TOLERANCE, SCORE_HOLD_SECONDS, false);
+    }
+
+    /** Request a node intended for climb operations. */
+    public void goToClimbPose(String nodeName) {
+        climbMode = true;
+        mode = Mode.CLIMB;
+        goToNode(nodeName, CLIMB_TOLERANCE, CLIMB_HOLD_SECONDS, true);
+    }
+
+    /**
+     * Request a node with explicit motion settings.
+     *
+     * @param nodeName          Target node name
+     * @param tolerance         Five-element tolerance array (pivot, elevator, wrist pitch, wrist roll, intake)
+     * @param minHoldSeconds    Minimum time the position must remain within tolerance
+     * @param climbConstraints  Whether to apply climb safety constraints for elevator/pitch
+     */
+    public void goToNode(String nodeName, double[] tolerance, double minHoldSeconds, boolean climbConstraints) {
+        Node node = GraphParser.getNodeByName(nodeName);
+        if (node == null) {
+            Logger.recordOutput("Supervisor/UnknownNode", nodeName);
             return;
         }
 
-        if (activeStep == null) {
-            startNextStep();
+        double[] toleranceCopy = tolerance != null && tolerance.length == 5
+                ? Arrays.copyOf(tolerance, tolerance.length)
+                : Arrays.copyOf(TRANSIT_TOLERANCE, TRANSIT_TOLERANCE.length);
+
+        manager.requestNode(node, toleranceCopy, minHoldSeconds, climbConstraints);
+        lastRequestedNode = nodeName;
+        lastRequestedTolerance = toleranceCopy;
+        lastRequestedHold = Math.max(minHoldSeconds, 0.0);
+        lastRequestUsedClimbMode = climbConstraints;
+
+        Logger.recordOutput("Supervisor/LastTolerance", lastRequestedTolerance);
+        Logger.recordOutput("Supervisor/LastHoldSeconds", lastRequestedHold);
+    }
+
+    public boolean isTargetSettled() {
+        return manager.isTargetSettled();
+    }
+
+    public void requestIdle() {
+        climbMode = false;
+        algaeMode = false;
+        mode = Mode.CORAL;
+        goToTransit("Idle");
+    }
+
+    public void setAlgaeMode(boolean enabled) {
+        algaeMode = enabled;
+        if (enabled) {
+            mode = Mode.ALGAE;
+        } else if (!climbMode) {
+            mode = Mode.CORAL;
+        }
+    }
+
+    public boolean isAlgaeMode() {
+        return algaeMode;
+    }
+
+    public boolean isClimbMode() {
+        return climbMode;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode newMode) {
+        mode = newMode;
+        if (newMode != Mode.CLIMB) {
+            climbMode = false;
+        }
+        algaeMode = newMode == Mode.ALGAE;
+    }
+
+    public GamePieceState getPieceState() {
+        return pieceState;
+    }
+
+    public void markCoralInWrist(boolean value) {
+        pieceState.setCoralInWrist(value);
+    }
+
+    public void markCoralInIntake(boolean value) {
+        pieceState.setCoralInIntake(value);
+    }
+
+    public void markAlgaeInEndEffector(boolean value) {
+        pieceState.setAlgaeInEndEffector(value);
+    }
+
+    public void markAlgaeInIntake(boolean value) {
+        pieceState.setAlgaeInIntake(value);
+    }
+
+    public void runEndEffector(double volts) {
+        endEffector.setDutyCycle(volts);
+    }
+
+    public void stopEndEffector() {
+        endEffector.stop();
+    }
+
+    public void runGroundIntakeRoller(double volts) {
+        groundIntake.setRollerVolts(volts);
+    }
+
+    public void stopGroundIntake() {
+        groundIntake.stop();
+    }
+
+    public void clearAutomation() {
+        manager.setInactive();
+        stopEndEffector();
+        stopGroundIntake();
+        pieceState.clearAll();
+        algaeMode = false;
+        climbMode = false;
+        mode = Mode.CORAL;
+        lastEndEffectorOccupied = false;
+        lastAlgaeAcquisitionTimestamp = -10.0;
+        lastRequestedNode = "Idle";
+        lastRequestedTolerance = Arrays.copyOf(TRANSIT_TOLERANCE, TRANSIT_TOLERANCE.length);
+        lastRequestedHold = TRANSIT_HOLD_SECONDS;
+        lastRequestUsedClimbMode = false;
+    }
+
+    public String getLastRequestedNode() {
+        return lastRequestedNode;
+    }
+
+    public double[] getLastRequestedTolerance() {
+        return Arrays.copyOf(lastRequestedTolerance, lastRequestedTolerance.length);
+    }
+
+    public double getLastRequestedHoldSeconds() {
+        return lastRequestedHold;
+    }
+
+    public boolean lastRequestUsedClimbMode() {
+        return lastRequestUsedClimbMode;
+    }
+
+    public void recordAlgaeAcquisition() {
+        lastAlgaeAcquisitionTimestamp = Timer.getFPGATimestamp();
+        setAlgaeMode(true);
+    }
+
+    public void recordCoralAcquisition() {
+        setMode(Mode.CORAL);
+    }
+
+    private void updatePossessionHeuristics(boolean endEffectorSensor) {
+        if (!sensors.hasAlgaeEndEffectorSensor()) {
             return;
         }
 
-        double now = Timer.getFPGATimestamp();
-        boolean timedOut = activeStep.timeoutSeconds() > 0.0 && (now - stepStartTime) >= activeStep.timeoutSeconds();
-        if (timedOut && activeStep.requiresConfirm()) {
-            confirmQueued = true;
-        }
+        if (endEffectorSensor && !lastEndEffectorOccupied) {
+            boolean assumeAlgae = mode == Mode.ALGAE
+                    || pieceState.isAlgaeInIntake()
+                    || (Timer.getFPGATimestamp() - lastAlgaeAcquisitionTimestamp) < ALGAE_CONFIDENCE_WINDOW_SECONDS;
 
-        boolean targetSettled = manager.isTargetSettled();
-        boolean conditionMet = true;
-        AdvanceCondition condition = activeStep.advanceCondition();
-        if (condition != null) {
-            conditionMet = condition.shouldAdvance(context);
-        }
-
-        if ((targetSettled && conditionMet) || timedOut) {
-            if (activeStep.requiresConfirm()) {
-                if (confirmQueued) {
-                    waitingForConfirm = false;
-                    confirmQueued = false;
-                    runAction(activeStep.onExit());
-                    pieceState.setCoralInIntake(false);
-                    startNextStep();
-                } else {
-                    waitingForConfirm = true;
+            if (assumeAlgae) {
+                pieceState.setAlgaeInEndEffector(true);
+                if (!sensors.hasCoralWristSensor()) {
+                    pieceState.setCoralInWrist(false);
                 }
             } else {
-                runAction(activeStep.onExit());
-                startNextStep();
+                pieceState.setAlgaeInEndEffector(false);
+                if (!sensors.hasCoralWristSensor()) {
+                    pieceState.setCoralInWrist(true);
+                }
+            }
+        } else if (!endEffectorSensor && lastEndEffectorOccupied) {
+            pieceState.setAlgaeInEndEffector(false);
+            if (!sensors.hasCoralWristSensor()) {
+                pieceState.setCoralInWrist(false);
             }
         }
-    }
 
-    public void queueConfirm() {
-        confirmQueued = true;
-        waitingForConfirm = false;
-    }
-
-    public boolean isWaitingForConfirm() {
-        return waitingForConfirm;
-    }
-
-    public HighLevelState getState() {
-        return state;
-    }
-
-    public void requestGroundIntakeHandoff() {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-        if (pieceState.isAlgaeInEndEffector()) {
-            schedulePlan(PlanLibrary.groundIntakeHold(), false);
-        } else {
-            schedulePlan(PlanLibrary.groundIntakeAndHandoff(), false);
-        }
-        activeScoreLevel = null;
-    }
-
-    public void requestGroundIntakeHold() {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-        schedulePlan(PlanLibrary.groundIntakeHold(), false);
-        activeScoreLevel = null;
-    }
-
-    public void requestStow(boolean clearQueue) {
-        schedulePlan(PlanLibrary.stow(), clearQueue);
-        activeScoreLevel = null;
-    }
-
-    public void requestScoreLevel(ScoreLevel level) {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-
-        if (activeStep != null && activeStep.requiresConfirm() && activeScoreLevel == level) {
-            queueConfirm();
-            return;
-        }
-
-        ManipulatorPlan plan = switch (level) {
-            case L1 -> PlanLibrary.scoreL1();
-            case L2 -> PlanLibrary.scoreL2();
-            case L3 -> PlanLibrary.scoreL3();
-            case L4 -> PlanLibrary.scoreL4();
-        };
-
-        activeScoreLevel = level;
-        schedulePlan(plan, false);
-    }
-
-    public void requestAutoAlgae() {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-
-        schedulePlan(PlanLibrary.algaeReefPickup(), false);
-        activeScoreLevel = null;
-    }
-
-    public void requestAlgaeGroundIntake() {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-        schedulePlan(PlanLibrary.algaeGroundIntake(), false);
-        activeScoreLevel = null;
-    }
-
-    public void requestProcessorScore() {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-        if (waitingForConfirm && isCurrentPlan("AlgaeProcessorScore")) {
-            queueConfirm();
-            return;
-        }
-        schedulePlan(PlanLibrary.algaeProcessorScore(), false);
-        activeScoreLevel = null;
-    }
-
-    public void requestBargeScore() {
-        if (state == HighLevelState.CLIMB) {
-            return;
-        }
-        if (waitingForConfirm && isCurrentPlan("AlgaeBargeScore")) {
-            queueConfirm();
-            return;
-        }
-        schedulePlan(PlanLibrary.algaeBargeScore(), false);
-        activeScoreLevel = null;
-    }
-
-    public void toggleClimbMode() {
-        if (state == HighLevelState.CLIMB) {
-            state = HighLevelState.MANIPULATE;
-            schedulePlan(PlanLibrary.stow(), true);
-        } else {
-            state = HighLevelState.CLIMB;
-            schedulePlan(PlanLibrary.climbReady(), true);
-        }
-    }
-
-    public void executeClimb() {
-        if (state != HighLevelState.CLIMB) {
-            return;
-        }
-        schedulePlan(PlanLibrary.climbFinish(), true);
-    }
-
-    public void clear() {
-        planQueue.clear();
-        currentPlan = null;
-        currentStepIndex = -1;
-        activeStep = null;
-        waitingForConfirm = false;
-        confirmQueued = false;
-        manager.setInactive();
-        endEffector.stop();
-        pieceState.clearAll();
-    }
-
-    private void pollQueue() {
-        if (currentPlan != null) {
-            return;
-        }
-        ManipulatorPlan next = planQueue.pollFirst();
-        if (next != null) {
-            setPlan(next);
-        }
-    }
-
-    private void schedulePlan(ManipulatorPlan plan, boolean clearQueue) {
-        if (clearQueue) {
-            planQueue.clear();
-            currentPlan = null;
-            activeStep = null;
-            currentStepIndex = -1;
-        }
-
-        if (currentPlan == null) {
-            setPlan(plan);
-        } else {
-            planQueue.addLast(plan);
-        }
-    }
-
-    private void setPlan(ManipulatorPlan plan) {
-        currentPlan = plan;
-        currentStepIndex = -1;
-        activeStep = null;
-        waitingForConfirm = false;
-        confirmQueued = false;
-        Logger.recordOutput("Supervisor/PlanStarted", plan.name());
-        startNextStep();
-    }
-
-    private boolean isCurrentPlan(String name) {
-        return currentPlan != null && currentPlan.name().equals(name);
-    }
-
-    private void startNextStep() {
-        if (currentPlan == null) {
-            pollQueue();
-            return;
-        }
-
-        currentStepIndex++;
-        if (currentStepIndex >= currentPlan.steps().size()) {
-            Logger.recordOutput("Supervisor/PlanCompleted", currentPlan.name());
-            currentPlan = null;
-            activeStep = null;
-            currentStepIndex = -1;
-            waitingForConfirm = false;
-            confirmQueued = false;
-            activeScoreLevel = null;
-            pollQueue();
-            return;
-        }
-
-        activeStep = currentPlan.steps().get(currentStepIndex);
-        stepStartTime = Timer.getFPGATimestamp();
-        waitingForConfirm = false;
-        confirmQueued = false;
-        Logger.recordOutput("Supervisor/PlanStepIndex", currentStepIndex);
-        Logger.recordOutput("Supervisor/PlanStepTotal", currentPlan.steps().size());
-        Logger.recordOutput("Supervisor/StepNode", activeStep.nodeName());
-        Logger.recordOutput("Supervisor/StepProfile", activeStep.profile().name());
-        Logger.recordOutput("Supervisor/StepMinHoldSeconds", activeStep.minHoldTimeSeconds());
-        Logger.recordOutput("Supervisor/StepRequiresConfirm", activeStep.requiresConfirm());
-        Logger.recordOutput("Supervisor/StepTolerance", activeStep.tolerance());
-
-        StepAction onEnter = activeStep.onEnter();
-        if (onEnter != null) {
-            onEnter.run(context);
-        }
-
-        if (!PlanLibrary.nodeExists(activeStep.nodeName())) {
-            Logger.recordOutput("Supervisor/UnknownNode", activeStep.nodeName());
-        }
-
-        manager.requestNode(
-                GraphParser.getNodeByName(activeStep.nodeName()),
-                activeStep.profile(),
-                activeStep.tolerance(),
-                activeStep.minHoldTimeSeconds()
-        );
-    }
-
-    private void runAction(StepAction action) {
-        if (action != null) {
-            action.run(context);
-        }
+        lastEndEffectorOccupied = endEffectorSensor;
     }
 }
+
+
+
+

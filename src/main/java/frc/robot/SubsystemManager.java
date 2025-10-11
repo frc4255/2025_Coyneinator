@@ -8,7 +8,6 @@ import org.littletonrobotics.junction.Logger;
 import frc.lib.util.graph.GraphParser;
 import frc.lib.util.graph.Node;
 import frc.robot.superstructure.Constraints;
-import frc.robot.superstructure.ManipulatorProfile;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.GroundIntake;
@@ -33,14 +32,15 @@ public class SubsystemManager {
 
     private boolean reactivation = false;
 
-    private ManipulatorProfile currentProfile = ManipulatorProfile.TRANSIT;
-    private double[] currentTolerance = currentProfile.toleranceCopy();
-    private double minHoldTimeSeconds = currentProfile.defaultHoldTimeSeconds();
+    private static final double[] DEFAULT_TOLERANCE = new double[] {0.06, 0.04, 0.08, 0.12, 0.10};
+    private double[] currentTolerance = Arrays.copyOf(DEFAULT_TOLERANCE, DEFAULT_TOLERANCE.length);
+    private double minHoldTimeSeconds = 0.0;
     private double holdStartTime = -1.0;
     private boolean holdSatisfied = true;
     private Node targetNode;
     private double[] targetSetpoints = new double[] {0, 0, 0, 0, 0};
     private final double[] commandedSetpoints = new double[] {0, 0, 0, 0, 0};
+    private boolean climbModeActive = false;
 
     public SubsystemManager(
             Pivot sPivot, Elevator sElevator, DifferentialWrist sWrist, GroundIntake sGroundIntake
@@ -62,17 +62,22 @@ public class SubsystemManager {
         active = false;
     }
     public void requestNode(Node requestedNode) {
-        requestNode(requestedNode, ManipulatorProfile.TRANSIT, null, ManipulatorProfile.TRANSIT.defaultHoldTimeSeconds());
+        requestNode(requestedNode, null, 0.0, false);
     }
 
-    public void requestNode(Node requestedNode, ManipulatorProfile profile, double[] tolerance, double minHoldTime) {
+    public void requestNode(Node requestedNode, double[] tolerance, double minHoldTime, boolean climbMode) {
 
         if (requestedNode == null) {
             return;
         }
 
         if (currentNode == null) {
-            currentNode = GraphParser.getNodeByName("Stow");
+            // Default to a safe idle node as the starting point. Older graphs used "Stow"; the
+            // current graph uses "Idle". Fall back to the requested node if neither exists.
+            currentNode = GraphParser.getNodeByName("Idle");
+            if (currentNode == null) {
+                currentNode = requestedNode;
+            }
         }
         reactivation = true;
         lastNode = new Node("Empty", new double[] {0, 0, 0, 0, 0});
@@ -80,16 +85,13 @@ public class SubsystemManager {
         this.requestedNode = requestedNode;
         this.targetNode = requestedNode;
         this.targetSetpoints = requestedNode.getSetpoints();
-        this.currentProfile = profile != null ? profile : ManipulatorProfile.TRANSIT;
-        double[] fallbackTolerance = this.currentProfile.toleranceCopy();
-        if (tolerance != null && tolerance.length == 5) {
-            this.currentTolerance = Arrays.copyOf(tolerance, tolerance.length);
-        } else {
-            this.currentTolerance = fallbackTolerance;
-        }
-        this.minHoldTimeSeconds = minHoldTime >= 0.0 ? minHoldTime : this.currentProfile.defaultHoldTimeSeconds();
+        this.currentTolerance = tolerance != null && tolerance.length == 5
+                ? Arrays.copyOf(tolerance, tolerance.length)
+                : Arrays.copyOf(DEFAULT_TOLERANCE, DEFAULT_TOLERANCE.length);
+        this.minHoldTimeSeconds = Math.max(minHoldTime, 0.0);
         this.holdStartTime = -1.0;
         this.holdSatisfied = this.minHoldTimeSeconds <= 0.0;
+        this.climbModeActive = climbMode;
 
         this.currentIndex = 0;
         this.path = GraphParser.getFastestPath(currentNode, requestedNode);
@@ -146,8 +148,8 @@ public class SubsystemManager {
        */
 
         double pivotGoal = Constraints.clampPivot(setpoints[0], pivotPosition, elevatorPosition);
-        double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, currentProfile);
-        double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, currentProfile);
+        double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, climbModeActive);
+        double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, climbModeActive);
         double wristRollGoal = Constraints.clampRoll(setpoints[3]);
         double groundIntakeGoal = Constraints.clampGroundIntake(setpoints[4]);
 
@@ -171,7 +173,7 @@ public class SubsystemManager {
             sGroundIntake.setPitchGoal(groundIntakeGoal);
         }
         Logger.recordOutput("Manager/ActiveNode", currentNode.getName());
-        Logger.recordOutput("Manager/ActiveProfile", currentProfile.name());
+        Logger.recordOutput("Manager/ClimbMode", climbModeActive);
 
         if (hasReachedTarget(setpoints, measurements)) {
             lastNode = currentNode;

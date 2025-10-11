@@ -55,7 +55,7 @@ public final class Constraints {
             double desiredMeters,
             double currentMeters,
             double pivotRadians,
-            ManipulatorProfile profile
+            boolean climbMode
     ) {
         double allowable = MAX_ELEVATOR_HEIGHT;
         if (pivotRadians < PIVOT_LOW_THRESHOLD) {
@@ -67,7 +67,7 @@ public final class Constraints {
         double commanded = clamp(desiredMeters, ELEVATOR_MIN_HEIGHT, allowable);
 
         // For climb profile we slow expansion when pivot is low to avoid bar interference.
-        if (profile == ManipulatorProfile.CLIMB && pivotRadians < PIVOT_HIGH_THRESHOLD) {
+        if (climbMode && pivotRadians < PIVOT_HIGH_THRESHOLD) {
             commanded = Math.min(commanded, currentMeters + 0.02);
         }
 
@@ -78,7 +78,7 @@ public final class Constraints {
             double desiredRadians,
             double pivotRadians,
             double elevatorMeters,
-            ManipulatorProfile profile
+            boolean climbMode
     ) {
         double minPitchAllowed;
         if (pivotRadians < PIVOT_LOW_THRESHOLD) {
@@ -93,7 +93,7 @@ public final class Constraints {
             minPitchAllowed = Math.max(minPitchAllowed, REEF_APPROACH_PITCH_LIMIT);
         }
 
-        if (profile == ManipulatorProfile.CLIMB) {
+        if (climbMode) {
             minPitchAllowed = Math.max(minPitchAllowed, Units.degreesToRadians(-35.0));
         }
 
