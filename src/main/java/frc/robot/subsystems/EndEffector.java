@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.Objects;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.EndEffectorIOInputsAutoLogged;
 
@@ -10,7 +13,7 @@ public class EndEffector extends SubsystemBase {
     private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
     public EndEffector(EndEffectorIO io) {
-        this.io = io;
+        this.io = Objects.requireNonNull(io, "end effector IO cannot be null");
     }
 
     public double getMotorCurrent() {
@@ -18,7 +21,9 @@ public class EndEffector extends SubsystemBase {
     }
 
     public void setDutyCycle(double volts) {
-        io.setVoltage(volts);
+        double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        io.setVoltage(appliedVolts);
+        Logger.recordOutput("EndEffector/CommandedVolts", appliedVolts);
     }
 
     public void stop() {

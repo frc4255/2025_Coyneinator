@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.Objects;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -25,7 +28,7 @@ public class DifferentialWrist extends SubsystemBase {
     private double manualRollPercent = 0.0;
 
     public DifferentialWrist(DifferentialWristIO io) {
-        this.io = io;
+        this.io = Objects.requireNonNull(io, "differential wrist IO cannot be null");
 
         pitchController = new ProfiledPIDController(
             20,
@@ -155,7 +158,7 @@ public class DifferentialWrist extends SubsystemBase {
 
     public void controlRollManually(double percent) {
         manualRollControl = true;
-        manualRollPercent = percent;
+        manualRollPercent = MathUtil.clamp(percent, -1.0, 1.0);
     }
 
     public void disableManualControl() {
@@ -198,15 +201,17 @@ public class DifferentialWrist extends SubsystemBase {
             Logger.recordOutput("DifferentialWrist/RollVoltage", rollOutput);
         }
 
-        io.setMotorVoltages(leftVoltage, rightVoltage);
-        Logger.recordOutput("DifferentialWrist/LeftAppliedVolts", leftVoltage);
-        Logger.recordOutput("DifferentialWrist/RightAppliedVolts", rightVoltage);
+        double clampedLeft = MathUtil.clamp(leftVoltage, -12.0, 12.0);
+        double clampedRight = MathUtil.clamp(rightVoltage, -12.0, 12.0);
+        io.setMotorVoltages(clampedLeft, clampedRight);
+        Logger.recordOutput("DifferentialWrist/LeftAppliedVolts", clampedLeft);
+        Logger.recordOutput("DifferentialWrist/RightAppliedVolts", clampedRight);
     }
 
     private void applyManualOutputs() {
         double rollVoltage = manualRollPercent * 12.0;
-        double leftVoltage = rollVoltage;
-        double rightVoltage = -rollVoltage;
+        double leftVoltage = MathUtil.clamp(rollVoltage, -12.0, 12.0);
+        double rightVoltage = MathUtil.clamp(-rollVoltage, -12.0, 12.0);
         io.setMotorVoltages(leftVoltage, rightVoltage);
         Logger.recordOutput("DifferentialWrist/ManualRollPercent", manualRollPercent);
     }
@@ -234,5 +239,7 @@ public class DifferentialWrist extends SubsystemBase {
         Logger.recordOutput("DifferentialWrist/ManualMode", manualRollControl);
         Logger.recordOutput("DifferentialWrist/PitchActive", pitchActive);
         Logger.recordOutput("DifferentialWrist/RollActive", rollActive);
+        Logger.recordOutput("DifferentialWrist/AutoHomeRequested", autoHomeRequested);
+        Logger.recordOutput("DifferentialWrist/IsHomed", isHomed);
     }
 }

@@ -3,8 +3,11 @@ package frc.robot.subsystems.Vision;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.AutoLog;
@@ -22,20 +25,20 @@ public class VisionSubsystem extends SubsystemBase {
     }
     
     /* Might need to create a custom class if I need more features. */
-    private Camera[] cameras;
+    private final Camera[] cameras;
 
     /* Possibly a list of poses generated from each individual camera */
-    public List<PoseAndTimestampAndDev> results = new ArrayList<>();
+    private final List<PoseAndTimestampAndDev> results = new ArrayList<>();
 
     private final VisionSubsystemInputsAutoLogged inputs = new VisionSubsystemInputsAutoLogged();
 
     public VisionSubsystem(Camera[] cameras) {
-        this.cameras = cameras;      
+        this.cameras = Objects.requireNonNull(cameras, "camera array cannot be null").clone();
     }
 
-    public byte[] convertToByteArray(Optional<VisionSubsystem.PoseAndTimestampAndDev> optionalPose) {
+    public byte[] convertToByteArray(Optional<PoseAndTimestampAndDev> optionalPose) {
         if (optionalPose.isPresent()) {
-            VisionSubsystem.PoseAndTimestampAndDev pose = optionalPose.get();
+            PoseAndTimestampAndDev pose = optionalPose.get();
     
             try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                  ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
@@ -56,13 +59,16 @@ public class VisionSubsystem extends SubsystemBase {
         results.clear();
         
         for (Camera cam : cameras) {
+            if (cam == null) {
+                continue;
+            }
             cam.updateEstimate();
             cam.updateCameraPoseEntry();
             Optional<PoseAndTimestampAndDev> camEst = cam.getEstimate();
-            if (camEst != null) {
-                results.add(camEst.get());
-                Logger.recordOutput("Camera " + cam + " Pose", camEst.get().getPose());
-            }
+            camEst.ifPresent(pose -> {
+                results.add(pose);
+                Logger.recordOutput("Camera " + cam + " Pose", pose.getPose());
+            });
         }
 
         inputs.estimatedPoses = new Pose2d[results.size()];
@@ -80,13 +86,15 @@ public class VisionSubsystem extends SubsystemBase {
     }  
 
     public List<PoseAndTimestampAndDev> getResults() {
-        return results;
+        return Collections.unmodifiableList(results);
     }
 
-    public static class PoseAndTimestampAndDev {
-        Pose2d pose;
-        double timestamp;
-        double stdDev;
+    public static class PoseAndTimestampAndDev implements Serializable {
+        private static final long serialVersionUID = -1583699044845882985L;
+
+        private final Pose2d pose;
+        private final double timestamp;
+        private final double stdDev;
 
         public PoseAndTimestampAndDev(Pose2d pose, double timestamp, double stdDev) {
             this.pose = pose;

@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
+import java.util.Objects;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,11 +22,12 @@ public class Elevator extends SubsystemBase {
 
     private boolean isHomed = false;
     private boolean active = false;
+    private boolean autoHomeRequested = false;
 
     private final DoubleSupplier pivotAngleSupplier;
 
     public Elevator(ElevatorIO io, DoubleSupplier pivotAngleSupplier) {
-        this.io = io;
+        this.io = Objects.requireNonNull(io, "elevator IO cannot be null");
         this.pivotAngleSupplier = pivotAngleSupplier;
 
         feedforward = new PivotingElevatorFeedforward(0.35, 3.5, 0.01);
@@ -47,10 +50,14 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setAutoHome(boolean request) {
-        isHomed = request;
+        autoHomeRequested = request;
+        if (!request) {
+            isHomed = false;
+        }
     }
 
     public void autoHome() {
+        autoHomeRequested = true;
         io.runOpenLoop(-0.3);
 
         Logger.recordOutput("Elevator/HomingVelocity", inputs.velocityMetersPerSecond);
@@ -59,7 +66,8 @@ public class Elevator extends SubsystemBase {
         if (Math.abs(inputs.velocityMetersPerSecond) <= 0.05) {
             io.resetPosition(0.0);
             io.stop();
-            setAutoHome(true);
+            isHomed = true;
+            autoHomeRequested = false;
         }
     }
 
@@ -85,11 +93,18 @@ public class Elevator extends SubsystemBase {
 
     public void setElevatorAsHomed() {
         io.resetPosition(0.0);
+        isHomed = true;
+        autoHomeRequested = false;
     }
 
     public void setGoal(double pos) {
-        controller.setGoal(pos);
-        Logger.recordOutput("Elevator/GoalPosition", pos);
+        double minLimit = Constants.Elevator.ElevatorMinExtensionLimit;
+        double maxLimit = Constants.Elevator.ElevatorMaxExtensionLimit;
+        double constrainedPos = maxLimit > minLimit
+            ? MathUtil.clamp(pos, minLimit, maxLimit)
+            : pos;
+        controller.setGoal(constrainedPos);
+        Logger.recordOutput("Elevator/GoalPosition", constrainedPos);
     }
 
     public boolean atGoal() {
@@ -109,10 +124,11 @@ public class Elevator extends SubsystemBase {
                         pivotAngleSupplier.getAsDouble()
                 );
         double totalOutput = output + feedforwardVolts;
-        io.setVoltage(totalOutput);
+        double appliedVoltage = MathUtil.clamp(totalOutput, -12.0, 12.0);
+        io.setVoltage(appliedVoltage);
         Logger.recordOutput("Elevator/PIDOutputVolts", output);
         Logger.recordOutput("Elevator/FeedforwardVolts", feedforwardVolts);
-        Logger.recordOutput("Elevator/AppliedVoltage", totalOutput);
+        Logger.recordOutput("Elevator/AppliedVoltage", appliedVoltage);
     }
 
     @Override
@@ -139,5 +155,7 @@ public class Elevator extends SubsystemBase {
         Logger.recordOutput("Elevator/PositionMeters", getElevatorPosition());
         Logger.recordOutput("Elevator/VelocityMetersPerSecond", inputs.velocityMetersPerSecond);
         Logger.recordOutput("Elevator/AccelerationMetersPerSecondSq", inputs.accelerationMetersPerSecondSq);
+        Logger.recordOutput("Elevator/IsHomed", isHomed);
+        Logger.recordOutput("Elevator/AutoHomeRequested", autoHomeRequested);
     }
 }

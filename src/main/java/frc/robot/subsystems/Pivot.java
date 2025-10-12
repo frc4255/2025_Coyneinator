@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.Objects;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -20,9 +23,10 @@ public class Pivot extends SubsystemBase {
     private boolean isHomed = false;
     private boolean isPosePossible = true;
     private boolean isStowed = false;
+    private boolean autoHomeRequested = false;
 
     public Pivot(PivotIO io) {
-        this.io = io;
+        this.io = Objects.requireNonNull(io, "pivot IO cannot be null");
 
         controller = new ProfiledPIDController(
             10,
@@ -50,10 +54,14 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setAutoHome(boolean request) {
-        isHomed = request;
+        autoHomeRequested = request;
+        if (!request) {
+            isHomed = false;
+        }
     }
 
     public void autoHome() {
+        autoHomeRequested = true;
         io.runOpenLoop(-0.2);
 
         Logger.recordOutput("Pivot/HomingVelocity", inputs.velocityRadiansPerSecond);
@@ -62,7 +70,8 @@ public class Pivot extends SubsystemBase {
         if (Math.abs(inputs.velocityRadiansPerSecond) <= 0.05) {
             io.resetPosition(0.0);
             io.stop();
-            setAutoHome(true);
+            isHomed = true;
+            autoHomeRequested = false;
         }
     }
 
@@ -88,6 +97,8 @@ public class Pivot extends SubsystemBase {
 
     public void setPivotAsHomed() {
         io.resetPosition(0.0);
+        isHomed = true;
+        autoHomeRequested = false;
     }
 
     public boolean isHomed() {
@@ -114,7 +125,7 @@ public class Pivot extends SubsystemBase {
 
     private void useOutput(double output, TrapezoidProfile.State setpoint) {
         double ffVolts = feedforward.calculate(setpoint.position, setpoint.velocity);
-        double finalOut = output + ffVolts;
+        double finalOut = MathUtil.clamp(output + ffVolts, -12.0, 12.0);
         io.setVoltage(finalOut);
         Logger.recordOutput("Pivot/PIDOutputVolts", output);
         Logger.recordOutput("Pivot/FeedforwardVolts", ffVolts);
@@ -138,6 +149,8 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Position", currentPosition);
         Logger.recordOutput("Pivot/Velocity", inputs.velocityRadiansPerSecond);
         Logger.recordOutput("Pivot/Acceleration", inputs.accelerationRadiansPerSecondSq);
+        Logger.recordOutput("Pivot/IsHomed", isHomed);
+        Logger.recordOutput("Pivot/AutoHomeRequested", autoHomeRequested);
 
         if (currentPosition > Constants.Elevator.PivotMaxLimit
             || currentPosition < Constants.Elevator.PivotMinLimit) {
