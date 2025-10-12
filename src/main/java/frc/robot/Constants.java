@@ -15,46 +15,25 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.led.LedColor;
 
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static class LEDs {
+        public static final int CANDLE_ID = 0; // TODO: replace with actual CANdle device ID
+        public static final int LED_COUNT = 60; // TODO: replace with actual LED count
 
-        public static HashMap<String, int[]> colorDatabase = new HashMap<String, int[]>();
+        public static final double CELEBRATION_DURATION_SECONDS = 2.0;
+        public static final double CELEBRATION_PERIOD_SECONDS = 0.25;
 
-        static {
-            colorDatabase.put("Red", new int[] {255, 0, 0});
-            colorDatabase.put("Green", new int[] {0, 255, 0});
-            colorDatabase.put("Blue", new int[] {0, 0, 255});
-            colorDatabase.put("Yellow", new int[] {255, 255, 0});
-            colorDatabase.put("Purple", new int[] {255, 0, 255});
-            colorDatabase.put("Cyan", new int[] {0, 255, 255});
-            colorDatabase.put("White", new int[] {255, 255, 255});
-            colorDatabase.put("noColor", new int[] {0, 0, 0});
-        }
-        
-        public static enum LEDStates {
-            OFF(10, colorDatabase.get("noColor"));
-
-
-            
-            private final int[] color;
-            private final int priority;
-    
-            LEDStates(int priority, int[] color) {
-                            this.priority = priority;
-                            this.color = color;
-            }
-    
-            public int getPriority() {
-                return priority;
-            }
-            public int[] getColor() {
-                return color;
-            }
-        }
+        public static final LedColor TEAL = new LedColor(0, 128, 128);
+        public static final LedColor LIGHT_GREEN = new LedColor(120, 255, 150);
+        public static final LedColor DEEP_GREEN = new LedColor(0, 100, 0);
+        public static final LedColor YELLOW = new LedColor(255, 200, 0);
+        public static final LedColor PURPLE = new LedColor(160, 32, 240);
+        public static final LedColor OFF = LedColor.BLACK;
     }
 
     public static final class PieceSensors {

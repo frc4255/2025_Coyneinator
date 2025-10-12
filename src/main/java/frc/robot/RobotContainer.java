@@ -32,18 +32,18 @@ import java.util.function.Function;
 import frc.robot.FieldLayout;
 import frc.robot.FieldLayout.Branch;
 import frc.robot.FieldLayout.Face;
+import frc.robot.autoalign.ReefAutoAlign;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.led.LedCoordinator;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.Camera;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.superstructure.PieceSensors;
 import frc.robot.superstructure.RobotSupervisor;
 import frc.robot.superstructure.RobotSupervisor.Mode;
 import frc.robot.superstructure.RobotSupervisor.ScoreLevel;
 import frc.robot.visualization.SuperstructureVisualizer;
-import frc.robot.autoalign.ReefAutoAlign;
-import java.util.Set;
 
 
 /**
@@ -124,6 +124,7 @@ public class RobotContainer {
         private final GroundIntake s_GroundIntake;
         private final EndEffector s_EndEffector;
         private final Climber s_Climber;
+        private final LEDHandler s_Leds;
         //private final OnTheFlyTrajectory onTheFlyTrajectory = new OnTheFlyTrajectory(s_Swerve);
         //private final AlignTool alignTool = new AlignTool();
 
@@ -132,6 +133,7 @@ public class RobotContainer {
         private final RobotSupervisor supervisor;
         private final ReefAutoAlign reefAutoAlign = new ReefAutoAlign();
         private final SuperstructureVisualizer superstructureVisualizer;
+        private final LedCoordinator ledCoordinator;
         
         /* auto stuff */
         private SendableChooser<Command> autochooser;
@@ -174,6 +176,7 @@ public class RobotContainer {
             s_GroundIntake = new GroundIntake(groundIntakeIO);
             s_EndEffector = new EndEffector(endEffectorIO);
             s_Climber = new Climber(climberIO);
+            s_Leds = new LEDHandler(Constants.LEDs.CANDLE_ID, Constants.LEDs.LED_COUNT);
 
             manager = new SubsystemManager(s_Pivot, s_Elevator, s_DifferentialWrist, s_GroundIntake);
 
@@ -186,6 +189,7 @@ public class RobotContainer {
                 s_GroundIntake,
                 SuperstructureVisualizer.Config.fromConstants()
             );
+            ledCoordinator = new LedCoordinator(s_Leds, supervisor, manager);
 
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -235,10 +239,19 @@ public class RobotContainer {
             manager.setInactive();
         }
 
+        public void handleDisabledInit() {
+            ledCoordinator.handleDisabledInit();
+        }
+
+        public void setAutoAlignActive(boolean active) {
+            ledCoordinator.setAutoAlignActive(active);
+        }
+
         public void updateManager() {
             manager.update();
             supervisor.periodic();
             logAutoAlignTarget();
+            ledCoordinator.update();
         }
 
         public void updateVisualizer() {
@@ -288,7 +301,7 @@ public class RobotContainer {
         boolean isRedAlliance = DriverStation.getAlliance()
                 .map(alliance -> alliance == DriverStation.Alliance.Red)
                 .orElse(false);
-        reefAutoAlign.calculate(currentPose, isRedAlliance);
+        ledCoordinator.setAlignmentResult(reefAutoAlign.calculate(currentPose, isRedAlliance));
     }
 
     private Command povAutomation(POVButton button, ScoreLevel coralLevel, Function<BooleanSupplier, Command> algaeFactory) {
@@ -316,6 +329,7 @@ public class RobotContainer {
                     String scoreNode = scoreNodeName(level, useFront);
 
                     Command sequence = Commands.sequence(
+                            Commands.runOnce(() -> setAutoAlignActive(true)),
                             prepare,
                             Commands.runOnce(() -> supervisor.goToTransit("Waiting to Score")),
                             Commands.waitUntil(supervisor::isTargetSettled),
@@ -335,7 +349,7 @@ public class RobotContainer {
                             ),
                             Commands.waitUntil(() -> !holdSupplier.getAsBoolean())
                     );
-                    return sequence;
+                    return sequence.finallyDo(() -> setAutoAlignActive(false));
                 },
                 Set.of(s_Swerve)
         );
