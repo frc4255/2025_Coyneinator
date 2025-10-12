@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -28,33 +29,37 @@ public class GroundIntake extends SubsystemBase {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            15, 
-            0, 
-            0,
+            Constants.GroundIntake.PITCH_KP,
+            Constants.GroundIntake.PITCH_KI,
+            Constants.GroundIntake.PITCH_KD,
             new TrapezoidProfile.Constraints(
-                4,
-                4
+                Constants.GroundIntake.PITCH_MAX_VELOCITY_RAD_PER_SEC,
+                Constants.GroundIntake.PITCH_MAX_ACCEL_RAD_PER_SEC_SQ
             )
         );
-        
+        controller.setTolerance(Constants.GroundIntake.PITCH_POSITION_TOLERANCE_RADIANS);
+
         feedforward = new ArmFeedforward(
-            0,
-            0,
-            0
+            Constants.GroundIntake.PITCH_KS,
+            Constants.GroundIntake.PITCH_KG,
+            Constants.GroundIntake.PITCH_KV,
+            Constants.GroundIntake.PITCH_KA
         );
 
         pitchClosedLoopEnabled = false;
     }
 
     public void setPitchVolts(double volts) {
-        io.setPitchVolts(volts);
+        double clampedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        io.setPitchVolts(clampedVolts);
         pitchClosedLoopEnabled = false;
-        Logger.recordOutput("GroundIntake/PitchCommandVolts", volts);
+        Logger.recordOutput("GroundIntake/PitchCommandVolts", clampedVolts);
     }
 
     public void setRollerVolts(double volts) {
-        io.setRollerVolts(volts);
-        Logger.recordOutput("GroundIntake/RollerCommandVolts", volts);
+        double clampedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        io.setRollerVolts(clampedVolts);
+        Logger.recordOutput("GroundIntake/RollerCommandVolts", clampedVolts);
     }
 
     public void stop() {
@@ -103,10 +108,11 @@ public class GroundIntake extends SubsystemBase {
     private void useOutput(double pidVolts, TrapezoidProfile.State setpoint) {
         double ffVolts = feedforward.calculate(setpoint.position, setpoint.velocity);
         double applied = pidVolts + ffVolts;
-        io.setPitchVolts(applied);
+        double clampedApplied = MathUtil.clamp(applied, -12.0, 12.0);
+        io.setPitchVolts(clampedApplied);
         Logger.recordOutput("GroundIntake/PIDVolts", pidVolts);
         Logger.recordOutput("GroundIntake/FeedforwardVolts", ffVolts);
-        Logger.recordOutput("GroundIntake/PitchControllerOutputVolts", applied);
+        Logger.recordOutput("GroundIntake/PitchControllerOutputVolts", clampedApplied);
     }
 
     @Override

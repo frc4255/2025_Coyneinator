@@ -23,31 +23,41 @@ public class StateManager {
     }
 
     
-    private static final HashMap<Positions, double[]> coral = new HashMap<>();
-    private static final HashMap<Positions, double[]> algae = new HashMap<>();
+    private static final HashMap<Positions, double[]> coral = createCoralCoordinateMap();
+    private static final HashMap<Positions, double[]> algae = createAlgaeCoordinateMap();
 
-    private static HashMap<Positions, double[]> currentCoordinateBase = new HashMap<>();
+    private static HashMap<Positions, double[]> currentCoordinateBase = coral;
 
-    public StateManager() {
+    public StateManager() {}
 
-        coral.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
-        coral.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
+    private static HashMap<Positions, double[]> createCoralCoordinateMap() {
+        HashMap<Positions, double[]> coralCoordinates = new HashMap<>();
 
-        coral.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
 
-        algae.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.INTAKE, new double[] {0.0, 0.0}); //TODO Tune this
-        algae.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
+        coralCoordinates.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
 
+        return coralCoordinates;
+    }
+
+    private static HashMap<Positions, double[]> createAlgaeCoordinateMap() {
+        HashMap<Positions, double[]> algaeCoordinates = new HashMap<>();
+
+        algaeCoordinates.put(Positions.L1, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.L2, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.L3, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.L4, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.NET, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.HP, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.INTAKE, new double[] {0.0, 0.0}); //TODO Tune this
+        algaeCoordinates.put(Positions.STOW, new double[] {0.0, 0.0}); //TODO Tune this
+
+        return algaeCoordinates;
     }
 
     public static double[] getCoordinate(Positions requested) {
@@ -58,7 +68,13 @@ public class StateManager {
             currentCoordinateBase = coral;
         }
 
-        return currentCoordinateBase.get(requested);
+        double[] coordinates = currentCoordinateBase.get(requested);
+        if (coordinates == null) {
+            throw new IllegalArgumentException(
+                    "No coordinates defined for " + requested + " in " + getCurrentState() + " mode");
+        }
+
+        return coordinates;
     }
 
     public static RobotStateMachine getCurrentState() {

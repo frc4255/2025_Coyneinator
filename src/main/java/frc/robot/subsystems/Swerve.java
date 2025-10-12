@@ -1,8 +1,13 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.littletonrobotics.junction.Logger;
 
 import choreo.trajectory.SwerveSample;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -51,8 +56,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public Swerve(SwerveIO io, VisionSubsystem vision) {
-        this.io = io;
-        this.vision = vision;
+        this.io = Objects.requireNonNull(io, "swerve IO cannot be null");
+        this.vision = Objects.requireNonNull(vision, "vision subsystem cannot be null");
 
         io.updateInputs(inputs);
 
@@ -99,7 +104,7 @@ public class Swerve extends SubsystemBase {
         lastCommandedModuleStates = swerveModuleStates;
         lastCommandedChassisSpeeds = fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getHeading().rotateBy(allianceRotation))
+                translation.getX(), translation.getY(), -rotation, getHeading().rotateBy(allianceRotation))
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
     }
 
@@ -201,7 +206,7 @@ public class Swerve extends SubsystemBase {
         angle = (angle + 180) % 360;
 
         char[] branches = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'};
-        int sectorIndex = (int) (angle / 30.0);
+        int sectorIndex = MathUtil.clamp((int) (angle / 30.0), 0, branches.length - 1);
 
         Logger.recordOutput("Swerve/ActiveSector", branches[sectorIndex]);
 
@@ -214,10 +219,27 @@ public class Swerve extends SubsystemBase {
         Logger.processInputs("Swerve", inputs);
 
         m_SwervePoseEstimator.update(getGyroYaw(), getModulePositions());
-        for (PoseAndTimestampAndDev poseAndTimestamp : vision.getResults()) {
+        List<PoseAndTimestampAndDev> measurements = new ArrayList<>(vision.getResults());
+        for (PoseAndTimestampAndDev poseAndTimestamp : measurements) {
+            if (poseAndTimestamp == null) {
+                continue;
+            }
+
+            double timestamp = poseAndTimestamp.getTimestamp();
+            if (!Double.isFinite(timestamp)) {
+                continue;
+            }
+
+            double translationalStdDev = Math.max(poseAndTimestamp.getStdDev(), 0.01);
+            if (!Double.isFinite(translationalStdDev)) {
+                continue;
+            }
+            double rotationalStdDev = Math.max(Math.toRadians(5.0), translationalStdDev * 0.25);
+
             m_SwervePoseEstimator.addVisionMeasurement(
                 poseAndTimestamp.getPose(),
-                poseAndTimestamp.getTimestamp()
+                timestamp,
+                VecBuilder.fill(translationalStdDev, translationalStdDev, rotationalStdDev)
             );
         }
 

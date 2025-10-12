@@ -31,11 +31,11 @@ import frc.robot.FieldLayout;
 import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
 
 public class Camera {
-    private PhotonCamera cam;
-    private PhotonPoseEstimator poseEstimator;
+    private final PhotonCamera cam;
+    private final PhotonPoseEstimator poseEstimator;
     public List<PhotonTrackedTarget> targets = new ArrayList<>();
-    private Optional<PoseAndTimestampAndDev> estimate = null;
-    private Optional<Double> poseStdDevs;
+    private Optional<PoseAndTimestampAndDev> estimate = Optional.empty();
+    private Optional<Double> poseStdDevs = Optional.empty();
     private Supplier<Pose2d> robotPoseSupplier;
 
     public DoubleArrayLogEntry cameraPoseEntry;
@@ -62,19 +62,20 @@ public class Camera {
   
     public void updateCameraPoseEntry() {
         // Check if there is an estimate available
-        if (estimate != null) {
-            Pose2d pose = estimate.get().getPose();
-            
+        estimate.ifPresent(poseAndTimestamp -> {
+            Pose2d pose = poseAndTimestamp.getPose();
+
             // Flatten the Pose2d data into individual components
-            double[] poseData = { pose.getTranslation().getX(), 
-                                  pose.getTranslation().getY(),
-                                  pose.getRotation().getDegrees()};
-    
+            double[] poseData = {
+                pose.getTranslation().getX(),
+                pose.getTranslation().getY(),
+                pose.getRotation().getDegrees()
+            };
+
             // Append the pose data to the DoubleArrayLogEntry
             SmartDashboard.putNumberArray(cam.getName() + "Pose Estimate", poseData);
             cameraPoseEntry.append(poseData);
-        } else {
-        }
+        });
     }
     
     
@@ -82,58 +83,66 @@ public class Camera {
 
     public void updateEstimate() {
         /* Clear last estimate */
-        estimate = null;
+        estimate = Optional.empty();
+        poseStdDevs = Optional.empty();
 
         //TODO: Fix use of deprecated function
-        var opt = poseEstimator.update(cam.getLatestResult());
-        EstimatedRobotPose result = opt.isPresent() ? opt.get() : null;
+        Optional<EstimatedRobotPose> opt = poseEstimator.update(cam.getLatestResult());
 
-        if (result != null) {
-            Pose3d pose = result.estimatedPose;
-            boolean shouldRejectPose = false;
+        if (opt.isEmpty()) {
+            return;
+        }
 
-            List<Double> tagDistances = new ArrayList<>();
-            
-            /* Filtering; Reject unlikely*/
-            if (isPoseOutOfBounds(pose)) {
+        EstimatedRobotPose result = opt.get();
+        Pose3d pose = result.estimatedPose;
+        boolean shouldRejectPose = false;
+
+        List<Double> tagDistances = new ArrayList<>();
+
+        /* Filtering; Reject unlikely*/
+        if (isPoseOutOfBounds(pose)) {
+            shouldRejectPose = true;
+        }
+
+        /*if (robotPoseSupplier != null) {
+            if (!isPosePhysicallyPossible(robotPoseSupplier.get(), pose.toPose2d()) && !isPoseOutOfBounds(robotPoseSupplier.get())) {
                 shouldRejectPose = true;
             }
-            
-            /*if (robotPoseSupplier != null) {
-                if (!isPosePhysicallyPossible(robotPoseSupplier.get(), pose.toPose2d()) && !isPoseOutOfBounds(robotPoseSupplier.get())) {
-                    shouldRejectPose = true;
-                }
-            }*/
+        }*/
 
-            for (PhotonTrackedTarget target : result.targetsUsed) {
-                if (target.getPoseAmbiguity() > 0.2) {
-                    shouldRejectPose = true;
-                }
-
-                if (robotPoseSupplier != null) {
-                    Translation3d translation = target.getBestCameraToTarget().getTranslation();
-                    tagDistances.add(Math.hypot(translation.getX(), translation.getY()));
-                }
+        for (PhotonTrackedTarget target : result.targetsUsed) {
+            if (target.getPoseAmbiguity() > 0.2) {
+                shouldRejectPose = true;
             }
 
+            if (robotPoseSupplier != null) {
+                Translation3d translation = target.getBestCameraToTarget().getTranslation();
+                tagDistances.add(Math.hypot(translation.getX(), translation.getY()));
+            }
+        }
+
+        if (!shouldRejectPose && !tagDistances.isEmpty()) {
             double sum = 0.0;
 
             for (double distance : tagDistances) {
                 sum += distance;
             }
 
-            double meanDist = sum/tagDistances.size();
+            double meanDist = sum / tagDistances.size();
 
             double sumOfSquares = 0.0;
-            
+
             for (double dist : tagDistances) {
-                sumOfSquares+= Math.pow(dist - meanDist, 2);
+                sumOfSquares += Math.pow(dist - meanDist, 2);
             }
-            
-            if (!shouldRejectPose) {
-                poseStdDevs = Optional.ofNullable(Math.sqrt(sumOfSquares/tagDistances.size()));
-                estimate = Optional.ofNullable(new PoseAndTimestampAndDev(result.estimatedPose.toPose2d(), result.timestampSeconds, poseStdDevs.get()));
-            }
+
+            double stdDev = Math.sqrt(sumOfSquares / tagDistances.size());
+            poseStdDevs = Optional.of(stdDev);
+        }
+
+        if (!shouldRejectPose) {
+            double stdDev = poseStdDevs.orElse(0.0);
+            estimate = Optional.of(new PoseAndTimestampAndDev(result.estimatedPose.toPose2d(), result.timestampSeconds, stdDev));
         }
     }
 
