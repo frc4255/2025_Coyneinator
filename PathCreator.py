@@ -55,6 +55,7 @@ SETPOINTS = {
     "Algae L3 Back": [1.38, 0.28, 1.57, 1.57, 3.59],
     "Climb Init": [1.57, 0.0, -1.29, 0, 3.59],
     "Climb Final": [-0.2, 0, 1.57, 0, 3.59],
+    "Intake while Holding Algae":[1.1, 0.0, 0.2, 0.0, -0.27]
 }
 
 

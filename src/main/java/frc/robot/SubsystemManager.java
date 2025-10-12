@@ -147,11 +147,17 @@ public class SubsystemManager {
         }
        */
 
+        double pivotGoal = setpoints[0];
+        double elevatorGoal = setpoints[1];
+        double wristPitchGoal = setpoints[2];
+        double wristRollGoal = setpoints[3];
+        double groundIntakeGoal = setpoints[4];
+        /*
         double pivotGoal = Constraints.clampPivot(setpoints[0], pivotPosition, elevatorPosition);
         double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, climbModeActive);
         double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, climbModeActive);
         double wristRollGoal = Constraints.clampRoll(setpoints[3]);
-        double groundIntakeGoal = Constraints.clampGroundIntake(setpoints[4]);
+        double groundIntakeGoal = Constraints.clampGroundIntake(setpoints[4]);*/
 
         commandedSetpoints[0] = pivotGoal;
         commandedSetpoints[1] = elevatorGoal;
@@ -184,8 +190,6 @@ public class SubsystemManager {
                 holdSatisfied = minHoldTimeSeconds <= 0.0;
             }
         }
-
-        canAutoHome();
 
         Logger.recordOutput("CurrentNode", currentNode.getName());
         Logger.recordOutput("Manager/Active", active);

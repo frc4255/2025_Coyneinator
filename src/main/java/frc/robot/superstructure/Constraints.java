@@ -32,7 +32,7 @@ public final class Constraints {
     private static final double ROLL_MIN = Units.degreesToRadians(-200.0);
     private static final double ROLL_MAX = Units.degreesToRadians(200.0);
     private static final double GROUND_INTAKE_MIN = Units.degreesToRadians(-150.0);
-    private static final double GROUND_INTAKE_MAX = Units.degreesToRadians(150.0);
+    private static final double GROUND_INTAKE_MAX = Units.degreesToRadians(250);
 
     private static final double PIVOT_HOLD_WINDOW = Units.degreesToRadians(2.0);
 

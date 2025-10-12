@@ -32,8 +32,8 @@ public class GroundIntake extends SubsystemBase {
             0, 
             0,
             new TrapezoidProfile.Constraints(
-                4,
-                4
+                10,
+                12
             )
         );
         
@@ -57,6 +57,19 @@ public class GroundIntake extends SubsystemBase {
         Logger.recordOutput("GroundIntake/RollerCommandVolts", volts);
     }
 
+    //TODO: Tune speed
+    public void setCoralIntake() {
+        io.setRollerVolts(5);
+    }
+
+    public void stopRollers() {
+        io.setRollerVolts(0);
+    }
+
+    //TODO: Tune Speed
+    public void setHandoffSpeeds() {
+        io.setRollerVolts(-5);
+    }
     public void stop() {
         io.stop();
     }

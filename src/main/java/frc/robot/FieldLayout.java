@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.time.chrono.HijrahEra;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
+import frc.robot.superstructure.RobotSupervisor.ScoreLevel;
 
 public class FieldLayout {
 
@@ -163,6 +165,37 @@ public class FieldLayout {
         return handleAllianceFlip(getAlgaeReefIntakePose(face), isRedAlliance);
     }
 
+    public static enum AlgaeHeight {
+        HIGH,
+        LOW
+    }
+
+    public static ScoreLevel getAlgaeHeightForFace(Face face) {
+        ScoreLevel result;
+        switch (face) {
+            case NEAR_CENTER:
+                result = ScoreLevel.L4;
+                break;
+            case NEAR_LEFT:
+                result = ScoreLevel.L3;
+                break;
+            case NEAR_RIGHT:
+                result = ScoreLevel.L3;
+                break;
+            case FAR_LEFT:
+                result = ScoreLevel.L4;
+                break;
+            case FAR_RIGHT:
+                result = ScoreLevel.L4;
+                break;
+            case FAR_CENTER:
+                result = ScoreLevel.L3;
+                break;
+            default:
+                result = ScoreLevel.L4;
+        }
+        return result;
+    }
     public enum Branch {
         A(new BranchKey(true, Face.NEAR_CENTER)),
         B(new BranchKey(false, Face.NEAR_CENTER)),
@@ -212,7 +245,7 @@ public class FieldLayout {
         }
     }
 
-    private static final class BranchKey {
+    public static final class BranchKey {
         private final boolean isLeft;
         private final Face face;
 

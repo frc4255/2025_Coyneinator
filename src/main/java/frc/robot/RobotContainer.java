@@ -11,25 +11,33 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.TimeUnit;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.security.cert.CertPathBuilderException;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 import frc.robot.FieldLayout;
+import frc.robot.FieldLayout.AlgaeHeight;
 import frc.robot.FieldLayout.Branch;
 import frc.robot.FieldLayout.Face;
 import frc.robot.autos.*;
@@ -37,12 +45,15 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Vision.Camera;
+import frc.robot.superstructure.GamePieceState;
 import frc.robot.superstructure.PieceSensors;
 import frc.robot.superstructure.RobotSupervisor;
 import frc.robot.superstructure.RobotSupervisor.Mode;
 import frc.robot.superstructure.RobotSupervisor.ScoreLevel;
 import frc.robot.visualization.SuperstructureVisualizer;
 import frc.robot.autoalign.ReefAutoAlign;
+import frc.robot.autoalign.ReefAutoAlign.AlignmentResult;
+
 import java.util.Set;
 
 
@@ -55,9 +66,13 @@ import java.util.Set;
 public class RobotContainer {
     private static final double TRIGGER_THRESHOLD = 0.1;
     private static final double GROUND_INTAKE_VOLTS = 6.0;
+    private static final double AUTO_ALIGN_DISTANCE_EPS_METERS = Units.inchesToMeters(1.5);
+    private static final double AUTO_ALIGN_ANGLE_EPS_RAD = Units.degreesToRadians(4.0);
+    private static final double AUTO_ALIGN_LINEAR_SPEED_EPS = 0.12; // m/s
+    private static final double AUTO_ALIGN_ANGULAR_SPEED_EPS = Units.degreesToRadians(6.0);
 
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
+    private final CommandXboxController driver = new CommandXboxController(0);
 
     private final Joystick operator = new Joystick(1);
 
@@ -94,24 +109,6 @@ public class RobotContainer {
 
     private final JoystickButton coralHPIntake = new JoystickButton(operator, XboxController.Button.kB.value);
 
-    /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton groundIntake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-
-    private final JoystickButton processorScore = new JoystickButton(driver, XboxController.Button.kX.value);
-
-    private final JoystickButton runElevatorTesting = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
-    private final JoystickButton scoreBarge = new JoystickButton(driver, XboxController.Button.kY.value);
-
-    private final CommandXboxController driverAgain = new CommandXboxController(0);
-    private final JoystickButton climb = new JoystickButton(driver, XboxController.Button.kStart.value);
-
-    private final POVButton povRight = new POVButton(driver, 90);
-    private final POVButton povDown = new POVButton(driver, 180);
-    private final POVButton povLeft = new POVButton(driver, 270);
-    private final POVButton povUp = new POVButton(driver, 0);
     
         /* Subsystems */
         private final VisionSubsystem s_VisionSubystem = new VisionSubsystem(
@@ -246,33 +243,36 @@ public class RobotContainer {
         }
         
         private void configureButtonBindings() {
-            zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+            driver.back().onTrue(Commands.runOnce(() -> s_Swerve.zeroHeading(), s_Swerve));
+            
+            driver.a().onTrue(Commands.runOnce(() -> supervisor.goToTransit("Idle")));
+            // Intaking
 
-            Trigger algaeModeTrigger = driverAgain.rightTrigger(TRIGGER_THRESHOLD);
-            algaeModeTrigger.onTrue(Commands.runOnce(() -> supervisor.setAlgaeMode(true)).ignoringDisable(true));
-            algaeModeTrigger.onFalse(
-                    Commands.runOnce(() -> {
-                        if (!supervisor.getPieceState().isAlgaeInIntake()
-                                && !supervisor.getPieceState().isAlgaeInEndEffector()) {
-                            supervisor.setAlgaeMode(false);
-                        }
-                    }).ignoringDisable(true)
+            driver.rightBumper().toggleOnTrue(
+                Commands.either(
+                    coralIntakeWithAlgae(),
+                    coralIntakeToHandoff(),
+                    () -> supervisor.isAlgaeMode()
+                ).handleInterrupt((interruptGroundIntake())
+                )
             );
 
-            povUp.whileTrue(povAutomation(povUp, ScoreLevel.L1, this::algaeReefIntakeCommand));
-            povRight.whileTrue(povAutomation(povRight, ScoreLevel.L4, hold -> algaeBargeScoreCommand()));
-            povDown.whileTrue(povAutomation(povDown, ScoreLevel.L3, hold -> algaeProcessorScoreCommand()));
-            povLeft.whileTrue(povAutomation(povLeft, ScoreLevel.L2, hold -> algaeGroundIntakeCommand().until(() -> !hold.getAsBoolean())));
+            driver.leftBumper().toggleOnTrue(
+                Commands.either(
+                    algaeGroundIntake(),
+                    coralIntakeToHold(),
+                    () -> driver.rightTrigger(0.1).getAsBoolean()
+                ).handleInterrupt(() -> {
+                    s_EndEffector.stop();
+                    supervisor.goToTransit("Idle");
+                })
+            );
 
-            runElevatorTesting.whileTrue(coralIntakeHoldCommand());
-            groundIntake.onTrue(coralIntakeHandoffCommand());
-
-            climb.onTrue(humanPlayerIntakeCommand());
-            processorScore.onTrue(climbInitCommand());
-            scoreBarge.onTrue(climbFinishCommand());
-
-            stow.onTrue(new InstantCommand(supervisor::requestIdle).withName("DriverA_ResetToIdle"));
-            zeroWristRoll.onTrue(new InstantCommand(s_DifferentialWrist::setHomed));
+            // Scoring
+            //Top left trigger - L4 and Barge
+          /*  driver.povUp().whileTrue(
+                Commands.either(Barge, L4, coralHPIntake)
+            );*/
         }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
@@ -291,6 +291,233 @@ public class RobotContainer {
         reefAutoAlign.calculate(currentPose, isRedAlliance);
     }
 
+    private Command autoAlignUntilStable(Pose2d targetPose) {
+        return new FunctionalCommand(
+                () -> {},
+                () -> {
+                    var result = reefAutoAlign.calculate(s_Swerve.getPose(), isRedAlliance());
+                    ChassisSpeeds speeds = result.robotRelativeSpeeds();
+                    s_Swerve.drive(
+                            new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
+                            speeds.omegaRadiansPerSecond,
+                            false,
+                            false
+                    );
+                },
+                interrupted -> s_Swerve.drive(new Translation2d(), 0.0, false, true),
+                () -> isPoseStable(targetPose),
+                s_Swerve
+        );
+    }
+
+    private boolean isPoseStable(Pose2d targetPose) {
+        Pose2d current = s_Swerve.getPose();
+        double posError = current.getTranslation().getDistance(targetPose.getTranslation());
+        double angleError = Math.abs(current.getRotation().minus(targetPose.getRotation()).getRadians());
+
+        ChassisSpeeds speeds = s_Swerve.getChassisSpeeds();
+        double linearSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        double angularSpeed = Math.abs(speeds.omegaRadiansPerSecond);
+
+        return posError <= AUTO_ALIGN_DISTANCE_EPS_METERS
+                && angleError <= AUTO_ALIGN_ANGLE_EPS_RAD
+                && linearSpeed <= AUTO_ALIGN_LINEAR_SPEED_EPS
+                && angularSpeed <= AUTO_ALIGN_ANGULAR_SPEED_EPS;
+    }
+
+    private Runnable interruptGroundIntake() {
+        return () -> {
+            s_EndEffector.stop();
+            s_GroundIntake.stop();
+
+            if (supervisor.isAlgaeMode()) {
+                supervisor.goToTransit("Holding Algae");
+            } else {
+                supervisor.goToTransit("Idle");
+            }
+        };
+    }
+
+    private class lazyWrapper {
+        AlignmentResult res;
+
+        public void setRes(AlignmentResult res) {
+            this.res = res;
+        }
+
+        public AlignmentResult getRes() {
+            return res;
+        }
+    }
+
+    private Command autoAlignToReefCommand() {
+
+        lazyWrapper res = new lazyWrapper();
+
+        return Commands.run(
+                () -> {
+                    Pose2d currentPose = s_Swerve.getPose();
+                    boolean isRedAlliance = DriverStation.getAlliance()
+                            .map(alliance -> alliance == DriverStation.Alliance.Red)
+                            .orElse(false);
+                    res.setRes(reefAutoAlign.calculate(currentPose, isRedAlliance));
+                    ChassisSpeeds speeds = res.getRes().robotRelativeSpeeds();
+                    s_Swerve.drive(
+                            new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
+                            speeds.omegaRadiansPerSecond,
+                            false,
+                            false
+                    );
+                }
+        ).finallyDo(() -> s_Swerve.drive(new Translation2d(), 0.0, false, true)).until(() -> {
+            return (s_Swerve.getPose().getTranslation().getDistance(res.getRes().targetPose().getTranslation()) < 0.1) && (Math.abs(s_Swerve.getPose().getRotation().getRadians() - res.getRes().targetPose().getRotation().getRadians()) < 0.1);
+        });
+    }
+
+    private Command algaeGroundIntake() {
+        return Commands.sequence(
+            Commands.parallel(
+                Commands.runOnce(() -> supervisor.goToTransit("Ground Intake Algae")),
+                Commands.runOnce(() -> s_EndEffector.setAlgaeIntakeSpeed())
+            ),
+            Commands.waitUntil(pieceSensors::algaeDetectedAtEndEffector),
+            Commands.parallel(
+                Commands.runOnce(() -> supervisor.recordAlgaeAcquisition()),
+                rumbleCommand(0.5),
+                Commands.runOnce(() -> supervisor.goToTransit("Holding Algae")),
+                Commands.runOnce(() -> s_EndEffector.stop())
+            )
+        );
+    }
+    private Command coralIntakeWithAlgae() {
+        return Commands.sequence(
+            Commands.parallel(
+                Commands.runOnce(() -> supervisor.goToTransit("Intake while Holding Algae")),
+                Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
+                // LEDs
+            ),
+            Commands.waitUntil(pieceSensors::coralDetectedInIntake),
+            Commands.parallel(
+                    rumbleCommand(0.5),
+                    Commands.runOnce(() -> supervisor.goToTransit("Holding Algae")),
+                    Commands.runOnce(() -> s_GroundIntake.stopRollers())
+                    // LEDs
+            )
+        );
+    }
+
+    private Command coralIntakeToHold() {
+        return Commands.sequence(
+            Commands.parallel(
+                Commands.runOnce(() -> supervisor.goToTransit("Ground Intake")),
+                Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
+        // LEDs
+        ),
+        Commands.waitUntil(pieceSensors::coralDetectedInIntake),
+        Commands.parallel(
+                rumbleCommand(0.5),
+                Commands.runOnce(() -> supervisor.goToTransit("Idle")),
+                Commands.runOnce(() -> s_GroundIntake.stopRollers())
+        // LEDs
+        )
+        );
+    }
+
+    private Command HandoffCoralToWrist() {
+        return Commands.sequence(
+            Commands.runOnce(() -> supervisor.goToTransit("Handoff")),
+            Commands.waitUntil(supervisor::isTargetSettled),
+            Commands.parallel(
+                    Commands.runOnce(() -> s_EndEffector.setCoralHandoffSpeed()),
+                    Commands.runOnce(() -> s_GroundIntake.setHandoffSpeeds())),
+            Commands.waitUntil(pieceSensors::coralDetectedAtWrist),
+            Commands.parallel(
+                Commands.runOnce(() -> s_EndEffector.stop()),
+                Commands.runOnce(() -> s_GroundIntake.stopRollers())
+            ),
+            Commands.runOnce(() -> supervisor.goToTransit("Waiting to Score"))
+        );
+    }
+    private Command coralIntakeToHandoff() {
+        return Commands.sequence(
+                Commands.parallel(
+                        Commands.runOnce(() -> supervisor.goToTransit("Ground Intake")),
+                        Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
+                // LEDs
+                ),
+                Commands.waitUntil(pieceSensors::coralDetectedInIntake).withTimeout(10),
+                Commands.parallel(
+                        rumbleCommand(0.5),
+                        Commands.runOnce(() -> supervisor.goToTransit("Handoff")),
+                        Commands.runOnce(() -> s_GroundIntake.stopRollers())
+                // LEDs
+                ),
+                Commands.waitUntil(supervisor::isTargetSettled),
+                Commands.parallel(
+                        Commands.runOnce(() -> s_EndEffector.setCoralHandoffSpeed()),
+                        Commands.runOnce(() -> s_GroundIntake.setHandoffSpeeds())),
+                Commands.waitUntil(pieceSensors::coralDetectedAtWrist),
+                Commands.parallel(
+                    Commands.runOnce(() -> s_EndEffector.stop()),
+                    Commands.runOnce(() -> s_GroundIntake.stopRollers())
+                ),
+                Commands.runOnce(() -> supervisor.goToTransit("Waiting to Score"))
+        );
+    }
+    /*
+    private Command coralIntakeToHandoff() {
+        return Commands.sequence(
+            Commands.parallel(
+                Commands.runOnce(() -> supervisor.goToTransit("Intake while Holding Algae")),
+                Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
+                //LEDs
+            ),
+            Commands.waitUntil(pieceSensors::coralDetectedInIntake),
+            Commands.either(
+                Commands.parallel(
+                    rumbleCommand(0.5),
+                    Commands.runOnce(() -> supervisor.goToTransit("Holding Algae")),
+                    Commands.runOnce(() -> s_GroundIntake.stopRollers())
+                    //LEDs
+                ),
+                () -> {
+                    Commands.parallel(
+                        rumbleCommand(0.5),
+                        Commands.runOnce(() -> supervisor.goToTransit("Handoff")),
+                        Commands.runOnce(() -> s_GroundIntake.stopRollers(), s_Swerve)
+                        //LEDs
+                    ),
+                    Commands.waitUntil(supervisor::isTargetSettled),
+                    //LEDs
+                    Commands.parallel(
+                        Commands.runOnce(() -> s_EndEffector.setCoralHandoffSpeed()),
+                        Commands.runOnce(() -> s_GroundIntake.setHandoffSpeeds())  
+                    ),
+                    Commands.waitUntil(pieceSensors::coralDetectedAtWrist),
+                    Commands.runOnce(() -> supervisor.goToTransit("Waiting to Score"))
+                },
+            () -> supervisor.getPieceState().isAlgaeInEndEffector())
+            
+        );
+    }*/
+
+    public Command rumbleCommand(double durationSeconds) {
+		return Commands.sequence(
+						Commands.runOnce(() -> {
+							setRumble(true);
+						}),
+						Commands.waitSeconds(durationSeconds),
+						Commands.runOnce(() -> {
+							setRumble(false);
+						}))
+				.handleInterrupt(() -> {
+					setRumble(false);
+				});
+	}
+
+    public void setRumble(boolean on) {
+		driver.getHID().setRumble(RumbleType.kBothRumble, on ? 1.0 : 0.0);
+	}
     private Command povAutomation(POVButton button, ScoreLevel coralLevel, Function<BooleanSupplier, Command> algaeFactory) {
         BooleanSupplier holdSupplier = button::getAsBoolean;
         return Commands.defer(
@@ -304,41 +531,57 @@ public class RobotContainer {
         );
     }
 
-    private Command coralScoreWhileHeld(POVButton button, ScoreLevel level) {
+    private Command coralScoreWhileHeld(Trigger button, ScoreLevel level) {
         BooleanSupplier holdSupplier = button::getAsBoolean;
         return Commands.defer(
                 () -> {
                     boolean isRed = isRedAlliance();
                     Branch branch = FieldLayout.getClosestBranch(s_Swerve.getPose(), isRed);
                     boolean useFront = shouldUseFront(branch, isRed);
-
-                    Command prepare = ensureCoralReady();
+                    Pose2d targetPose = FieldLayout.getRobotApproachPose(
+                            branch,
+                            isRed,
+                            reefAutoAlign.getStandoffMeters());
+                    ScoreLevel algaeLevel = FieldLayout.getAlgaeHeightForFace(branch.getKey().face());
+                    Command align = autoAlignUntilStable(targetPose);
+                    Command prepare = new InstantCommand();
                     String scoreNode = scoreNodeName(level, useFront);
 
+                    GamePieceState pieceState = supervisor.getPieceState();
+                    if (pieceState.isCoralInWrist()) {
+                        if (!pieceState.isCoralInIntake()) {
+                            return new InstantCommand();
+                        } else {
+                            prepare = ensureCoralReady();
+                        }
+                    }
                     Command sequence = Commands.sequence(
-                            prepare,
+                            Commands.parallel(
+                                align,
+                                prepare
+                            ),
                             Commands.runOnce(() -> supervisor.goToTransit("Waiting to Score")),
                             Commands.waitUntil(supervisor::isTargetSettled),
                             Commands.runOnce(() -> supervisor.goToScorePose(scoreNode)),
                             Commands.waitUntil(supervisor::isTargetSettled),
-                            Commands.runOnce(() -> supervisor.runEndEffector(Constants.EndEffector.OUTTAKE_CORAL_VOLTS)),
-                            Commands.waitSeconds(0.35),
+                            Commands.runOnce(
+                                    () -> supervisor.runEndEffector(Constants.EndEffector.OUTTAKE_CORAL_VOLTS)),
+                            Commands.waitSeconds(0.35), //TODO: Idk how I feel about this
                             Commands.runOnce(() -> {
                                 supervisor.stopEndEffector();
                                 supervisor.markCoralInWrist(false);
                                 supervisor.markCoralInIntake(false);
                             }),
                             Commands.either(
-                                    algaeReefFollowCommand(level, branch, useFront),
+                                    algaeReefFollowCommand(algaeLevel, branch, useFront),
                                     Commands.runOnce(supervisor::requestIdle),
-                                    algaeFollowRequestedSupplier()
-                            ),
-                            Commands.waitUntil(() -> !holdSupplier.getAsBoolean())
-                    );
+                                    () -> {
+                                        return supervisor.isAlgaeMode() || driver.rightTrigger(0.1).getAsBoolean();
+                                    }),
+                            Commands.waitUntil(() -> !holdSupplier.getAsBoolean()));
                     return sequence;
                 },
-                Set.of(s_Swerve)
-        );
+                Set.of(s_Swerve, s_GroundIntake));
     }
 
     private Command algaeReefIntakeCommand(BooleanSupplier holdSupplier) {
@@ -349,8 +592,7 @@ public class RobotContainer {
                     return algaeReefFollowCommand(ScoreLevel.L3, branch, useFront)
                             .andThen(Commands.waitUntil(() -> !holdSupplier.getAsBoolean()));
                 },
-                Set.of(s_Swerve)
-        );
+                Set.of(s_Swerve));
     }
 
     private Command algaeBargeScoreCommand() {
@@ -445,36 +687,6 @@ public class RobotContainer {
         );
     }
 
-    private Command coralIntakeHandoffCommand() {
-        return Commands.defer(
-                () -> {
-                    if (supervisor.isAlgaeMode()) {
-                        return Commands.none();
-                    }
-                    return Commands.sequence(
-                            Commands.runOnce(() -> {
-                                supervisor.goToTransit("Ground Intake");
-                                supervisor.runGroundIntakeRoller(GROUND_INTAKE_VOLTS);
-                                supervisor.runEndEffector(Constants.EndEffector.INTAKE_CORAL_VOLTS);
-                            }),
-                            Commands.waitSeconds(0.35),
-                            Commands.runOnce(() -> supervisor.goToTransit("Handoff")),
-                            Commands.waitUntil(supervisor::isTargetSettled),
-                            Commands.runOnce(() -> supervisor.runEndEffector(Constants.EndEffector.HANDOFF_CORAL_VOLTS)),
-                            Commands.waitSeconds(0.3),
-                            Commands.runOnce(() -> {
-                                supervisor.runEndEffector(Constants.EndEffector.HOLD_CORAL_VOLTS);
-                                supervisor.markCoralInWrist(true);
-                                supervisor.recordCoralAcquisition();
-                                supervisor.markCoralInIntake(false);
-                                supervisor.stopGroundIntake();
-                            })
-                    );
-                },
-                Set.of(s_Swerve, s_GroundIntake)
-        );
-    }
-
     private Command humanPlayerIntakeCommand() {
         return Commands.defer(
                 () -> Commands.sequence(
@@ -516,24 +728,9 @@ public class RobotContainer {
 
     private Command ensureCoralReady() {
         return Commands.either(
-                coralHandoffSequence(),
+                HandoffCoralToWrist(),
                 Commands.none(),
                 () -> supervisor.getPieceState().isCoralInIntake() && !supervisor.getPieceState().isCoralInWrist()
-        );
-    }
-
-    private Command coralHandoffSequence() {
-        return Commands.sequence(
-                Commands.runOnce(() -> supervisor.goToTransit("Handoff")),
-                Commands.waitUntil(supervisor::isTargetSettled),
-                Commands.runOnce(() -> supervisor.runEndEffector(Constants.EndEffector.HANDOFF_CORAL_VOLTS)),
-                Commands.waitSeconds(0.3),
-                Commands.runOnce(() -> {
-                    supervisor.runEndEffector(Constants.EndEffector.HOLD_CORAL_VOLTS);
-                    supervisor.markCoralInWrist(true);
-                    supervisor.recordCoralAcquisition();
-                    supervisor.markCoralInIntake(false);
-                })
         );
     }
 
@@ -553,12 +750,12 @@ public class RobotContainer {
                 Commands.waitUntil(supervisor::isTargetSettled)
         );
     }
-
+/*
     private BooleanSupplier algaeFollowRequestedSupplier() {
         return () -> driverAgain.getRightTriggerAxis() > TRIGGER_THRESHOLD
                 || supervisor.getPieceState().isAlgaeInEndEffector()
                 || supervisor.getPieceState().isAlgaeInIntake();
-    }
+    }*/
 
     private String scoreNodeName(ScoreLevel level, boolean front) {
         return switch (level) {

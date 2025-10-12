@@ -50,6 +50,10 @@ public final class ReefAutoAlign {
         this.standoffMeters = meters;
     }
 
+    public double getStandoffMeters() {
+        return standoffMeters;
+    }
+
     public AlignmentResult calculate(Pose2d currentPose, boolean isRedAlliance) {
         Branch branch = FieldLayout.getClosestBranch(currentPose, isRedAlliance);
         int sectorIndex = branch.ordinal() + 1;
