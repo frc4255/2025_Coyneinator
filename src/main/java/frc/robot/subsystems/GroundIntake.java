@@ -7,8 +7,6 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -30,12 +28,12 @@ public class GroundIntake extends SubsystemBase {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            1, 
+            15, 
             0, 
             0,
             new TrapezoidProfile.Constraints(
-                4,
-                4
+                10,
+                12
             )
         );
         
@@ -59,6 +57,19 @@ public class GroundIntake extends SubsystemBase {
         Logger.recordOutput("GroundIntake/RollerCommandVolts", volts);
     }
 
+    //TODO: Tune speed
+    public void setCoralIntake() {
+        io.setRollerVolts(5);
+    }
+
+    public void stopRollers() {
+        io.setRollerVolts(0);
+    }
+
+    //TODO: Tune Speed
+    public void setHandoffSpeeds() {
+        io.setRollerVolts(-5);
+    }
     public void stop() {
         io.stop();
     }

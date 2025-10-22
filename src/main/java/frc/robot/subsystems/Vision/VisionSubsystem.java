@@ -11,7 +11,6 @@ import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -27,8 +26,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     /* Possibly a list of poses generated from each individual camera */
     public List<PoseAndTimestampAndDev> results = new ArrayList<>();
-
-    public DoubleArrayLogEntry cameraPoseEntry;
 
     private final VisionSubsystemInputsAutoLogged inputs = new VisionSubsystemInputsAutoLogged();
 

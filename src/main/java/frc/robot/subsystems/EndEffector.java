@@ -21,6 +21,12 @@ public class EndEffector extends SubsystemBase {
         io.setVoltage(volts);
     }
 
+    public void setAlgaeIntakeSpeed() {
+        io.setVoltage(5); //TODO: Tune
+    }
+    public void setCoralHandoffSpeed() {
+        io.setVoltage(5); //TODO: Tune
+    }
     public void stop() {
         io.stop();
     }

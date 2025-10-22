@@ -33,7 +33,7 @@ class ConstraintsTest {
         double currentElevator = 0.0;
         double pivotRadians = Math.toRadians(5.0); // below low threshold
 
-        double clamped = Constraints.clampElevator(desiredElevator, currentElevator, pivotRadians, ManipulatorProfile.TRANSIT);
+        double clamped = Constraints.clampElevator(desiredElevator, currentElevator, pivotRadians, false);
         assertEquals(0.15, clamped, 1e-9, "Elevator should be capped while pivot is low");
     }
 
@@ -43,7 +43,7 @@ class ConstraintsTest {
         double currentElevator = 0.2;
         double pivotRadians = Math.toRadians(30.0);
 
-        double clamped = Constraints.clampElevator(desiredElevator, currentElevator, pivotRadians, ManipulatorProfile.CLIMB);
+        double clamped = Constraints.clampElevator(desiredElevator, currentElevator, pivotRadians, true);
         assertEquals(currentElevator + 0.02, clamped, 1e-9, "Climb profile should limit elevator rate while pivot is low");
     }
 
@@ -53,7 +53,7 @@ class ConstraintsTest {
         double pivotRadians = Math.toRadians(10.0); // low pivot -> shallow pitch allowed
         double elevatorMeters = 0.2; // below reef clearance
 
-        double clamped = Constraints.clampPitch(desiredPitch, pivotRadians, elevatorMeters, ManipulatorProfile.SCORE);
+        double clamped = Constraints.clampPitch(desiredPitch, pivotRadians, elevatorMeters, false);
         assertEquals(Math.toRadians(-15.0), clamped, 1e-9, "Pitch should respect the most conservative limit");
     }
 

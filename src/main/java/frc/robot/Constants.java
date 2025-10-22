@@ -1,8 +1,6 @@
 package frc.robot;
 
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -14,13 +12,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 
 public final class Constants {
@@ -206,6 +200,7 @@ public final class Constants {
             public static final Translation3d PIVOT_TO_ELEVATOR = new Translation3d(0.0, 0.0, 0.0);
             public static final Translation3d ELEVATOR_TO_PITCH = new Translation3d(0.61595, 0.0, 0.0);
             public static final Translation3d PITCH_TO_ROLL = new Translation3d(0.053887, 0.0, 0.0);
+            public static final Translation3d ROLL_AXIS = new Translation3d(1.0, 0.0, 0.0);
         }
 
         public static final class GroundIntake {
@@ -337,9 +332,11 @@ public final class Constants {
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
         public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
+        /*bottom right -> 0, bottom left -> 1, top right -> 2, top left -> 3 */
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
-        public static final class Mod0 { //TODO: This must be tuned to specific robot
+        /* driveMotorID = 3, angleMotorID = 4, canCoderID = 1 */
+        public static final class Mod3 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 1;
@@ -349,7 +346,8 @@ public final class Constants {
         }
 
         /* Front Right Module - Module 1 */
-        public static final class Mod1 { //TODO: This must be tuned to specific robot
+        /* driveMotorID = 1, angleMotorID = 2, canCoderID = 2*/
+        public static final class Mod2 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 2;
             public static final int canCoderID = 2;
@@ -359,7 +357,8 @@ public final class Constants {
         }
 
         /* Back Left Module - Module 2 */
-        public static final class Mod2 { //TODO: This must be tuned to specific robot
+        /* driveMotorID = 5, angleMotorID = 6, canCoderID = 4 */
+        public static final class Mod1 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
             public static final int canCoderID = 4;
@@ -369,7 +368,8 @@ public final class Constants {
         }
 
          /* Back Right Module - Module 3 */
-        public static final class Mod3 { //TODO: This must be tuned to specific robot
+         /* driveMotorID = 7, angleMotorID = 8, canCoderID = 3 */
+        public static final class Mod0 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 3;
