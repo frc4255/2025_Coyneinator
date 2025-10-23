@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DigitalInput;
+
+import frc.robot.Constants;
 
 /**
  * Simple physics-lite simulation of the ground intake. Tracks the pitch joint angle and roller
@@ -18,8 +21,13 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
 
     private double lastTimestamp = Timer.getFPGATimestamp();
 
+    private final DigitalInput coralSensor =
+        new DigitalInput(Constants.GroundIntake.CORAL_SENSOR_ROBORIO_DIGITAL_CHANNEL);
+
     @Override
     public void updateInputs(GroundIntakeIOInputs inputs) {
+        inputs.hasCoral = hasCoral();
+
         double now = Timer.getFPGATimestamp();
         double dt = now - lastTimestamp;
         if (dt <= 0.0 || dt > 0.1) {
@@ -55,5 +63,10 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
     public void stop() {
         setPitchVolts(0.0);
         setRollerVolts(0.0);
+    }
+
+    @Override
+    public boolean hasCoral() {
+        return coralSensor.get();
     }
 }

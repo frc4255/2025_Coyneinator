@@ -208,6 +208,46 @@ public class Swerve extends SubsystemBase {
         return branches[sectorIndex];
     }
 
+    private void logModuleVectorTelemetry(SwerveModuleState[] measuredStates, Pose2d robotPose) {
+        Translation2d[] moduleLocations = Constants.Swerve.SWERVE_MODULE_LOCATIONS;
+        if (moduleLocations.length != measuredStates.length) {
+            return;
+        }
+
+        Pose2d[] moduleAnchors = new Pose2d[measuredStates.length];
+        Pose2d[] moduleVectorTips = new Pose2d[measuredStates.length];
+        double[][] moduleVectorTable = new double[measuredStates.length][9];
+
+        for (int i = 0; i < measuredStates.length; i++) {
+            Translation2d fieldOffset = moduleLocations[i].rotateBy(robotPose.getRotation());
+            Translation2d anchorTranslation = robotPose.getTranslation().plus(fieldOffset);
+
+            Rotation2d robotRelativeAngle = measuredStates[i].angle;
+            Rotation2d fieldAngle = robotPose.getRotation().plus(robotRelativeAngle);
+            double speed = measuredStates[i].speedMetersPerSecond;
+            double unitX = fieldAngle.getCos();
+            double unitY = fieldAngle.getSin();
+            Translation2d tipTranslation = anchorTranslation.plus(new Translation2d(speed, fieldAngle));
+
+            moduleAnchors[i] = new Pose2d(anchorTranslation, fieldAngle);
+            moduleVectorTips[i] = new Pose2d(tipTranslation, fieldAngle);
+
+            moduleVectorTable[i][0] = i;
+            moduleVectorTable[i][1] = anchorTranslation.getX();
+            moduleVectorTable[i][2] = anchorTranslation.getY();
+            moduleVectorTable[i][3] = fieldAngle.getRadians();
+            moduleVectorTable[i][4] = unitX;
+            moduleVectorTable[i][5] = unitY;
+            moduleVectorTable[i][6] = speed;
+            moduleVectorTable[i][7] = speed * unitX;
+            moduleVectorTable[i][8] = speed * unitY;
+        }
+
+        Logger.recordOutput("Swerve/ModuleAnchors", moduleAnchors);
+        Logger.recordOutput("Swerve/ModuleVectorTips", moduleVectorTips);
+        Logger.recordOutput("Swerve/ModuleVectorTable", moduleVectorTable);
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
@@ -221,18 +261,23 @@ public class Swerve extends SubsystemBase {
             );
         }
 
-        double[] array = {getPose().getX(), getPose().getY()};
+        Pose2d estimatedPose = getPose();
+        double[] array = {estimatedPose.getX(), estimatedPose.getY()};
         SmartDashboard.putNumberArray("Swerve Pose Estimation", array);
 
         // AdvantageScope sources
-        Logger.recordOutput("Swerve/Pose", getPose());
-        Logger.recordOutput("Swerve/Rotation", getHeading());
+        Logger.recordOutput("Swerve/Pose", estimatedPose);
+        Logger.recordOutput("Swerve/Rotation", estimatedPose.getRotation());
         Logger.recordOutput("Swerve/GyroYawDegrees", getGyroYaw().getDegrees());
 
-        Logger.recordOutput("Swerve/MeasuredChassisSpeeds", getChassisSpeeds());
+        ChassisSpeeds measuredChassisSpeeds = getChassisSpeeds();
+        Logger.recordOutput("Swerve/MeasuredChassisSpeeds", measuredChassisSpeeds);
         Logger.recordOutput("Swerve/CommandedChassisSpeeds", lastCommandedChassisSpeeds);
 
-        Logger.recordOutput("Swerve/MeasuredModuleStates", statesToArray(getModuleStates()));
+        SwerveModuleState[] measuredStates = getModuleStates();
+        Logger.recordOutput("Swerve/MeasuredModuleStates", statesToArray(measuredStates));
         Logger.recordOutput("Swerve/CommandedModuleStates", statesToArray(lastCommandedModuleStates));
+
+        logModuleVectorTelemetry(measuredStates, estimatedPose);
     }
 }

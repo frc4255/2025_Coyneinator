@@ -5,6 +5,8 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 import frc.robot.Constants;
 
 /**
@@ -24,8 +26,17 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
     private final VoltageOut pitchVoltageRequest = new VoltageOut(0.0);
     private final VoltageOut rollerVoltageRequest = new VoltageOut(0.0);
+    private final DigitalInput coralSensor;
 
     public GroundIntakeIOReal() {
+        if (Constants.GroundIntake.CORAL_SENSOR_ROBORIO_DIGITAL_CHANNEL >= 0) {
+            coralSensor =
+                new DigitalInput(
+                    Constants.GroundIntake.CORAL_SENSOR_ROBORIO_DIGITAL_CHANNEL);
+        } else {
+            coralSensor = null;
+        }
+
         pitchLeader.setNeutralMode(NeutralModeValue.Brake);
         pitchLeader.setPosition(0.0);
 
@@ -49,6 +60,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         inputs.rollerVelocityRotationsPerSecond = rollerMotor.getVelocity().getValueAsDouble();
         inputs.rollerAppliedVolts = rollerMotor.getMotorVoltage().getValueAsDouble();
         inputs.rollerCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
+        inputs.hasCoral = coralSensor != null && coralSensor.get();
     }
 
     @Override
@@ -66,5 +78,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         pitchLeader.stopMotor();
         pitchFollower.stopMotor();
         rollerMotor.stopMotor();
+    }
+
+    @Override
+    public boolean hasCoral() {
+        return coralSensor != null && coralSensor.get();
     }
 }
