@@ -16,6 +16,7 @@ public interface GroundIntakeIO {
         public double rollerAppliedVolts;
         public double pitchCurrentAmps;
         public double rollerCurrentAmps;
+        public boolean hasCoral;
     }
 
     default void updateInputs(GroundIntakeIOInputs inputs) {}
@@ -27,4 +28,8 @@ public interface GroundIntakeIO {
     default void stop() {}
 
     default void resetPosition(double pos) {}
+
+    default boolean hasCoral() {
+        return false;
+    }
 }

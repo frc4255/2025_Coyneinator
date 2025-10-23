@@ -7,9 +7,14 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+
 
 /**
  * Simple placeholder ground intake subsystem so the rest of the codebase can compile while the
@@ -23,12 +28,15 @@ public class GroundIntake extends SubsystemBase {
     private final ArmFeedforward feedforward;
     private final ProfiledPIDController controller;
     private boolean pitchClosedLoopEnabled;
+    private final GenericEntry positionRadiansEntry;
+    private final GenericEntry positionDegreesEntry;
+    private final GenericEntry hasCoralEntry;
 
     public GroundIntake(GroundIntakeIO io) {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            15, 
+            .5, 
             0, 
             0,
             new TrapezoidProfile.Constraints(
@@ -42,6 +50,11 @@ public class GroundIntake extends SubsystemBase {
             0,
             0
         );
+
+        ShuffleboardTab groundIntakeTab = Shuffleboard.getTab("GroundIntake");
+        positionRadiansEntry = groundIntakeTab.add("Current Position (rad)", 0.0).getEntry();
+        positionDegreesEntry = groundIntakeTab.add("Current Position (deg)", 0.0).getEntry();
+        hasCoralEntry = groundIntakeTab.add("Has Coral", false).getEntry();
 
         pitchClosedLoopEnabled = false;
     }
@@ -122,6 +135,10 @@ public class GroundIntake extends SubsystemBase {
         Logger.recordOutput("GroundIntake/PitchControllerOutputVolts", applied);
     }
 
+    public boolean hasCoral() {
+        return inputs.hasCoral;
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
@@ -139,6 +156,14 @@ public class GroundIntake extends SubsystemBase {
         Logger.recordOutput("GroundIntake/ControllerError", controller.getPositionError());
         Logger.recordOutput("GroundIntake/SetpointPosition", setpoint.position);
         Logger.recordOutput("GroundIntake/SetpointVelocity", setpoint.velocity);
+        Logger.recordOutput("GroundIntake/CurrentPosition", position);
+        SmartDashboard.putNumber("GroundIntake/CurrentPositionRadians", position);
+        SmartDashboard.putNumber("GroundIntake/CurrentPositionDegrees", Math.toDegrees(position));
+        positionRadiansEntry.setDouble(position);
+        positionDegreesEntry.setDouble(Math.toDegrees(position));
+        Logger.recordOutput("GroundIntake/HasCoral", inputs.hasCoral);
+        SmartDashboard.putBoolean("GroundIntake/HasCoral", inputs.hasCoral);
+        hasCoralEntry.setBoolean(inputs.hasCoral);
 
         if (pitchClosedLoopEnabled) {
             double pidOutput = controller.calculate(position);

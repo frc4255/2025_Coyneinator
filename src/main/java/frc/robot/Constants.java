@@ -220,9 +220,11 @@ public final class Constants {
 
 
     public static final class GroundIntake {
-        public static final int PITCH_LEADER_MOTOR_ID = -1;
-        public static final int PITCH_FOLLOWER_MOTOR_ID = -1;
-        public static final int ROLLER_MOTOR_ID = -1;
+        public static final int PITCH_LEADER_MOTOR_ID = 7;
+        public static final int PITCH_FOLLOWER_MOTOR_ID = 8;
+        public static final int ROLLER_MOTOR_ID = 9;
+
+        public static final int CORAL_SENSOR_ROBORIO_DIGITAL_CHANNEL = 0; //TODO find real value.
         public static final double PITCH_GEAR_RATIO = 1.0; // TODO: Update with the real ground intake gear ratio.
 
         public static final double ZERO_OFFSET_RADIANS = 0.0;
@@ -331,6 +333,8 @@ public final class Constants {
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
         public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
+
+        
 
         /*bottom right -> 0, bottom left -> 1, top right -> 2, top left -> 3 */
         /* Module Specific Constants */
