@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -36,19 +37,21 @@ public class GroundIntake extends SubsystemBase {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            .5, 
-            0, 
-            0,
+            0.5,
+            0.0,
+            0.0,
             new TrapezoidProfile.Constraints(
-                10,
-                12
+                Constants.GroundIntake.PITCH_MAX_VELOCITY_RAD_PER_SEC,
+                Constants.GroundIntake.PITCH_MAX_ACCEL_RAD_PER_SEC_SQ
             )
         );
+        controller.setTolerance(Constants.GroundIntake.PITCH_POSITION_TOLERANCE_RADIANS);
         
         feedforward = new ArmFeedforward(
-            0,
-            0,
-            0
+            Constants.GroundIntake.PITCH_KS,
+            Constants.GroundIntake.PITCH_KG,
+            Constants.GroundIntake.PITCH_KV,
+            Constants.GroundIntake.PITCH_KA
         );
 
         ShuffleboardTab groundIntakeTab = Shuffleboard.getTab("GroundIntake");
@@ -88,8 +91,13 @@ public class GroundIntake extends SubsystemBase {
     }
 
     public void setPitchGoal(double radians) {
-        controller.setGoal(radians);
-        Logger.recordOutput("GroundIntake/GoalPosition", radians);
+        double clamped = MathUtil.clamp(
+            radians,
+            Constants.GroundIntake.MIN_PITCH_RADIANS,
+            Constants.GroundIntake.MAX_PITCH_RADIANS
+        );
+        controller.setGoal(clamped);
+        Logger.recordOutput("GroundIntake/GoalPosition", clamped);
         pitchClosedLoopEnabled = true;
     }
 
@@ -157,6 +165,7 @@ public class GroundIntake extends SubsystemBase {
         Logger.recordOutput("GroundIntake/SetpointPosition", setpoint.position);
         Logger.recordOutput("GroundIntake/SetpointVelocity", setpoint.velocity);
         Logger.recordOutput("GroundIntake/CurrentPosition", position);
+        Logger.recordOutput("GroundIntake/ClosedLoopEnabled", pitchClosedLoopEnabled);
         SmartDashboard.putNumber("GroundIntake/CurrentPositionRadians", position);
         SmartDashboard.putNumber("GroundIntake/CurrentPositionDegrees", Math.toDegrees(position));
         positionRadiansEntry.setDouble(position);
