@@ -250,7 +250,25 @@ public class RobotContainer {
 
 
             driver.rightBumper().whileTrue(
-                intake()
+                intake().handleInterrupt(
+                    () -> {
+                        s_GroundIntake.setPitchGoal(1);
+                        s_GroundIntake.stopRollers();
+                    }
+                )
+            );
+
+            driver.leftBumper().whileTrue(
+                Commands.sequence(
+                        Commands.runOnce(() -> s_GroundIntake.setPitchGoal(1)),
+                        Commands.waitUntil(() ->  s_GroundIntake.atGoal()),
+                        Commands.runOnce(() -> s_GroundIntake.setRollerVolts(5))
+                    ).handleInterrupt(
+                        () -> {
+                            s_GroundIntake.setPitchGoal(0);
+                            s_GroundIntake.stopRollers();
+                        }
+                    )
             );
             /*
             driver.rightBumper().toggleOnTrue(
@@ -262,6 +280,7 @@ public class RobotContainer {
                 )
             );*/
 
+            /*
             driver.leftBumper().toggleOnTrue(
                 Commands.either(
                     algaeGroundIntake(),
@@ -272,7 +291,7 @@ public class RobotContainer {
                     supervisor.goToTransit("Idle");
                 })
             );
-
+            
             // Scoring
             //Top left trigger - L4 and Barge
           /*  driver.povUp().whileTrue(
@@ -414,7 +433,7 @@ public class RobotContainer {
 
     private Command intake() {
         return Commands.parallel(
-            Commands.runOnce(() -> supervisor.goToTransit("Ground Intake")),
+            Commands.runOnce(() -> s_GroundIntake.setPitchGoal(1)),
             Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
         );
     }
