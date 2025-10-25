@@ -1,0 +1,301 @@
+package frc.robot;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.littletonrobotics.junction.Logger;
+
+import frc.lib.util.graph.GraphParser;
+import frc.lib.util.graph.Node;
+import frc.robot.superstructure.Constraints;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.GroundIntake;
+import frc.robot.subsystems.DifferentialWrist;
+import edu.wpi.first.wpilibj.Timer;
+
+public class SubsystemManager {
+
+    private final Pivot sPivot;
+    private final Elevator sElevator;
+    private final DifferentialWrist sWrist;
+    private final GroundIntake sGroundIntake;
+    
+    private List<Node> path;
+    private int currentIndex;
+    private boolean active;
+
+    private Node currentNode;
+    private Node requestedNode;
+
+    private Node lastNode;
+
+    private boolean reactivation = false;
+
+    private static final double[] DEFAULT_TOLERANCE = new double[] {0.06, 0.04, 0.08, 0.12, 0.10};
+    private double[] currentTolerance = Arrays.copyOf(DEFAULT_TOLERANCE, DEFAULT_TOLERANCE.length);
+    private double minHoldTimeSeconds = 0.0;
+    private double holdStartTime = -1.0;
+    private boolean holdSatisfied = true;
+    private Node targetNode;
+    private double[] targetSetpoints = new double[] {0, 0, 0, 0, 0};
+    private final double[] commandedSetpoints = new double[] {0, 0, 0, 0, 0};
+    private boolean climbModeActive = false;
+
+    public SubsystemManager(
+            Pivot sPivot, Elevator sElevator, DifferentialWrist sWrist, GroundIntake sGroundIntake
+        ) {
+
+        this.sPivot = sPivot;
+        this.sElevator = sElevator;
+        this.sWrist = sWrist;
+        this.sGroundIntake = sGroundIntake;
+        
+        this.active = false;
+        this.currentIndex = 0;
+
+        lastNode = new Node("Empty", new double[] {0, 0, 0, 0, 0});
+
+    }
+
+    public void setInactive() {
+        active = false;
+    }
+    public void requestNode(Node requestedNode) {
+        requestNode(requestedNode, null, 0.0, false);
+    }
+
+    public void requestNode(Node requestedNode, double[] tolerance, double minHoldTime, boolean climbMode) {
+
+        if (requestedNode == null) {
+            return;
+        }
+
+        if (currentNode == null) {
+            // Default to a safe idle node as the starting point. Older graphs used "Stow"; the
+            // current graph uses "Idle". Fall back to the requested node if neither exists.
+            currentNode = GraphParser.getNodeByName("Idle");
+            if (currentNode == null) {
+                currentNode = requestedNode;
+            }
+        }
+        reactivation = true;
+        lastNode = new Node("Empty", new double[] {0, 0, 0, 0, 0});
+
+        this.requestedNode = requestedNode;
+        this.targetNode = requestedNode;
+        this.targetSetpoints = requestedNode.getSetpoints();
+        this.currentTolerance = tolerance != null && tolerance.length == 5
+                ? Arrays.copyOf(tolerance, tolerance.length)
+                : Arrays.copyOf(DEFAULT_TOLERANCE, DEFAULT_TOLERANCE.length);
+        this.minHoldTimeSeconds = Math.max(minHoldTime, 0.0);
+        this.holdStartTime = -1.0;
+        this.holdSatisfied = this.minHoldTimeSeconds <= 0.0;
+        this.climbModeActive = climbMode;
+
+        this.currentIndex = 0;
+        this.path = GraphParser.getFastestPath(currentNode, requestedNode);
+        this.active = (path != null && !path.isEmpty());
+    }
+
+    /**
+     * Call this method periodically (e.g., in Robot.periodic()).
+     * It processes the current node in the path and commands each subsystem accordingly.
+     */
+    public void update() {
+        
+        if (path == null) {
+            return;
+        }
+
+        double pivotPosition = sPivot.getPivotPosition();
+        double elevatorPosition = sElevator.getElevatorPosition();
+        double wristPitchPosition = sWrist.getPitchPosition();
+        double wristRollPosition = sWrist.getRollPosition();
+        double groundIntakePosition = sGroundIntake != null ? sGroundIntake.getPitchPosition() : 0.0;
+
+        double[] measurements = new double[] {
+                pivotPosition,
+                elevatorPosition,
+                wristPitchPosition,
+                wristRollPosition,
+                groundIntakePosition
+        };
+        Logger.recordOutput("Manager/Measurements", measurements);
+
+        if (!active || currentIndex >= path.size()) {
+            evaluateHold(measurements);
+            return;
+        }
+
+        currentNode = path.get(currentIndex);
+        double[] setpoints = currentNode.getSetpoints();
+
+        if (setpoints.length != 5) {
+            setpoints = Arrays.copyOf(setpoints, 5);
+        }
+
+        /*  Code to automatically go to reef align, can be added back based on driver feedback
+
+        Not completed, isWithinReefZone() likely requires Swerve subsystem.
+        if (currentNode.getName().equalsIgnoreCase("Stow")) {
+            if (isWithinReefZone()) {
+                setpoints = REEF_ALIGN_SETPOINTS;
+            } else {
+                setpoints = STOW_SETPOINTS;
+            }
+        }
+       */
+
+        double pivotGoal = setpoints[0];
+        double elevatorGoal = setpoints[1];
+        double wristPitchGoal = setpoints[2];
+        double wristRollGoal = setpoints[3];
+        double groundIntakeGoal = setpoints[4];
+        /*
+        double pivotGoal = Constraints.clampPivot(setpoints[0], pivotPosition, elevatorPosition);
+        double elevatorGoal = Constraints.clampElevator(setpoints[1], elevatorPosition, pivotPosition, climbModeActive);
+        double wristPitchGoal = Constraints.clampPitch(setpoints[2], pivotPosition, elevatorPosition, climbModeActive);
+        double wristRollGoal = Constraints.clampRoll(setpoints[3]);
+        double groundIntakeGoal = Constraints.clampGroundIntake(setpoints[4]);*/
+
+        commandedSetpoints[0] = pivotGoal;
+        commandedSetpoints[1] = elevatorGoal;
+        commandedSetpoints[2] = wristPitchGoal;
+        commandedSetpoints[3] = wristRollGoal;
+        commandedSetpoints[4] = groundIntakeGoal;
+        Logger.recordOutput("Manager/CommandedSetpoints", commandedSetpoints);
+
+        if (reactivation || !currentNode.getName().equals(lastNode.getName())) {
+            reactivation = false;
+            sWrist.setActive();
+            sElevator.setActive();
+        }
+
+        sPivot.setGoal(pivotGoal);
+        sElevator.setGoal(elevatorGoal);
+        sWrist.setGoals(wristPitchGoal, wristRollGoal);
+        if (sGroundIntake != null) {
+            sGroundIntake.setPitchGoal(groundIntakeGoal);
+        }
+        Logger.recordOutput("Manager/ActiveNode", currentNode.getName());
+        Logger.recordOutput("Manager/ClimbMode", climbModeActive);
+
+        if (hasReachedTarget(setpoints, measurements)) {
+            lastNode = currentNode;
+            currentIndex++;
+            if (currentIndex >= path.size()) {
+                active = false;
+                holdStartTime = -1.0;
+                holdSatisfied = minHoldTimeSeconds <= 0.0;
+            }
+        }
+
+        Logger.recordOutput("CurrentNode", currentNode.getName());
+        Logger.recordOutput("Manager/Active", active);
+        Logger.recordOutput("Manager/HoldSatisfied", holdSatisfied);
+        Logger.recordOutput("Manager/PathIndex", currentIndex);
+        Logger.recordOutput("Manager/PathLength", path != null ? path.size() : 0);
+        Logger.recordOutput("Manager/RawSetpoints", setpoints);
+
+        double[] errors = new double[5];
+        for (int i = 0; i < errors.length; i++) {
+            errors[i] = setpoints[i] - measurements[i];
+        }
+        Logger.recordOutput("Manager/SetpointErrors", errors);
+    }
+
+    /**
+     * Checks if all subsystems have reached their target.
+     * Assumes each subsystem has an atGoal() method that returns true when the target is reached.
+     *
+     * @return true if all subsystems are at their target, false otherwise.
+     */
+    public boolean hasReachedTarget(double[] setpoints, double[] measurements) {
+        if (setpoints.length != 5 || measurements.length != 5) {
+            return false;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (Math.abs(setpoints[i] - measurements[i]) > currentTolerance[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean hasReachedGoal(String x) {
+        if (currentNode.getName().equals(x) && hasReachedTarget() && currentNode != lastNode) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean canAutoHome() {
+        if (currentNode.getName().equals("Stow") && hasReachedTarget() && currentNode != lastNode) {
+            System.err.println("can Auto Home");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean hasReachedTarget() {
+        return !active && holdSatisfied;
+    }
+
+    public boolean isTargetSettled() {
+        return !active && holdSatisfied;
+    }
+
+    private void evaluateHold(double[] measurements) {
+        if (targetNode == null) {
+            return;
+        }
+
+        if (!withinTolerance(targetSetpoints, measurements, currentTolerance)) {
+            Logger.recordOutput("Manager/HoldWithinTolerance", false);
+            holdStartTime = -1.0;
+            holdSatisfied = minHoldTimeSeconds <= 0.0;
+            return;
+        }
+
+        if (holdSatisfied) {
+            return;
+        }
+
+        if (holdStartTime < 0.0) {
+            holdStartTime = Timer.getFPGATimestamp();
+        }
+
+        double elapsed = Timer.getFPGATimestamp() - holdStartTime;
+        if (elapsed >= minHoldTimeSeconds) {
+            holdSatisfied = true;
+        }
+        Logger.recordOutput("Manager/HoldWithinTolerance", true);
+        Logger.recordOutput("Manager/HoldElapsed", elapsed);
+    }
+
+    private boolean withinTolerance(double[] setpoints, double[] measurements, double[] tolerance) {
+        if (setpoints.length != 5 || measurements.length != 5 || tolerance.length != 5) {
+            return false;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (Math.abs(setpoints[i] - measurements[i]) > tolerance[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns whether the manager is actively processing a path.
+     *
+     * @return true if active, false otherwise.
+     */
+    public boolean isActive() {
+        return active;
+    } 
+}

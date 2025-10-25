@@ -21,10 +21,13 @@ import frc.lib.util.FlippingUtil;
 import frc.robot.Constants;
 import frc.robot.FieldLayout;
 import frc.robot.subsystems.SwerveIOInputsAutoLogged;
+import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem.PoseAndTimestampAndDev;
 
 public class Swerve extends SubsystemBase {
     private final SwerveIO io;
     private final SwerveIOInputsAutoLogged inputs = new SwerveIOInputsAutoLogged();
+    private final VisionSubsystem vision;
 
     public final SwerveDrivePoseEstimator m_SwervePoseEstimator;
 
@@ -47,8 +50,9 @@ public class Swerve extends SubsystemBase {
         return array;
     }
 
-    public Swerve(SwerveIO io) {
+    public Swerve(SwerveIO io, VisionSubsystem vision) {
         this.io = io;
+        this.vision = vision;
 
         io.updateInputs(inputs);
 
@@ -250,6 +254,13 @@ public class Swerve extends SubsystemBase {
         Logger.processInputs("Swerve", inputs);
 
         m_SwervePoseEstimator.update(getGyroYaw(), getModulePositions());
+        for (PoseAndTimestampAndDev poseAndTimestamp : vision.getResults()) {
+            m_SwervePoseEstimator.addVisionMeasurement(
+                poseAndTimestamp.getPose(),
+                poseAndTimestamp.getTimestamp()
+            );
+        }
+
         Pose2d estimatedPose = getPose();
         double[] array = {estimatedPose.getX(), estimatedPose.getY()};
         SmartDashboard.putNumberArray("Swerve Pose Estimation", array);
