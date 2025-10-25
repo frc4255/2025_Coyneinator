@@ -41,7 +41,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         pitchLeader.setPosition(0.0);
 
         pitchFollower.setNeutralMode(NeutralModeValue.Brake);
-        pitchFollower.setControl(new Follower(pitchLeader.getDeviceID(), false));
+        pitchFollower.setControl(new Follower(pitchLeader.getDeviceID(), true));
         pitchFollower.setPosition(0.0);
 
         rollerMotor.setNeutralMode(NeutralModeValue.Brake);
@@ -76,7 +76,6 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     @Override
     public void stop() {
         pitchLeader.stopMotor();
-        pitchFollower.stopMotor();
         rollerMotor.stopMotor();
     }
 

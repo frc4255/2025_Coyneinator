@@ -36,7 +36,7 @@ public class GroundIntake extends SubsystemBase {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            .5, 
+            2, 
             0, 
             0,
             new TrapezoidProfile.Constraints(

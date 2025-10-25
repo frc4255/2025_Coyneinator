@@ -248,6 +248,11 @@ public class RobotContainer {
             driver.a().onTrue(Commands.runOnce(() -> supervisor.goToTransit("Idle")));
             // Intaking
 
+
+            driver.rightBumper().whileTrue(
+                intake()
+            );
+            /*
             driver.rightBumper().toggleOnTrue(
                 Commands.either(
                     coralIntakeWithAlgae(),
@@ -255,7 +260,7 @@ public class RobotContainer {
                     () -> supervisor.isAlgaeMode()
                 ).handleInterrupt((interruptGroundIntake())
                 )
-            );
+            );*/
 
             driver.leftBumper().toggleOnTrue(
                 Commands.either(
@@ -406,6 +411,12 @@ public class RobotContainer {
         );
     }
 
+    private Command intake() {
+        return Commands.parallel(
+            Commands.runOnce(() -> supervisor.goToTransit("Ground Intake")),
+            Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
+        );
+    }
     private Command coralIntakeToHold() {
         return Commands.sequence(
             Commands.parallel(
