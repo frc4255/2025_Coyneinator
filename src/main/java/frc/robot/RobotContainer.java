@@ -252,15 +252,15 @@ public class RobotContainer {
             driver.rightBumper().whileTrue(
                 intake().handleInterrupt(
                     () -> {
-                        s_GroundIntake.setPitchGoal(1);
+                        s_GroundIntake.setPitchGoal(0);
                         s_GroundIntake.stopRollers();
                     }
-                )
+                ).withDeadline(Commands.waitUntil(() -> s_GroundIntake.getCurrent() > 15))
             );
 
             driver.leftBumper().whileTrue(
                 Commands.sequence(
-                        Commands.runOnce(() -> s_GroundIntake.setPitchGoal(1)),
+                        Commands.runOnce(() -> s_GroundIntake.setPitchGoal(1.967)),
                         Commands.waitUntil(() ->  s_GroundIntake.atGoal()),
                         Commands.runOnce(() -> s_GroundIntake.setRollerVolts(5))
                     ).handleInterrupt(
@@ -301,7 +301,7 @@ public class RobotContainer {
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
         autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_DifferentialWrist, s_EndEffector, manager));
-        autochooser.addOption("Taxi", new Leave(s_Swerve));
+        //autochooser.addOption("Taxi", new Leave(s_Swerve));
         SmartDashboard.putData(autochooser);
     }
     
@@ -433,7 +433,7 @@ public class RobotContainer {
 
     private Command intake() {
         return Commands.parallel(
-            Commands.runOnce(() -> s_GroundIntake.setPitchGoal(1)),
+            Commands.runOnce(() -> s_GroundIntake.setPitchGoal(3.8)),
             Commands.runOnce(() -> s_GroundIntake.setCoralIntake())
         );
     }
@@ -826,7 +826,8 @@ public class RobotContainer {
     
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return autochooser.getSelected();
+        return Commands.none();
+        //return autochooser.getSelected();
     }
 }
 

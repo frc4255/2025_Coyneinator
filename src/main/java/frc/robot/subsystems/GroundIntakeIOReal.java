@@ -49,9 +49,14 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     }
 
     @Override
+    public double getCurrent() {
+        return rollerMotor.getStatorCurrent().getValueAsDouble();
+    }
+    //ratio is a reduction of 47.1602
+    @Override
     public void updateInputs(GroundIntakeIOInputs inputs) {
         inputs.pitchPositionRadians =
-                pitchLeader.getPosition().getValueAsDouble() * ROTATIONS_TO_RADIANS;
+                (pitchLeader.getPosition().getValueAsDouble() / 47.102) * 2 * Math.PI;
         inputs.pitchVelocityRadiansPerSecond =
                 pitchLeader.getVelocity().getValueAsDouble() * ROTATIONS_TO_RADIANS;
         inputs.pitchAppliedVolts = pitchLeader.getMotorVoltage().getValueAsDouble();

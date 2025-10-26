@@ -40,12 +40,6 @@ public class Leave extends SequentialCommandGroup{
         Optional<Trajectory<SwerveSample>> optionalTrajectory = Choreo.loadTrajectory("Leave");
         Trajectory<SwerveSample> myTrajectory = optionalTrajectory.get();
 
-        ArrayList<Optional<Trajectory<SwerveSample>>> trajectories = new ArrayList<>();
-
-        for (int i = 0; i < 6; i++) {
-            trajectories.add(Choreo.loadTrajectory("path" + i));
-        }
-
         Optional<Pose2d> initialPose = optionalTrajectory.get().getInitialPose(DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red));
 
 

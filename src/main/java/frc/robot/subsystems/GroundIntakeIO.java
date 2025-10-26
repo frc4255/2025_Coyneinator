@@ -25,6 +25,9 @@ public interface GroundIntakeIO {
 
     default void setRollerVolts(double volts) {}
 
+    default double getCurrent() {
+        return 0.0;
+    }
     default void stop() {}
 
     default void resetPosition(double pos) {}

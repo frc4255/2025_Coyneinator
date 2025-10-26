@@ -36,7 +36,7 @@ public class GroundIntake extends SubsystemBase {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            2, 
+            8, 
             0, 
             0,
             new TrapezoidProfile.Constraints(
@@ -72,11 +72,15 @@ public class GroundIntake extends SubsystemBase {
 
     //TODO: Tune speed
     public void setCoralIntake() {
-        io.setRollerVolts(5);
+        io.setRollerVolts(-9);
     }
 
     public void stopRollers() {
         io.setRollerVolts(0);
+    }
+    
+    public double getCurrent() {
+        return io.getCurrent();
     }
 
     //TODO: Tune Speed
@@ -95,9 +99,9 @@ public class GroundIntake extends SubsystemBase {
 
     public double getPosition() {
         double pitch = inputs.pitchPositionRadians;
-        if (Robot.isReal()) {
+       /* if (Robot.isReal()) {
             pitch -= Constants.GroundIntake.ZERO_OFFSET_RADIANS;
-        }
+        }*/
         return pitch;
     }
 
@@ -118,7 +122,7 @@ public class GroundIntake extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return Math.abs(controller.getPositionError()) < 0.05
+        return Math.abs(controller.getPositionError()) < 0.1
             && controller.getSetpoint().position == controller.getGoal().position;
     }
 
