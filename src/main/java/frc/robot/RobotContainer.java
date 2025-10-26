@@ -249,13 +249,22 @@ public class RobotContainer {
             // Intaking
 
 
+
             driver.rightBumper().whileTrue(
-                intake().handleInterrupt(
+                intake().andThen(
+                    () -> {
+                        s_GroundIntake.setPitchGoal(0);
+                        s_GroundIntake.stopRollers();
+                    }  
+                ).handleInterrupt(
                     () -> {
                         s_GroundIntake.setPitchGoal(0);
                         s_GroundIntake.stopRollers();
                     }
-                ).withDeadline(Commands.waitUntil(() -> s_GroundIntake.getCurrent() > 15))
+                ).withDeadline(Commands.waitUntil(() -> {
+                    return s_GroundIntake.getCurrent() > 15;
+                }
+                ))
             );
 
             driver.leftBumper().whileTrue(
@@ -263,6 +272,11 @@ public class RobotContainer {
                         Commands.runOnce(() -> s_GroundIntake.setPitchGoal(1.967)),
                         Commands.waitUntil(() ->  s_GroundIntake.atGoal()),
                         Commands.runOnce(() -> s_GroundIntake.setRollerVolts(5))
+                    ).andThen(
+                        () -> {
+                            s_GroundIntake.setPitchGoal(0);
+                            s_GroundIntake.stopRollers();
+                        }
                     ).handleInterrupt(
                         () -> {
                             s_GroundIntake.setPitchGoal(0);
