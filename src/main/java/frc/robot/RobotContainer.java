@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -206,6 +207,9 @@ public class RobotContainer {
             );
 
             configureAutoChooser();
+            if (RobotBase.isSimulation()) {
+                publishSimAutoButtons();
+            }
 
             /*
         autoChooser = new AutoChooser();
@@ -311,12 +315,27 @@ public class RobotContainer {
           /*  driver.povUp().whileTrue(
                 Commands.either(Barge, L4, coralHPIntake)
             );*/
-        }
+    }
     private void configureAutoChooser() {
         autochooser = new SendableChooser<>();
+        autochooser.setDefaultOption("Do Nothing", Commands.none());
+        autochooser.addOption("Circle Path (custom JSON)", new CirclePathAuto(s_Swerve));
         autochooser.addOption("4 piece left", new OnePieceL1(s_Swerve, null, s_Pivot, s_Elevator, s_DifferentialWrist, s_EndEffector, manager));
         //autochooser.addOption("Taxi", new Leave(s_Swerve));
         SmartDashboard.putData(autochooser);
+    }
+
+    /**
+     * Simulation helpers: publish buttons on Shuffleboard to run/cancel autos without a DS mode change.
+     */
+    private void publishSimAutoButtons() {
+        SmartDashboard.putData("Sim/Run Selected Auto", Commands.runOnce(() -> {
+            Command auto = autochooser.getSelected();
+            if (auto != null) {
+                auto.schedule();
+            }
+        }));
+        SmartDashboard.putData("Sim/Cancel All Autos", Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
     }
     
     private void addTuningSliders() {
@@ -840,8 +859,8 @@ public class RobotContainer {
     
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return Commands.none();
-        //return autochooser.getSelected();
+        Command selected = autochooser.getSelected();
+        return selected != null ? selected : Commands.none();
     }
 }
 

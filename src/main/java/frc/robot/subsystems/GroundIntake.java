@@ -36,7 +36,7 @@ public class GroundIntake extends SubsystemBase {
         this.io = Objects.requireNonNull(io);
 
         controller = new ProfiledPIDController(
-            8, 
+            Robot.isReal() ? 8 : 15, 
             0, 
             0,
             new TrapezoidProfile.Constraints(

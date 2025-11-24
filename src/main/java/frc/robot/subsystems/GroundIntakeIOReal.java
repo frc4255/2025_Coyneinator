@@ -66,6 +66,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         inputs.rollerAppliedVolts = rollerMotor.getMotorVoltage().getValueAsDouble();
         inputs.rollerCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
         inputs.hasCoral = coralSensor != null && coralSensor.get();
+
     }
 
     @Override

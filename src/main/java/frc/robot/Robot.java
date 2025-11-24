@@ -135,7 +135,5 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     // Perform any simulation-specific initialization here.
-    m_robotContainer = new RobotContainer();
-
   }
 }

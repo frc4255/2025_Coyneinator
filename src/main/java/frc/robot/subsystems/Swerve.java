@@ -126,6 +126,26 @@ public class Swerve extends SubsystemBase {
         Logger.recordOutput("Swerve/CommandedSpeeds", speeds);
     }
 
+    /**
+     * Closed-loop to a single field pose using the same PID controllers as the trajectory follower.
+     */
+    public void followPose(Pose2d targetPose) {
+        Pose2d pose = getPose();
+        double vx = xController.calculate(pose.getX(), targetPose.getX());
+        double vy = yController.calculate(pose.getY(), targetPose.getY());
+        double omega = headingController.calculate(pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+
+        // Convert field-relative corrections to robot-relative chassis speeds and drive without alliance flipping.
+        ChassisSpeeds robotRelative = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, getHeading());
+        follow(robotRelative);
+    }
+
+    public void setPoseControllerTolerances(double posToleranceMeters, double headingToleranceRad) {
+        xController.setTolerance(posToleranceMeters);
+        yController.setTolerance(posToleranceMeters);
+        headingController.setTolerance(headingToleranceRad);
+    }
+
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
         io.setModuleStates(desiredStates, false);
