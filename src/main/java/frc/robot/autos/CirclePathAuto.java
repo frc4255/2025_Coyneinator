@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.util.customTrajectoryInterpreter.JsonTrajectorySet;
+import frc.lib.util.customTrajectoryInterpreter.JsonTrajectorySet.TimedTrajectory;
 import frc.robot.autos.autocommands.JsonTrajectoryFollower;
 import frc.robot.subsystems.Swerve;
 
@@ -39,10 +40,10 @@ public class CirclePathAuto extends SequentialCommandGroup {
             new WaitCommand(0.1)
         ));
 
-        List<List<Pose2d>> paths = trajectories.getTrajectoriesInOrder(flipForRed);
+        List<TimedTrajectory> paths = trajectories.getTimedTrajectoriesInOrder(flipForRed);
         for (int i = 0; i < paths.size(); i++) {
-            List<Pose2d> path = paths.get(i);
-            addCommands(new JsonTrajectoryFollower(swerve, path));
+            TimedTrajectory path = paths.get(i);
+            addCommands(new JsonTrajectoryFollower(swerve, path.poses(), path.totalTimeSeconds()));
 
             // Break between segments so game-piece actions can be inserted.
             if (i < paths.size() - 1) {

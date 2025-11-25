@@ -1,11 +1,24 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
+    id "eclipse"
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+def mainJavaDir = file("src/main/java")
+def testJavaDir = file("src/test/java")
+
+sourceSets {
+    main {
+        java.setSrcDirs([mainJavaDir])
+    }
+    test {
+        java.setSrcDirs([testJavaDir])
+    }
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
@@ -109,4 +122,24 @@ tasks.withType(JavaCompile) {
 task(replayWatch, type: JavaExec) {
     mainClass = "org.littletonrobotics.junction.ReplayWatch"
     classpath = sourceSets.main.runtimeClasspath
+}
+
+def prepareSourceFolders = tasks.register("prepareSourceFolders") {
+    group = "build setup"
+    description = "Ensures Gradle creates the default Java source directories before IDE sync."
+    doLast {
+        [mainJavaDir, testJavaDir].each { dir ->
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    dependsOn(prepareSourceFolders)
+}
+
+tasks.named("eclipse").configure {
+    dependsOn(prepareSourceFolders)
 }
